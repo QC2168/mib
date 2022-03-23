@@ -5,6 +5,7 @@ specifiers:
   '@swc/core': ^1.2.133
   '@types/fs-extra': ^9.0.13
   '@types/node': ^17.0.10
+  '@types/prompts': ^2.0.14
   '@types/winston': ^2.4.4
   '@typescript-eslint/eslint-plugin': ^5.11.0
   '@typescript-eslint/parser': ^5.11.0
@@ -14,6 +15,8 @@ specifiers:
   eslint-plugin-import: ^2.25.4
   fs-extra: ^10.0.0
   prettier: ^2.5.1
+  prompts: ^2.4.2
+  regenerator-runtime: ^0.13.9
   rollup-plugin-swc: ^0.2.1
   typescript: ^4.5.5
   winston: ^3.5.1
@@ -23,12 +26,15 @@ dependencies:
   '@types/winston': registry.npmmirror.com/@types/winston/2.4.4
   fs-extra: registry.npmmirror.com/fs-extra/10.0.0
   prettier: 2.5.1
+  prompts: 2.4.2
+  regenerator-runtime: 0.13.9
   winston: registry.npmmirror.com/winston/3.5.1
 
 devDependencies:
   '@swc/cli': registry.npmmirror.com/@swc/cli/0.1.55_@swc+core@1.2.133+chokidar@3.5.3
   '@swc/core': registry.npmmirror.com/@swc/core/1.2.133
   '@types/node': registry.npmmirror.com/@types/node/17.0.10
+  '@types/prompts': 2.0.14
   '@typescript-eslint/eslint-plugin': registry.npmmirror.com/@typescript-eslint/eslint-plugin/5.11.0_de5a1ddccd75ca1e499b8b8491d3dcba
   '@typescript-eslint/parser': registry.npmmirror.com/@typescript-eslint/parser/5.11.0_eslint@8.8.0+typescript@4.5.5
   chokidar: 3.5.3
@@ -165,6 +171,16 @@ packages:
     dev: true
     optional: true
 
+  /@types/node/17.0.10:
+    resolution: {integrity: sha512-S/3xB4KzyFxYGCppyDt68yzBU9ysL88lSdIah4D6cptdcltc4NCPCAMc0+PCpg/lLIyC7IPvj2Z52OJWeIUkog==}
+    dev: true
+
+  /@types/prompts/2.0.14:
+    resolution: {integrity: sha512-HZBd99fKxRWpYCErtm2/yxUZv6/PBI9J7N4TNFffl5JbrYMHBwF25DjQGTW3b3jmXq+9P6/8fCIb2ee57BFfYA==}
+    dependencies:
+      '@types/node': 17.0.10
+    dev: true
+
   /anymatch/3.1.2:
     resolution: {integrity: sha512-P43ePfOAIupkguHUycrc4qJ9kz8ZiuOUijaETwX7THt0Y/GNK7v0aa8rY816xWjZ7rJdA5XdMcpVFTKMq+RvWg==}
     engines: {node: '>= 8'}
@@ -255,6 +271,11 @@ packages:
     engines: {node: '>=0.12.0'}
     dev: true
 
+  /kleur/3.0.3:
+    resolution: {integrity: sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==}
+    engines: {node: '>=6'}
+    dev: false
+
   /normalize-path/3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
     engines: {node: '>=0.10.0'}
@@ -271,12 +292,24 @@ packages:
     hasBin: true
     dev: false
 
+  /prompts/2.4.2:
+    resolution: {integrity: sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q==}
+    engines: {node: '>= 6'}
+    dependencies:
+      kleur: 3.0.3
+      sisteransi: 1.0.5
+    dev: false
+
   /readdirp/3.6.0:
     resolution: {integrity: sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==}
     engines: {node: '>=8.10.0'}
     dependencies:
       picomatch: 2.3.1
     dev: true
+
+  /regenerator-runtime/0.13.9:
+    resolution: {integrity: sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==}
+    dev: false
 
   /rollup-plugin-swc/0.2.1_@swc+core@1.2.133:
     resolution: {integrity: sha512-wWRYt9tC0aIBvRQHNnVtwJ6DRPDj9XYpOAcOyFB11sKSkR/R+NAmbrjBACCPNVmZcxg6joV29wXgb5mU1DI7eA==}
@@ -287,6 +320,10 @@ packages:
       '@rollup/pluginutils': 4.2.0
       '@swc/core': registry.npmmirror.com/@swc/core/1.2.133
     dev: true
+
+  /sisteransi/1.0.5:
+    resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
+    dev: false
 
   /to-regex-range/5.0.1:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
