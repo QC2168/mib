@@ -32,7 +32,6 @@ const logger = winston.createLogger({
 // 记录输出
 export const log = (value: string, level: levelType = "info"): void => {
   logger.log(level, value);
-  //   console.log(value);
 };
 
 // 判断路径
@@ -78,7 +77,7 @@ export const selectDevice = async () => {
 
   if (list.length === 0) {
     log("当前无设备连接，请连接后再执行该工具", "warn");
-    return;
+    return false;
   }
 
   const result = list.map((i) => ({ title: i.name, value: i.name }));
@@ -90,6 +89,7 @@ export const selectDevice = async () => {
     choices: result,
   });
   currentDeviceName = value;
+  return currentDeviceName;
 };
 
 // 执行adb shell命令

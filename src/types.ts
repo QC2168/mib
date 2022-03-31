@@ -10,6 +10,7 @@ export interface SaveItemType {
   path: string;
   comment: string;
   full?: boolean;
+  output?:string;
 }
 
 // 备份目标

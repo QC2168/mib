@@ -1,11 +1,11 @@
 {
-  "name": "mib",
+  "name": "@qc2168/mib",
   "version": "1.0.0",
   "description": "data backup tool",
-  "main": "dist/index.js",
+  "main": "bin/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "swc src -d dist -w",
+    "watch": "swc src -d bin -w",
     "lint": "eslint ./src/**/*.ts --fix"
   },
   "repository": {
@@ -19,7 +19,7 @@
     "bin"
   ],
   "bin": {
-    "mib": "dist/index.js"
+    "mib": "bin/index.js"
   },
   "bugs": {
     "url": "https://github.com/QC2168/MIB/issues"

@@ -2,7 +2,13 @@
 import fs from "fs-extra";
 import { FileNodeType, SaveItemType } from "./types";
 import {
-  diff, log, isPath, replace, execAdb, isPathAdb,
+  diff,
+  log,
+  isPath,
+  replace,
+  execAdb,
+  isPathAdb,
+  selectDevice,
 } from "./utils";
 import { getConfig } from "./config";
 
@@ -11,10 +17,9 @@ const speedReg: RegExp = /[0-9.]+\s(MB\/s)/;
 // 获取手机中文件的大小
 const getFileSize = (path: string): number => {
   try {
-    const res = execAdb(
-      `shell du -k "${replace(path)}" | adb shell cut -f 1`,
-    ).toString();
-    return Number(res);
+    const res = execAdb(`shell du -k "${replace(path)}"`).toString();
+    const fileSize: string = res.split("\t")[0];
+    return Number(fileSize);
   } catch (error) {
     log(`获取文件大小失败-${path}`, "warn");
     return 0;
@@ -22,9 +27,7 @@ const getFileSize = (path: string): number => {
 };
 
 const getCurFileList = (path: string) => {
-  const res: string[] = execAdb(`shell ls -l ${path}`)
-    .toString()
-    .split("\r\n");
+  const res: string[] = execAdb(`shell ls -l ${path}`).toString().split("\r\n");
   // 去除开头的total
   res.shift();
   // 去除最后一个字符串
@@ -131,11 +134,13 @@ const MIB = () => {
       const outputDir = `${output + folderName}/`;
       // 判断导出路径
       isPath(outputDir);
-
       backup(backupDir, outputDir);
     }
   });
   log("程序结束");
 };
 
-MIB();
+(async () => {
+  await selectDevice();
+  MIB();
+})();
