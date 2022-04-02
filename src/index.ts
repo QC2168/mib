@@ -119,24 +119,31 @@ const backup = (target: string, output: string) => {
 const MIB = () => {
   // 获取配置文件
   const { backups, output } = getConfig();
-  isPath(output);
-  // 解析备份路径最后一个文件夹
-  backups.forEach((item: SaveItemType) => {
-    log(`当前执行备份任务:${item.comment}`);
-    const arr = item.path.split("/").filter((i: string) => i !== "");
-    const folderName = arr[arr.length - 1];
-    const backupDir = item.path;
-    // 判断备份路径是否存在
-    if (!isPathAdb(backupDir)) {
-      log(`备份路径:${backupDir} 不存在已跳过`, "error");
-    } else {
-      // 拼接导出路径
-      const outputDir = `${output + folderName}/`;
-      // 判断导出路径
-      isPath(outputDir);
-      backup(backupDir, outputDir);
-    }
-  });
+  // 判断备份节点是否为空
+  if (backups.length === 0) {
+    log("当前备份节点为空", "warn");
+    log("请在配置文件中添加备份节点", "warn");
+  }
+  if (backups.length > 0) {
+    isPath(output);
+    // 解析备份路径最后一个文件夹
+    backups.forEach((item: SaveItemType) => {
+      log(`当前执行备份任务:${item.comment}`);
+      const arr = item.path.split("/").filter((i: string) => i !== "");
+      const folderName = arr[arr.length - 1];
+      const backupDir = item.path;
+      // 判断备份路径是否存在
+      if (!isPathAdb(backupDir)) {
+        log(`备份路径:${backupDir} 不存在已跳过`, "error");
+      } else {
+        // 拼接导出路径
+        const outputDir = `${output + folderName}/`;
+        // 判断导出路径
+        isPath(outputDir);
+        backup(backupDir, outputDir);
+      }
+    });
+  }
   log("程序结束");
 };
 

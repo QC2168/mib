@@ -14,6 +14,6 @@ node_modules/
 # Optional eslint cache
 .eslintcache
 
-dist
+bin
 files
 .idea

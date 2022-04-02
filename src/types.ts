@@ -14,7 +14,7 @@ export interface SaveItemType {
 }
 
 // 备份目标
-export interface BackupsType {
+export interface ConfigType {
   backups: SaveItemType[];
   output: string;
 }
