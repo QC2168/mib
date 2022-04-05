@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@swc/cli': ^0.1.55
   '@swc/core': ^1.2.133
+  '@types/core-js': ^2.5.5
   '@types/fs-extra': ^9.0.13
   '@types/node': ^17.0.10
   '@types/prompts': ^2.0.14
@@ -10,6 +11,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.11.0
   '@typescript-eslint/parser': ^5.11.0
   chokidar: ^3.5.3
+  core-js: ^3.21.1
   eslint: ^8.8.0
   eslint-config-airbnb-base: ^15.0.0
   eslint-plugin-import: ^2.25.4
@@ -24,6 +26,7 @@ specifiers:
 dependencies:
   '@types/fs-extra': registry.npmmirror.com/@types/fs-extra/9.0.13
   '@types/winston': registry.npmmirror.com/@types/winston/2.4.4
+  core-js: 3.21.1
   fs-extra: registry.npmmirror.com/fs-extra/10.0.0
   prettier: 2.5.1
   prompts: 2.4.2
@@ -33,6 +36,7 @@ dependencies:
 devDependencies:
   '@swc/cli': registry.npmmirror.com/@swc/cli/0.1.55_@swc+core@1.2.133+chokidar@3.5.3
   '@swc/core': registry.npmmirror.com/@swc/core/1.2.133
+  '@types/core-js': 2.5.5
   '@types/node': registry.npmmirror.com/@types/node/17.0.10
   '@types/prompts': 2.0.14
   '@typescript-eslint/eslint-plugin': registry.npmmirror.com/@typescript-eslint/eslint-plugin/5.11.0_de5a1ddccd75ca1e499b8b8491d3dcba
@@ -171,6 +175,10 @@ packages:
     dev: true
     optional: true
 
+  /@types/core-js/2.5.5:
+    resolution: {integrity: sha512-C4vwOHrhsvxn7UFyk4NDQNUpgNKdWsT/bL39UWyD75KSEOObZSKa9mYDOCM5FGeJG2qtbG0XiEbUKND2+j0WOg==}
+    dev: true
+
   /@types/node/17.0.10:
     resolution: {integrity: sha512-S/3xB4KzyFxYGCppyDt68yzBU9ysL88lSdIah4D6cptdcltc4NCPCAMc0+PCpg/lLIyC7IPvj2Z52OJWeIUkog==}
     dev: true
@@ -215,6 +223,11 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
+
+  /core-js/3.21.1:
+    resolution: {integrity: sha512-FRq5b/VMrWlrmCzwRrpDYNxyHP9BcAZC+xHJaqTgIE5091ZV1NTmyh0sGOg5XqpnHvR0svdy0sv1gWA1zmhxig==}
+    requiresBuild: true
+    dev: false
 
   /estree-walker/2.0.2:
     resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}

@@ -9,7 +9,9 @@ import {
   execAdb,
   isPathAdb,
   selectDevice,
+  pathRepair,
 } from "./utils";
+import "core-js/stable/array/at";
 import { getConfig } from "./config";
 
 const speedReg: RegExp = /[0-9.]+\s(MB\/s)/;
@@ -47,15 +49,15 @@ const getCurFileList = (path: string) => {
 
 const initData = (backupDir: string, outputDir: string) => {
   const phoneFileList: string[] = getCurFileList(backupDir);
-  // 将带空白的名称替换
-  if (phoneFileList[phoneFileList.length - 1] === "") {
-    // if (phoneFileList.at(-1)=== '') {
-    phoneFileList.pop();
-  }
   // 获取当前存储空间
   const localFileList: string[] = fs.readdirSync(outputDir);
   // 对比文件
   const diffList: string[] = diff(localFileList, phoneFileList);
+  // 将带空白的名称替换
+  if (phoneFileList.at(-1) === "") {
+    phoneFileList.pop();
+  }
+
   // 将需要备份的文件转成文件节点
   // 细化备份数据列表
   const backupQueue: FileNodeType[] = [];
@@ -67,6 +69,7 @@ const initData = (backupDir: string, outputDir: string) => {
     };
     backupQueue.push(curFileNode);
   }
+
   return {
     phoneFileList,
     localFileList,
@@ -105,15 +108,30 @@ const move = (backupQueue: FileNodeType[], outputDir: string): void => {
     }
   }
 };
-
+const moveFolder = (source: string, target: string): void => {
+  log(`正在备份文件夹${source}`);
+  try {
+    const out: string = execAdb(`pull "${source}" "${target}"`);
+    const speed: string | null = out.match(speedReg) !== null ? out.match(speedReg)![0] : "读取速度失败";
+    log(`平均传输速度${speed}`);
+  } catch (e: any) {
+    log(`备份文件夹${source}失败 error:${e.message}`, "error");
+  }
+};
 // backupFn
-const backup = (target: string, output: string) => {
-  // 获取手机中的文件信息,对比本地
-  const { backupQueue } = initData(target, output);
-  // 计算体积和数量
-  computeBackupSize(backupQueue);
-  // 执行备份程序
-  move(backupQueue, output);
+const backup = (target: string, output: string, full: boolean = false) => {
+  if (!full) {
+    // 备份非备份的文件数据
+    // 获取手机中的文件信息,对比本地
+    const { backupQueue } = initData(target, output);
+    // 计算体积和数量
+    computeBackupSize(backupQueue);
+    // 执行备份程序
+    move(backupQueue, output);
+  } else {
+    // 不文件对比，直接备份
+    moveFolder(target, output);
+  }
 };
 
 const MIB = () => {
@@ -130,17 +148,21 @@ const MIB = () => {
     backups.forEach((item: SaveItemType) => {
       log(`当前执行备份任务:${item.comment}`);
       const arr = item.path.split("/").filter((i: string) => i !== "");
-      const folderName = arr[arr.length - 1];
-      const backupDir = item.path;
+      const folderName = arr.at(-1);
+      const backupDir = pathRepair(item.path);
+      // 备份目录
+      // 判断节点内是否有备份目录  // 拼接导出路径
+      const rootPath = pathRepair(pathRepair(output) + folderName);
+      const outputDir = item.output
+        ? item.output && pathRepair(item.output)
+        : rootPath;
       // 判断备份路径是否存在
       if (!isPathAdb(backupDir)) {
         log(`备份路径:${backupDir} 不存在已跳过`, "error");
       } else {
-        // 拼接导出路径
-        const outputDir = `${output + folderName}/`;
         // 判断导出路径
         isPath(outputDir);
-        backup(backupDir, outputDir);
+        backup(backupDir, outputDir, item.full);
       }
     });
   }
@@ -148,6 +170,6 @@ const MIB = () => {
 };
 
 (async () => {
-  await selectDevice();
-  MIB();
+  const device: string | boolean = await selectDevice();
+  if (device) MIB();
 })();

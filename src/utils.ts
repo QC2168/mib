@@ -3,6 +3,7 @@ import winston, { format } from "winston";
 import path from "path";
 import { execSync } from "child_process";
 import prompts from "prompts";
+import "core-js/stable/string/at";
 import { home } from "./config";
 import { devicesType } from "./types";
 
@@ -71,7 +72,7 @@ export const devices = (): devicesType[] => {
 
 let currentDeviceName: string = "";
 // 指定设备
-export const selectDevice = async () => {
+export const selectDevice = async ():Promise<string|false> => {
   // 获取设备
   const list: devicesType[] = devices();
 
@@ -109,3 +110,6 @@ export const isPathAdb = (folderPath: string): boolean => {
     return false;
   }
 };
+
+// 路径后面补上斜杠
+export const pathRepair = (spath:string):string => (spath.at(-1) === "/" ? spath : `${spath}/`);
