@@ -25,7 +25,8 @@
     "url": "https://github.com/QC2168/MIB/issues"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "homepage": "https://github.com/QC2168/MIB#readme",
   "devDependencies": {
