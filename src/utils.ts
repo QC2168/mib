@@ -72,7 +72,7 @@ export const devices = (): devicesType[] => {
 
 let currentDeviceName: string = "";
 // 指定设备
-export const selectDevice = async ():Promise<string|false> => {
+export const selectDevice = async (): Promise<string | false> => {
   // 获取设备
   const list: devicesType[] = devices();
 
@@ -89,6 +89,12 @@ export const selectDevice = async ():Promise<string|false> => {
     message: "please select your device",
     choices: result,
   });
+  // 获取设备状态
+  const deviceStatus = list.find((i) => i.name === value)?.status;
+  if (deviceStatus === "unauthorized") {
+    log("该设备无权访问权限", "warn");
+    log("请在设备上允许USB调试", "warn");
+  }
   currentDeviceName = value;
   return currentDeviceName;
 };
@@ -112,4 +118,4 @@ export const isPathAdb = (folderPath: string): boolean => {
 };
 
 // 路径后面补上斜杠
-export const pathRepair = (spath:string):string => (spath.at(-1) === "/" ? spath : `${spath}/`);
+export const pathRepair = (spath: string): string => (spath.at(-1) === "/" ? spath : `${spath}/`);

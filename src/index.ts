@@ -108,6 +108,7 @@ const move = (backupQueue: FileNodeType[], outputDir: string): void => {
     }
   }
 };
+
 const moveFolder = (source: string, target: string): void => {
   log(`正在备份文件夹${source}`);
   try {
@@ -118,6 +119,7 @@ const moveFolder = (source: string, target: string): void => {
     log(`备份文件夹${source}失败 error:${e.message}`, "error");
   }
 };
+
 // backupFn
 const backup = (target: string, output: string, full: boolean = false) => {
   if (!full) {
