@@ -1,71 +1,73 @@
 import { useState } from 'react'
-import electron from '/electron.png'
-import react from '/react.svg'
-import vite from '/vite.svg'
-import styles from 'styles/app.module.scss'
-
+import FileManage from '@/pages/fileManage'
+import {
+  SettingOutlined,
+  RadarChartOutlined,
+  FileTextOutlined,
+} from '@ant-design/icons';
+import { Layout, Menu } from 'antd';
+import type { MenuProps } from 'antd';
+import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
+import Analysis from '@/pages/analysis';
+import Settings from '@/pages/settings';
+const { Header, Footer, Sider, Content } = Layout;
 const App: React.FC = () => {
-  const [count, setCount] = useState(0)
+  let navigate = useNavigate();
+  const [collapsed, setCollapsed] = useState(true);
+  type MenuItem = Required<MenuProps>['items'][number];
+  function getItem(
+    label: React.ReactNode,
+    key: React.Key,
+    icon?: React.ReactNode,
+    children?: MenuItem[],
+    type?: 'group',
+  ): MenuItem {
+    return {
+      key,
+      icon,
+      children,
+      label,
+      type,
+    } as MenuItem;
+  }
+
+  const items: MenuItem[] = [
+    getItem('状态', 'analysis', <RadarChartOutlined />),
+    getItem('文件管理', 'fileManage', <FileTextOutlined />),
+    getItem('设置', 'settings', <SettingOutlined />),
+  ];
+
 
   return (
-    <div className={styles.app}>
-      <header className={styles.appHeader}>
-        <div className={styles.logos}>
-          <div className={styles.imgBox}>
-            <img
-              src={electron}
-              style={{ height: '24vw' }}
-              className={styles.appLogo}
-              alt="electron"
-            />
-          </div>
-          <div className={styles.imgBox}>
-            <img src={vite} style={{ height: '19vw' }} alt="vite" />
-          </div>
-          <div className={styles.imgBox}>
-            <img
-              src={react}
-              style={{ maxWidth: '100%' }}
-              className={styles.appLogo}
-              alt="logo"
-            />
-          </div>
-        </div>
-        <p>Hello Electron + Vite + React!</p>
-        <p>
-          <button onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
+    <Layout>
+      <Header style={{ height: 50 }}>
         <div>
-          <a
-            className={styles.appLink}
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className={styles.appLink}
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-          <div className={styles.staticPublic}>
-            Place static files into the{' '}
-            <code>/public</code> folder
-            <img style={{ width: 77 }} src="./node.png" />
-          </div>
+          <svg className="icon" aria-hidden="true">
+            <use xlinkHref="#icon-guanbi"></use>
+          </svg>
         </div>
-      </header>
-    </div>
+
+      </Header>
+      <Layout>
+        <Sider collapsed={collapsed}>
+        <div>
+          <Menu
+            onSelect={({ key }) => navigate(key)}
+            mode="inline"
+            items={items}
+          />
+        </div>
+      </Sider>
+        <Content style={{ padding: '12px',minHeight:'100vh' }}>
+            <Routes>
+              <Route path='/' element={<Analysis />} />
+              <Route path='/analysis' element={<Analysis />} />
+                <Route path='/fileManage' element={<FileManage />} />
+                <Route path="/settings" element={<Settings />} />
+            </Routes>
+        </Content>
+      </Layout>
+    </Layout>
   )
 }
 
