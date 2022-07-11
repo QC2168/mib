@@ -4,6 +4,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import electron from 'vite-plugin-electron'
 import pkg from './package.json'
+import Unocss from 'unocss/vite'
 
 rmSync(join(__dirname, 'dist'), { recursive: true, force: true }) // v14.14.0
 
@@ -43,6 +44,7 @@ export default defineConfig({
       // Enables use of Node.js API in the Electron-Renderer
       renderer: {},
     }),
+    Unocss({ /* options */ }),
   ],
   server: {
     host: pkg.env.VITE_DEV_SERVER_HOST,
