@@ -1,3 +1,5 @@
 export default [
-  'System Volume Information'
+  'System Volume Information',
+  '$RECYCLE.BIN',
+  'Config.Msi'
 ]

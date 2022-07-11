@@ -58,7 +58,7 @@ const App: React.FC = () => {
           />
         </div>
       </Sider>
-        <Content style={{ padding: '12px',minHeight:'100vh' }}>
+        <Content style={{ padding: '12px',minHeight:'calc( 100vh - 50px )' }}>
             <Routes>
               <Route path='/' element={<Analysis />} />
               <Route path='/analysis' element={<Analysis />} />

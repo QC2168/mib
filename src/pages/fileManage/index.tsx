@@ -1,4 +1,3 @@
-import { List } from "antd";
 import { useMount } from "ahooks"
 import path from 'path'
 import { useState } from "react";
@@ -6,20 +5,10 @@ import ignoreFileList from "@/utils/ignoreFileList";
 import Table, { ColumnsType } from "antd/lib/table";
 const {pathExistsSync,readdirSync,statSync} =require('fs-extra')
 import dayjs from 'dayjs'
-// import {statSync} from 'fs-extra'
-interface FileNodeType {
-  fileSize: number;
-  fileName: string;
-  filePath: string;
-  isDirectory?:boolean;
-  fileMTime?:string
-}
-function readablizeBytes(bytes:number):string {
-  if(bytes ===0)return ''
-  const s = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
-  const e = Math.floor(Math.log(bytes)/Math.log(1024));
-  return (bytes/Math.pow(1024, Math.floor(e))).toFixed(2)+" "+s[e] ?? 0;
-}
+import { createFileNode, openNotification, readablizeBytes } from "@/utils";
+import { FileNodeType } from "@/types";
+
+
   const columns: ColumnsType<FileNodeType> = [
     {
       title: '文件名称',
@@ -40,21 +29,15 @@ function readablizeBytes(bytes:number):string {
     },
 
   ];
+
 export default function fileManage(){
   // 文件列表
   const [fileNodeList,setFileNodeList]=useState<FileNodeType[]>([])
-  function createFileNode(targetFilePath:string):FileNodeType{
-    const detail =statSync(targetFilePath)
-    console.log(detail)
-    return {
-      fileSize:detail.size,
-      fileName:targetFilePath.split('\\').at(-1) ?? '读取文件名错误',
-      filePath:targetFilePath,
-      isDirectory:detail.isDirectory(),
-      fileMTime:detail.mtime,
-    }
-  }
+
   function readDir(target:string){
+    // 清空原列表
+    setFileNodeList([])
+    console.log('trigger readDir');
       if(!pathExistsSync(target)){
         throw new Error('无效路径')
       }
@@ -66,16 +49,11 @@ export default function fileManage(){
         }
         try{
           const node=createFileNode(path.join(target,item))
-          console.log(node);
           setFileNodeList(fileNodeList=>[...fileNodeList,node])
-
-        }catch(e){
-            console.log(item,e)
+        }catch(error){
+          openNotification(item,'生成节点出错啦')
         }
-
-
       }
-      console.log(fileNodeList);
 
   }
   useMount(()=>{
@@ -89,7 +67,7 @@ export default function fileManage(){
 
   })
 return (
-  <Table columns={columns} dataSource={fileNodeList} />
+  <Table columns={columns} rowKey='fileName' dataSource={fileNodeList} />
 )
 
 }
