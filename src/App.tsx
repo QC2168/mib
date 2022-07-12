@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import FileManage from '@/pages/fileManage'
+import FileManage from '@/pages/fileStore'
 import {
   SettingOutlined,
   RadarChartOutlined,

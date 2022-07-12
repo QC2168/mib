@@ -1,6 +1,6 @@
 import { useMount, useSetState } from "ahooks"
 import path from 'path'
-import { AppstoreOutlined, SearchOutlined } from '@ant-design/icons'
+import { AppstoreOutlined, RetweetOutlined, RollbackOutlined, SearchOutlined } from '@ant-design/icons'
 import { useEffect, useState } from "react";
 import ignoreFileList from "@/utils/ignoreFileList";
 import Table, { ColumnsType } from "antd/lib/table";
@@ -8,7 +8,7 @@ const { pathExistsSync, readdirSync, statSync } = require('fs-extra')
 import dayjs from 'dayjs'
 import { createFileNode, openNotification, readablizeBytes } from "@/utils";
 import { FileNodeType } from "@/types";
-import { Breadcrumb, Button, Card, Input } from "antd";
+import { Breadcrumb, Button, Card, Input, message } from "antd";
 import styles from './index.module.scss'
 import classnames from "classnames";
 const { Search } = Input;
@@ -36,10 +36,11 @@ const columns: ColumnsType<FileNodeType> = [
 export default function fileManage() {
   // 文件列表
   const [fileNodeList, setFileNodeList] = useState<FileNodeType[]>([])
-  // 当前路径
-  const [curPath, setCurPath] = useState('d:/')
   // loading
   const [loading, setLoading] = useState(true)
+  // 当前文件路径
+  const [pathCollection,setPathCollection]=useState(['d:'])
+
   function readDir(target: string) {
     // 清空原列表
     setFileNodeList([])
@@ -66,7 +67,7 @@ export default function fileManage() {
   }
   useMount(() => {
     try {
-      readDir(curPath)
+      readDir(pathCollection.join('/'))
     } catch (error) {
       console.log('-------------------');
       console.log(error);
@@ -77,13 +78,18 @@ export default function fileManage() {
 
   // 更新文件列表
   useEffect(() => {
-    readDir(curPath)
-  }, [curPath])
+    console.log('trigger path rejoin');
+    readDir(pathCollection.join('/'))
+  }, [pathCollection])
 
   // 返回上一级
   const turnBack = () => {
-    console.log(curPath.slice(0, curPath.lastIndexOf('\\')));
-    setCurPath(path => path.slice(path.lastIndexOf('\\')))
+    // 如果是最上一层，不处理
+    if(pathCollection.length===1){
+      message.warning('当前位置处于根目录，无法再返回上一级了');
+      return
+    }
+    setPathCollection(path => path.slice(0,-1))
   }
 
   const reload = () => {
@@ -92,10 +98,18 @@ export default function fileManage() {
   return (
     <Card >
       <div className={classnames('flex', 'mb-4', 'justify-between')}>
-        <div className={styles.operationGroup}>
-          <Button type="default" onClick={() => turnBack()}>turnBack</Button>
-          <Button type="default" onClick={() => reload()}>reload</Button>
+        <div className={classnames('flex','items-center')}>
+          <div className={styles.operationGroup}>
+          <Button type="default" shape="circle" onClick={() => turnBack()}><RollbackOutlined /></Button>
+          <Button type="default" shape="circle" onClick={() => reload()}><RetweetOutlined /></Button>
+          </div>
+          <Breadcrumb>
+        {
+          pathCollection.map(item=><Breadcrumb.Item key={item}>{item}</Breadcrumb.Item>)
+        }
+        </Breadcrumb>
         </div>
+
         <div> <Input
           placeholder="input search text"
           allowClear
@@ -103,15 +117,6 @@ export default function fileManage() {
           style={{ width: 304 }}
         /></div>
 
-      </div>
-      <div className={classnames('my-4 ml-1')}>
-        <Breadcrumb>
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <a href="">Application Center</a>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>An Application</Breadcrumb.Item>
-        </Breadcrumb>
       </div>
       <Table columns={columns} onRow={({ fileName, isDirectory }, rowIndex) => {
         return {
@@ -124,7 +129,7 @@ export default function fileManage() {
 
             if (isDirectory) {
               setLoading(true)
-              setCurPath(p => path.join(p, fileName))
+              setPathCollection(paths=>[...paths,fileName])
             }
 
           }

@@ -44,6 +44,7 @@
     "react-router-dom": "6",
     "sass": "^1.52.2",
     "typescript": "^4.7.3",
+    "unocss": "^0.44.0",
     "vite": "^2.9.10",
     "vite-plugin-electron": "^0.6.2"
   },
