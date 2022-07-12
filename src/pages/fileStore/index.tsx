@@ -39,8 +39,9 @@ export default function fileManage() {
   // loading
   const [loading, setLoading] = useState(true)
   // 当前文件路径
-  const [pathCollection,setPathCollection]=useState(['d:'])
-
+  const [pathCollection, setPathCollection] = useState(['d:/'])
+  // 搜索框
+  const [searchVal, setSearchVal] = useState('')
   function readDir(target: string) {
     // 清空原列表
     setFileNodeList([])
@@ -65,15 +66,9 @@ export default function fileManage() {
     }
     setLoading(false)
   }
+
   useMount(() => {
-    try {
       readDir(pathCollection.join('/'))
-    } catch (error) {
-      console.log('-------------------');
-      console.log(error);
-
-    }
-
   })
 
   // 更新文件列表
@@ -85,35 +80,52 @@ export default function fileManage() {
   // 返回上一级
   const turnBack = () => {
     // 如果是最上一层，不处理
-    if(pathCollection.length===1){
+    if (pathCollection.length === 1) {
       message.warning('当前位置处于根目录，无法再返回上一级了');
       return
     }
-    setPathCollection(path => path.slice(0,-1))
+    setPathCollection(path => path.slice(0, -1))
   }
 
   const reload = () => {
-
+      search()
   }
+  const search = () => {
+    if (searchVal.trim() === '') {
+      readDir(pathCollection.join('/'))
+      return
+    }
+    const filterList = fileNodeList.filter(item => item.fileName.includes(searchVal))
+    setFileNodeList(filterList)
+  }
+  useEffect(() => {
+    console.log('search:', searchVal);
+    search()
+  }, [searchVal])
+
   return (
     <Card >
       <div className={classnames('flex', 'mb-4', 'justify-between')}>
-        <div className={classnames('flex','items-center')}>
+        <div className={classnames('flex', 'items-center')}>
           <div className={styles.operationGroup}>
-          <Button type="default" shape="circle" onClick={() => turnBack()}><RollbackOutlined /></Button>
-          <Button type="default" shape="circle" onClick={() => reload()}><RetweetOutlined /></Button>
+            <Button type="default" shape="circle" onClick={() => turnBack()}><RollbackOutlined /></Button>
+            <Button type="default" shape="circle" onClick={() => reload()}><RetweetOutlined /></Button>
           </div>
           <Breadcrumb>
-        {
-          pathCollection.map(item=><Breadcrumb.Item key={item}>{item}</Breadcrumb.Item>)
-        }
-        </Breadcrumb>
+            {
+              pathCollection.map((item,index) => <Breadcrumb.Item key={item}>{
+                index===0?(item.slice(0,-2)).toUpperCase():item
+              }</Breadcrumb.Item>)
+            }
+          </Breadcrumb>
         </div>
 
         <div> <Input
           placeholder="input search text"
           allowClear
           prefix={<SearchOutlined />}
+          value={searchVal}
+          onChange={(event) => setSearchVal(event.target.value)}
           style={{ width: 304 }}
         /></div>
 
@@ -129,7 +141,7 @@ export default function fileManage() {
 
             if (isDirectory) {
               setLoading(true)
-              setPathCollection(paths=>[...paths,fileName])
+              setPathCollection(paths => [...paths, fileName])
             }
 
           }
