@@ -107,6 +107,7 @@ export default function fileManage() {
   // 更新文件列表
   useEffect(() => {
     console.log('trigger path rejoin');
+    setLoading(true)
     readDir(pathCollection.join('/'))
   }, [pathCollection])
 
