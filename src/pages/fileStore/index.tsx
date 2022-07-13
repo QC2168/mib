@@ -1,4 +1,4 @@
-import { useMount, useSetState } from "ahooks"
+import { useClickAway, useMount, useSetState } from "ahooks"
 import path from 'path'
 import { AppstoreOutlined, RetweetOutlined, RollbackOutlined, SearchOutlined } from '@ant-design/icons'
 import { createRef, useEffect, useRef, useState } from "react";
@@ -40,7 +40,7 @@ export default function fileManage() {
   // loading
   const [loading, setLoading] = useState(true)
   // 当前文件路径
-  const [pathCollection, setPathCollection] = useState(['d:/'])
+  const [pathCollection, setPathCollection] = useState(['g:/'])
   // 搜索框
   const [searchVal, setSearchVal] = useState<string>('')
   // 右击
@@ -51,6 +51,9 @@ export default function fileManage() {
     top: number;
     visibility: 'visible' | 'hidden'
   }
+  useClickAway(() => {
+   setControlPanelStyle({...controlPanelStyle,visibility:'hidden'})
+  }, controlPanelRef);
   const [controlPanelStyle, setControlPanelStyle] = useState<ControlPanelStyleType>({
     left: 0,
     top: 0,
@@ -63,6 +66,12 @@ export default function fileManage() {
     },
     {
       label: '添加到忽略名单'
+    },
+    {
+      label: '刷新'
+    },
+    {
+      label: '重命名'
     },
   ]
   function readDir(target: string) {
@@ -127,10 +136,10 @@ export default function fileManage() {
   }, [searchVal])
 
   return (
-    <Card >
+    <Card className="overflow-hidden">
       <Control ref={controlPanelRef} options={rightDownOperations} styles={controlPanelStyle}></Control>
       <div className={classnames('flex', 'mb-4', 'justify-between')}>
-        <div className={classnames('flex', 'items-center')}>hover
+        <div className={classnames('flex', 'items-center')}>
           <div className={styles.operationGroup}>
             <Button type="default" shape="circle" onClick={() => turnBack()}><RollbackOutlined /></Button>
             <Button type="default" shape="circle" onClick={() => reload()}><RetweetOutlined /></Button>
@@ -172,9 +181,12 @@ export default function fileManage() {
           onMouseDown: event => {
             if (event.button === 2) {
               // 触发右击
+              console.log(event)
+              const {pageX,pageY}=event.nativeEvent
               setControlPanelStyle({
-                left: event.clientX - 98,
-                top: event.clientY - 80,
+                left: pageX - 98,
+                top: pageY - 80,
+                // top: event.clientY - 80,
                 visibility: 'visible'
               })
 
@@ -182,7 +194,7 @@ export default function fileManage() {
 
           }
         };
-      }} rowKey='fileName' bordered loading={loading} dataSource={fileNodeList} />
+      }} rowKey='fileName' loading={loading} dataSource={fileNodeList} />
     </ Card>
 
   )
