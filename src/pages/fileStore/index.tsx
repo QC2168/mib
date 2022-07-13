@@ -23,7 +23,8 @@ const columns: ColumnsType<FileNodeType> = [
     title: '文件大小',
     dataIndex: 'fileSize',
     key: 'fileSize',
-    render: val => readablizeBytes(val)
+    render: val => readablizeBytes(val),
+    sorter: (a, b) => a.fileSize - b.fileSize,
   },
   {
     title: '修改时间',
