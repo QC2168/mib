@@ -1,7 +1,7 @@
 import { useMount, useSetState } from "ahooks"
 import path from 'path'
 import { AppstoreOutlined, RetweetOutlined, RollbackOutlined, SearchOutlined } from '@ant-design/icons'
-import { useEffect, useState } from "react";
+import { createRef, useEffect, useRef, useState } from "react";
 import ignoreFileList from "@/utils/ignoreFileList";
 import Table, { ColumnsType } from "antd/lib/table";
 const { pathExistsSync, readdirSync, statSync } = require('fs-extra')
@@ -11,6 +11,7 @@ import { FileNodeType } from "@/types";
 import { Breadcrumb, Button, Card, Input, message } from "antd";
 import styles from './index.module.scss'
 import classnames from "classnames";
+import Control, { ControlOptionType } from "@/components/control";
 const { Search } = Input;
 const columns: ColumnsType<FileNodeType> = [
   {
@@ -41,7 +42,29 @@ export default function fileManage() {
   // 当前文件路径
   const [pathCollection, setPathCollection] = useState(['d:/'])
   // 搜索框
-  const [searchVal, setSearchVal] = useState('')
+  const [searchVal, setSearchVal] = useState<string>('')
+  // 右击
+  const controlPanelRef = useRef<HTMLDivElement | null>(null)
+  // 控制面板坐标
+  interface ControlPanelStyleType {
+    left: number;
+    top: number;
+    visibility: 'visible' | 'hidden'
+  }
+  const [controlPanelStyle, setControlPanelStyle] = useState<ControlPanelStyleType>({
+    left: 0,
+    top: 0,
+    visibility: 'hidden'
+  })
+
+  const rightDownOperations: ControlOptionType[] = [
+    {
+      label: '打开'
+    },
+    {
+      label: '添加到忽略名单'
+    },
+  ]
   function readDir(target: string) {
     // 清空原列表
     setFileNodeList([])
@@ -68,7 +91,7 @@ export default function fileManage() {
   }
 
   useMount(() => {
-      readDir(pathCollection.join('/'))
+    readDir(pathCollection.join('/'))
   })
 
   // 更新文件列表
@@ -88,7 +111,7 @@ export default function fileManage() {
   }
 
   const reload = () => {
-      search()
+    search()
   }
   const search = () => {
     if (searchVal.trim() === '') {
@@ -105,16 +128,17 @@ export default function fileManage() {
 
   return (
     <Card >
+      <Control ref={controlPanelRef} options={rightDownOperations} styles={controlPanelStyle}></Control>
       <div className={classnames('flex', 'mb-4', 'justify-between')}>
-        <div className={classnames('flex', 'items-center')}>
+        <div className={classnames('flex', 'items-center')}>hover
           <div className={styles.operationGroup}>
             <Button type="default" shape="circle" onClick={() => turnBack()}><RollbackOutlined /></Button>
             <Button type="default" shape="circle" onClick={() => reload()}><RetweetOutlined /></Button>
           </div>
           <Breadcrumb>
             {
-              pathCollection.map((item,index) => <Breadcrumb.Item key={item}>{
-                index===0?(item.slice(0,-2)).toUpperCase():item
+              pathCollection.map((item, index) => <Breadcrumb.Item key={item}>{
+                index === 0 ? (item.slice(0, -2)).toUpperCase() : item
               }</Breadcrumb.Item>)
             }
           </Breadcrumb>
@@ -142,6 +166,18 @@ export default function fileManage() {
             if (isDirectory) {
               setLoading(true)
               setPathCollection(paths => [...paths, fileName])
+            }
+
+          },
+          onMouseDown: event => {
+            if (event.button === 2) {
+              // 触发右击
+              setControlPanelStyle({
+                left: event.clientX - 98,
+                top: event.clientY - 80,
+                visibility: 'visible'
+              })
+
             }
 
           }
