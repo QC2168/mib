@@ -5,13 +5,13 @@ import { useMount } from "ahooks";
 import { useEffect, useState } from "react";
 
 export default () => {
-  const test_path = '/sdcard/MIUI/sound_recorder/app_rec/'
+  const test_path = '/sdcard/DCIM/Camera/'
+  // const test_path = '/sdcard/MIUI/sound_recorder/app_rec/'
   // 文件列表
   const [fileNodeList, setFileNodeList] = useState<FileNodeType[]>([])
   useMount(() => {
     readDir(test_path)
   })
-
   function readDir(target: string) {
     // 清空原列表
     setFileNodeList([])
@@ -19,21 +19,22 @@ export default () => {
     // todo 判断路径是否存在
 
     // 获取指定目录下的文件、文件夹列表
-    let originFileInfoList = execAdb(`shell ls ${target}`).toString().split("\r\n").filter(i => i !== '');
-    for (const fileName of originFileInfoList) {
-      try {
-        const node = createFileNodeWithADB(test_path + fileName)
-        setFileNodeList(fileNodeList => [...fileNodeList, node])
-      } catch {
-        openNotification(fileName, '生成节点出错啦')
+    let dirList = execAdb(`shell ls -l ${target}`).toString().split("\r\n").filter(i => i !== '');
+    // 去掉total
+    dirList.shift()
+    dirList.forEach((i) => {
+      const item: string[] = i.split(/\s+/);
+      const fileName = item.slice(7).join(" ");
+      const fileNode: FileNodeType = {
+        fileName,
+        fileSize: Number(item[3]) ?? 0,
+        filePath: target + fileName,
+        isDirectory: item[0].startsWith("d")
       }
-    }
-    // setLoading(false)
-    console.log(fileNodeList);
+      setFileNodeList(fileNodeList=>[...fileNodeList,fileNode])
+    });
   }
-  useEffect(() => {
-    console.log(fileNodeList)
-  }, [fileNodeList])
+
 
   return (
     <div>
