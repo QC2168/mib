@@ -1,4 +1,4 @@
-import { readJsonSync, pathExistsSync, outputJsonSync } from "fs-extra";
+const { readJsonSync, pathExistsSync, outputJsonSync } =require("fs-extra") ;
 import { platform, env } from "process";
 import path from "path";
 import { ConfigType } from "@/types";

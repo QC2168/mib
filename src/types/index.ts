@@ -8,7 +8,7 @@ export interface FileNodeType {
 }
 
 // 备份节点
-export interface SaveItemType {
+export interface BackItemType {
   path: string;
   comment: string;
   full?: boolean;
@@ -17,7 +17,7 @@ export interface SaveItemType {
 
 // 备份目标
 export interface ConfigType {
-  backups: SaveItemType[];
+  backups: BackItemType[];
   output: string;
 }
 
