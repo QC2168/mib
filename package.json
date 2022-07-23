@@ -36,6 +36,7 @@
     "@unocss/preset-attributify": "^0.44.5",
     "@unocss/preset-icons": "^0.44.5",
     "@unocss/preset-uno": "^0.44.5",
+    "@unocss/transformer-directives": "^0.44.5",
     "@vitejs/plugin-react": "^1.3.2",
     "ahooks": "^3.5.2",
     "antd": "^4.21.5",

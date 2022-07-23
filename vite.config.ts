@@ -8,6 +8,7 @@ import Unocss from 'unocss/vite'
 import presetUno from '@unocss/preset-uno'
 import presetIcons from '@unocss/preset-icons'
 import presetAttributify from '@unocss/preset-attributify'
+import transformerDirective from '@unocss/transformer-directives'
 import { presetScrollbar } from 'unocss-preset-scrollbar'
 rmSync(join(__dirname, 'dist'), { recursive: true, force: true }) // v14.14.0
 
@@ -18,7 +19,9 @@ export default defineConfig({
       '@': join(__dirname, 'src'),
       'styles': join(__dirname, 'src/assets/styles'),
     },
+    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.less']
   },
+
   css: {
     preprocessorOptions: {
       less: {
@@ -54,6 +57,7 @@ export default defineConfig({
       // Enables use of Node.js API in the Electron-Renderer
       renderer: {},
     }),
+
     Unocss({
       presets: [
         presetUno(),presetAttributify(),
@@ -61,6 +65,9 @@ export default defineConfig({
         presetScrollbar({
           // config
         }),
+      ],
+      transformers: [
+        transformerDirective(),
       ],
     })
   ],
