@@ -42,7 +42,7 @@ export default function fileManage() {
   // loading
   const [loading, setLoading] = useState(true)
   // 当前文件路径
-  const [localPathCollection, setLocalPathCollection] = useState(['g:/'])
+  const [localPathCollection, setLocalPathCollection] = useState(['d:/'])
   // 当前路径
   const [MobilePathCollection, setMobilePathCollection] = useState(['sdcard/', 'DCIM', 'Camera'])
   // 搜索框
@@ -149,7 +149,12 @@ export default function fileManage() {
 
   useMount(() => {
     readDir(localPathCollection.join('/'))
-    readMobileDriverDir(MobilePathCollection.join('/'))
+    try {
+      readMobileDriverDir(MobilePathCollection.join('/'))
+
+    } catch (error) {
+      openNotification('error','读取移动设备文件失败')
+    }
   })
 
   // 更新本地文件列表
@@ -296,7 +301,7 @@ return (
 
         }
       };
-    }} rowKey='fileName' loading={loading} dataSource={curDriType === DriverType.LOCAL ? localFileNodeList : mobileFileNodeList} />
+    }} rowKey='fileName'  loading={loading} scroll={{x:'100%',scrollToFirstRowOnChange:true,y:'380px'}} dataSource={curDriType === DriverType.LOCAL ? localFileNodeList : mobileFileNodeList} />
   </ Card >
 
 )
