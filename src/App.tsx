@@ -4,16 +4,23 @@ import {
   SettingOutlined,
   RadarChartOutlined,
   FileTextOutlined,
+  MinusOutlined,
+  FullscreenOutlined,
+  CloseOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Space } from 'antd';
 import type { MenuProps } from 'antd';
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
 import Analysis from '@/pages/analysis';
 import Settings from '@/pages/settings';
+import styles from "./App.module.scss"
+import classNames from 'classnames';
 const { Header, Footer, Sider, Content } = Layout;
+const { ipcRenderer } = require('electron')
+
 const App: React.FC = () => {
   let navigate = useNavigate();
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   type MenuItem = Required<MenuProps>['items'][number];
   function getItem(
     label: React.ReactNode,
@@ -37,34 +44,46 @@ const App: React.FC = () => {
     getItem('设置', 'settings', <SettingOutlined />),
   ];
 
-
+  const closeApp = () => {
+    ipcRenderer.invoke('close-win')
+  }
+  const minimizeApp = () => {
+    ipcRenderer.invoke('minimize-win')
+  }
+  const maximizeApp = () => {
+    ipcRenderer.invoke('maximize-win')
+  }
   return (
     <Layout>
-      <Header style={{ height: 50 }}>
-        <div>
-          <svg className="icon" aria-hidden="true">
-            <use xlinkHref="#icon-guanbi"></use>
-          </svg>
+      <Header style={{ height: 40 }} className={classNames('flex justify-between items-center text-white px-5', styles['ant-layout-header'])}>
+        <div className='text-md text-white font-bold' >
+          MIB
         </div>
-
+        <div>
+          <Space size='middle' className='text-md'>
+          <button className="opBtn i-carbon-sun dark:i-carbon-moon" />
+          <button className="opBtn i-codicon:chrome-minimize" onClick={() => minimizeApp()}  />
+          <button className="opBtn i-fluent:full-screen-maximize-20-filled"  onClick={() => maximizeApp()} />
+          <button className="opBtn i-eva:close-fill" onClick={() => closeApp()} />
+          </Space>
+        </div>
       </Header>
       <Layout>
         <Sider collapsed={collapsed}>
-        <div>
-          <Menu
-            onSelect={({ key }) => navigate(key)}
-            mode="inline"
-            items={items}
-          />
-        </div>
-      </Sider>
-        <Content style={{ padding: '12px',minHeight:'calc( 100vh - 50px )' }}>
-            <Routes>
-              <Route path='/' element={<Analysis />} />
-              <Route path='/analysis' element={<Analysis />} />
-                <Route path='/fileManage' element={<FileManage />} />
-                <Route path="/settings" element={<Settings />} />
-            </Routes>
+          <div>
+            <Menu
+              onSelect={({ key }) => navigate(key)}
+              mode="inline"
+              items={items}
+            />
+          </div>
+        </Sider>
+        <Content style={{ padding: '12px', minHeight: 'calc( 100vh - 50px )' }}>
+          <Routes >
+            <Route path='/analysis' element={<Analysis />} />
+            <Route path='/fileManage' element={<FileManage />} />
+            <Route path="/settings" element={<Settings />} />
+          </Routes>
         </Content>
       </Layout>
     </Layout>

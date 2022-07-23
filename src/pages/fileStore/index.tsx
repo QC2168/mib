@@ -236,8 +236,8 @@ return (
     <div className={classnames('flex', 'mb-4', 'justify-between')}>
       <div className={classnames('flex', 'items-center')}>
         <div className={styles.operationGroup}>
-          <Button type="default" shape="circle" onClick={() => turnBack()}><RollbackOutlined /></Button>
-          <Button type="default" shape="circle" onClick={() => reload()}><RetweetOutlined /></Button>
+          <Button type="default" shape="circle" onClick={() => turnBack()}><span className="i-akar-icons:arrow-back" /></Button>
+          <Button type="default" shape="circle" onClick={() => reload()}><span className="i-zondicons:reload" /></Button>
         </div>
         <Breadcrumb>
           {

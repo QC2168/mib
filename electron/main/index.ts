@@ -1,4 +1,3 @@
-import { log } from './../../src/utils/index';
 import { app, BrowserWindow, shell, ipcMain } from 'electron'
 import { release } from 'os'
 import { join } from 'path'
@@ -35,7 +34,7 @@ const indexHtml = join(ROOT_PATH.dist, 'index.html')
 async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
-    icon: join(ROOT_PATH.public, 'favicon.svg'),
+    icon: join(ROOT_PATH.public, 'favicon.svg'),frame:false,
     webPreferences: {
       preload,
       nodeIntegration: true,
@@ -61,6 +60,8 @@ async function createWindow() {
     return { action: 'deny' }
   })
 
+  // open devtools
+  win.webContents.openDevTools()
 }
 
 app.whenReady().then(createWindow).then(()=>{
@@ -105,4 +106,16 @@ ipcMain.handle('open-win', (event, arg) => {
     childWindow.loadURL(`${url}/#${arg}`)
     // childWindow.webContents.openDevTools({ mode: "undocked", activate: true })
   }
+})
+
+ipcMain.handle('close-win', (event) => {
+  app.exit()
+})
+
+ipcMain.handle('minimize-win', (event) => {
+  win.minimize()
+})
+
+ipcMain.handle('maximize-win', (event) => {
+win.maximize()
 })

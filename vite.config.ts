@@ -5,7 +5,10 @@ import react from '@vitejs/plugin-react'
 import electron from 'vite-plugin-electron'
 import pkg from './package.json'
 import Unocss from 'unocss/vite'
-
+import presetUno from '@unocss/preset-uno'
+import presetIcons from '@unocss/preset-icons'
+import presetAttributify from '@unocss/preset-attributify'
+import { presetScrollbar } from 'unocss-preset-scrollbar'
 rmSync(join(__dirname, 'dist'), { recursive: true, force: true }) // v14.14.0
 
 // https://vitejs.dev/config/
@@ -14,6 +17,13 @@ export default defineConfig({
     alias: {
       '@': join(__dirname, 'src'),
       'styles': join(__dirname, 'src/assets/styles'),
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      less: {
+        javascriptEnabled: true,
+      }
     },
   },
   plugins: [
@@ -44,7 +54,15 @@ export default defineConfig({
       // Enables use of Node.js API in the Electron-Renderer
       renderer: {},
     }),
-    Unocss({ /* options */ }),
+    Unocss({
+      presets: [
+        presetUno(),presetAttributify(),
+        presetIcons({ /* options */ }),
+        presetScrollbar({
+          // config
+        }),
+      ],
+    })
   ],
   server: {
     host: pkg.env.VITE_DEV_SERVER_HOST,
