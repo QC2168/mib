@@ -8,8 +8,8 @@ import { home } from "@/config";
 import { devicesType } from "@/types";
 // 文件大小后缀转换
 export function readablizeBytes(bytes: number): string {
-  if (bytes === 0) return ''
-  const s = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+  if (bytes === 0) return "";
+  const s = ["Bytes", "KB", "MB", "GB", "TB", "PB"];
   const e = Math.floor(Math.log(bytes) / Math.log(1024));
   return (bytes / Math.pow(1024, Math.floor(e))).toFixed(2) + " " + s[e] ?? 0;
 }
@@ -26,14 +26,14 @@ export const getFileSize = (path: string): number => {
 };
 // 通过本地文件路径生成文件本地节点
 export function createFileNode(targetFilePath: string): FileNodeType {
-  const detail = statSync(targetFilePath)
+  const detail = statSync(targetFilePath);
   return {
     fileSize: detail.size,
-    fileName: targetFilePath.split('\\').at(-1) ?? '读取文件名错误',
+    fileName: targetFilePath.split("\\").at(-1) ?? "读取文件名错误",
     filePath: targetFilePath,
     isDirectory: detail.isDirectory(),
     fileMTime: detail.mtime,
-  }
+  };
 }
 // 通过adb方式获取文件路径生成文件节点
 export function createFileNodeWithADB(targetFilePath: string): FileNodeType {
@@ -41,34 +41,44 @@ export function createFileNodeWithADB(targetFilePath: string): FileNodeType {
   // 对应文件类型（文件夹dictionary，常规文件regular file）
   // 文件名称 filename
   // 文件大小 filesize
-  const fileType = execAdb(`shell stat -c '%F' '${targetFilePath}'`).replace('\r\n', '')
-  const fileName = execAdb(`shell stat -c '%n' '${targetFilePath}'`).replace('\r\n', '')
-  const fileSize = Number(execAdb(`shell stat -c '%s' '${targetFilePath}'`).replace('\r\n', ''))
+  const fileType = execAdb(`shell stat -c '%F' '${targetFilePath}'`).replace(
+    "\r\n",
+    ""
+  );
+  const fileName = execAdb(`shell stat -c '%n' '${targetFilePath}'`).replace(
+    "\r\n",
+    ""
+  );
+  const fileSize = Number(
+    execAdb(`shell stat -c '%s' '${targetFilePath}'`).replace("\r\n", "")
+  );
   return {
     fileName,
     fileSize,
     filePath: targetFilePath,
-    isDirectory: fileType === 'directory'
-  }
-
+    isDirectory: fileType === "directory",
+  };
 }
 
-export function openNotification(message: string, description: string, onClick?: () => void,
-  onClose?: () => void) {
+export function openNotification(
+  message: string,
+  description: string,
+  onClick?: () => void,
+  onClose?: () => void
+) {
   notification.open({
     message,
     description,
     onClick,
-    onClose
-  })
-};
-
-
+    onClose,
+  });
+}
 
 type levelType = "info" | "error" | "warn";
 // find arr1
 // eslint-disable-next-line max-len
-export const diff = (localArr: string[], remoteArr: string[]): string[] => remoteArr.filter((item) => !localArr.includes(item));
+export const diff = (localArr: string[], remoteArr: string[]): string[] =>
+  remoteArr.filter((item) => !localArr.includes(item));
 // const logger = winston.createLogger({
 //   format: format.combine(
 //     format.timestamp({
@@ -91,7 +101,7 @@ export const diff = (localArr: string[], remoteArr: string[]): string[] => remot
 // 记录输出
 export const log = (value: string, level: levelType = "info"): void => {
   // logger.log(level, value);
-  console.log(level, value)
+  console.log(level, value);
 };
 
 // 判断路径
@@ -160,9 +170,16 @@ let currentDeviceName: string = "";
 
 // 执行adb shell命令
 export const execAdb = (code: string) => {
-  const command = `adb ${currentDeviceName ? `-s ${currentDeviceName}` : ""
-    } ${code}`;
-  return execSync(command).toString();
+  const command = `adb ${
+    currentDeviceName ? `-s ${currentDeviceName}` : ""
+  } ${code}`;
+  try {
+    let res = execSync(command).toString();
+    return res;
+  } catch (error) {
+    openNotification("error", `${code} 执行失败`);
+    return "";
+  }
 };
 
 // 判断手机备份路径是否存在
@@ -178,5 +195,5 @@ export const isPathAdb = (folderPath: string): boolean => {
 export const speedReg: RegExp = /[0-9.]+\s(MB\/s)/;
 
 // 路径后面补上斜杠
-export const pathRepair = (spath: string): string => (spath.at(-1) === "/" ? spath : `${spath}/`);
-
+export const pathRepair = (spath: string): string =>
+  spath.at(-1) === "/" ? spath : `${spath}/`;
