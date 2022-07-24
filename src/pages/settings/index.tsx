@@ -1,6 +1,6 @@
 import { Button, Card, List, Radio, RadioChangeEvent, Space, Tag } from "antd"
 import { useState } from "react"
-import styles from './index.module.scss'
+import styles from './index.module.less'
 
 import ignoreFileList from "@/utils/ignoreFileList"
 import { PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons"
@@ -8,6 +8,9 @@ import { useMount } from "ahooks"
 import { getConfig } from "@/config"
 import Table, { ColumnsType } from "antd/lib/table"
 import { BackItemType } from "@/types"
+import { loadTheme, ThemeType } from "@/lib/css/theme"
+import { useNavigate} from 'react-router-dom'
+
 const ignoreHeaderFn = () => {
   return (
     <div className="flex">
@@ -18,6 +21,9 @@ const ignoreHeaderFn = () => {
   )
 }
 export default () => {
+  const navigate =useNavigate()
+  const [theme,setTheme]=useState<ThemeType>(localStorage.getItem('theme'))
+
   const [config, setConfig] = useState({
     color: 'auto',
     backupNode: getConfig()
@@ -25,9 +31,10 @@ export default () => {
 
 
   const handleColor = (event: RadioChangeEvent) => {
-    const data = { ...config }
-    data.color = event.target.value
-    setConfig(data)
+    const theme = event.target.value
+    loadTheme(theme)
+    navigate(0)
+    setTheme(theme)
   }
 
 
@@ -71,17 +78,16 @@ export default () => {
   return (
     <Card >
       <div className={styles.settingItem}>
-        <div className="text-xl font-bold mb-3">皮肤</div>
-        <Radio.Group onChange={(event) => handleColor(event)} value={config.color}>
+        <div className="text-md font-bold mb-3">主题</div>
+        <Radio.Group onChange={(event) => handleColor(event)} value={theme}>
           <Space direction="horizontal">
-            <Radio value='auto'>自动</Radio>
-            <Radio value='light'>浅色</Radio>
-            <Radio value='dark'>深色</Radio>
+            <Radio value={ThemeType.LIGHT}>浅色</Radio>
+            <Radio value={ThemeType.DARK}>深色</Radio>
           </Space>
         </Radio.Group>
       </div>
       <div className={styles.settingItem}>
-        <div className="text-xl font-bold mb-3">忽略显示文件</div>
+        <div className="text-md font-bold mb-3">忽略扫描文件</div>
         <List
           size="small"
           header={ignoreHeaderFn()}
@@ -92,8 +98,8 @@ export default () => {
         />
       </div>
       <div className={styles.settingItem}>
-        <div className="text-xl font-bold mb-3">备份选项</div>
-        <Table columns={backupNodeColumns} dataSource={config.backupNode.backups} />;
+        <div className="text-md font-bold mb-3">备份选项</div>
+        <Table columns={backupNodeColumns} dataSource={config.backupNode.backups} />
       </div>
 
     </Card>

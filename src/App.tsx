@@ -13,7 +13,7 @@ import type { MenuProps } from 'antd';
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
 import Analysis from '@/pages/analysis';
 import Settings from '@/pages/settings';
-import styles from "./App.module.scss"
+import styles from "./App.module.less"
 import classNames from 'classnames';
 const { Header, Footer, Sider, Content } = Layout;
 const { ipcRenderer } = require('electron')
@@ -55,16 +55,16 @@ const App: React.FC = () => {
   }
   return (
     <Layout>
-      <Header style={{ height: 40 }} className={classNames('flex justify-between items-center text-white px-5', styles['ant-layout-header'])}>
-        <div className='text-md text-white font-bold' >
+      <Header style={{ height: 45 }} className={classNames('flex justify-between items-center text-white', styles['ant-layout-header'])}>
+        <div className='text-xl text-black dark:text-white font-bold' >
           MIB
         </div>
         <div>
           <Space size='middle' className='text-md'>
-          <button className="opBtn i-carbon-sun dark:i-carbon-moon" />
-          <button className="opBtn i-codicon:chrome-minimize" onClick={() => minimizeApp()}  />
-          <button className="opBtn i-fluent:full-screen-maximize-20-filled"  onClick={() => maximizeApp()} />
-          <button className="opBtn i-eva:close-fill" onClick={() => closeApp()} />
+          <button className="opBtn dark:text-white i-carbon-sun dark:i-carbon-moon" />
+          <button className="opBtn dark:text-white i-codicon:chrome-minimize" onClick={() => minimizeApp()}  />
+          <button className="opBtn dark:text-white i-fluent:full-screen-maximize-20-filled"  onClick={() => maximizeApp()} />
+          <button className="opBtn dark:text-white i-eva:close-fill" onClick={() => closeApp()} />
           </Space>
         </div>
       </Header>
