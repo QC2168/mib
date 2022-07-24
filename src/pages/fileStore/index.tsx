@@ -9,7 +9,7 @@ import dayjs from 'dayjs'
 import { createFileNode, execAdb, openNotification, readablizeBytes } from "@/utils";
 import { DriverType, FileNodeType } from "@/types";
 import { Breadcrumb, Button, Card, Input, message, Switch } from "antd";
-import styles from './index.module.scss'
+import styles from './index.module.less'
 import classnames from "classnames";
 import Control, { ControlOptionType } from "@/components/control";
 const columns: ColumnsType<FileNodeType> = [
