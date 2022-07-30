@@ -207,8 +207,13 @@ export default () => {
   const hasSelected = selectedRowKeys.length > 0;
   function tableFooter() {
     return (
-      <div>
-        {hasSelected ? `当前已选择 ${selectedRowKeys.length} 个节点` : ''}
+      <div >
+        {hasSelected ? <div>
+          <Space>
+          当前已选择 {selectedRowKeys.length} 个节点
+          <Button onClick={()=>setSelectedRowKeys([])}>全部取消选择</Button>
+          </Space>
+        </div> : ''}
       </div>
 
     )
@@ -220,7 +225,7 @@ export default () => {
       <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
         <Card>
           {/* 节点 */}
-          <Table rowSelection={rowSelection} footer={tableFooter} scroll={{ x: '100%', scrollToFirstRowOnChange: true, y: '300px' }} pagination={false} rowKey='comment' columns={backupNodeColumns} dataSource={config.backups} />
+          <Table rowSelection={rowSelection} footer={selectedRowKeys.length!==0?tableFooter:undefined} scroll={{ x: '100%', scrollToFirstRowOnChange: true, y: '300px' }} pagination={false} rowKey='comment' columns={backupNodeColumns} dataSource={config.backups} />
           {/* 图表 */}
           {/* <div className={styles.chartContain} ref={chartRef}>
 
