@@ -8,10 +8,11 @@ const { pathExistsSync, readdirSync, statSync } = require('fs-extra')
 import dayjs from 'dayjs'
 import { createFileNode, execAdb, openNotification, readablizeBytes } from "@/utils";
 import { DriverType, FileNodeType } from "@/types";
-import { Breadcrumb, Button, Card, Input, message, Switch } from "antd";
+import { Breadcrumb, Button, Card, ConfigProvider, Empty, Input, message, Switch } from "antd";
 import styles from './index.module.less'
 import classnames from "classnames";
 import Control, { ControlOptionType } from "@/components/control";
+import { exec } from "child_process";
 const columns: ColumnsType<FileNodeType> = [
   {
     title: '文件名称',
@@ -153,7 +154,7 @@ export default function fileManage() {
       readMobileDriverDir(MobilePathCollection.join('/'))
 
     } catch (error) {
-      openNotification('error','读取移动设备文件失败')
+      openNotification('error', '读取移动设备文件失败')
     }
   })
 
@@ -191,119 +192,145 @@ export default function fileManage() {
   }
 
 
-const reload = () => {
-  search()
-}
-const search = () => {
-  if (searchVal.trim() === '') {
-    readDir(localPathCollection.join('/'))
-    return
+  const reload = () => {
+    search()
   }
-  if (curDriType === DriverType.LOCAL) {
-    const filterList = localFileNodeList.filter(item => item.fileName.includes(searchVal))
-    setLocalFileNodeList(filterList)
-  }
-  if (curDriType === DriverType.MOBILE) {
-    const filterList = mobileFileNodeList.filter(item => item.fileName.includes(searchVal))
-    setMobileFileNodeList(filterList)
-  }
-
-}
-// 切换状态
-const handleDriverStatus = (targetStatus: DriverType) => {
-  setCurDriType(targetStatus)
-}
-useEffect(() => {
-  console.log('search:', searchVal);
-  search()
-}, [searchVal])
-
-return (
-  <Card className="overflow-hidden">
-    {/* 右击菜单面板 */}
-    <Control ref={controlPanelRef} options={rightDownOperations} onRow={
-      ({ label, key }) => {
-        return {
-          onClick: () => {
-            console.log(key, label)
-            setControlPanelStyle({ ...controlPanelStyle, visibility: 'hidden' })
-          },
-        }
-      }
-
+  const search = () => {
+    if (searchVal.trim() === '') {
+      readDir(localPathCollection.join('/'))
+      return
     }
-      curType={curDriType} styles={controlPanelStyle}></Control>
-    <div className={classnames('flex', 'mb-4', 'justify-between')}>
-      <div className={classnames('flex', 'items-center')}>
-        <div className={styles.operationGroup}>
-          <Button type="default" shape="circle" onClick={() => turnBack()}><span className="i-akar-icons:arrow-back" /></Button>
-          <Button type="default" shape="circle" onClick={() => reload()}><span className="i-zondicons:reload" /></Button>
-        </div>
-        <Breadcrumb>
-          {
-            curDriType === DriverType.LOCAL ?
-              localPathCollection.map((item, index) => <Breadcrumb.Item key={item}>{
-                index === 0 ? (item.slice(0, -2)).toUpperCase() : item
-              }</Breadcrumb.Item>)
-              :
-              MobilePathCollection.map((item) => <Breadcrumb.Item key={item}>{
-                item
-              }</Breadcrumb.Item>)
+    if (curDriType === DriverType.LOCAL) {
+      const filterList = localFileNodeList.filter(item => item.fileName.includes(searchVal))
+      setLocalFileNodeList(filterList)
+    }
+    if (curDriType === DriverType.MOBILE) {
+      const filterList = mobileFileNodeList.filter(item => item.fileName.includes(searchVal))
+      setMobileFileNodeList(filterList)
+    }
+
+  }
+  // 切换状态
+  const handleDriverStatus = (targetStatus: DriverType) => {
+    setCurDriType(targetStatus)
+  }
+  useEffect(() => {
+    console.log('search:', searchVal);
+    search()
+  }, [searchVal])
+function fileListEmpty(){
+  return (
+    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="当前目录没有文件/文件夹哦">
+       <Button onClick={()=>turnBack()}>返回上一级</Button>
+    </Empty>
+  )
+}
+  return (
+    <Card className="overflow-hidden">
+      {/* 右击菜单面板 */}
+      <Control ref={controlPanelRef} options={rightDownOperations} onRow={
+        ({ label, key }) => {
+          return {
+            onClick: () => {
+              console.log(key, label)
+              setControlPanelStyle({ ...controlPanelStyle, visibility: 'hidden' })
+            },
           }
-        </Breadcrumb>
-      </div>
-
-      <div className="flex items-center">
-        <div className="mx-4 text-xl">
-          <DesktopOutlined className={curDriType === DriverType.LOCAL ? 'text-indigo-600 mx-2' : ' mx-2'} onClick={() => handleDriverStatus(DriverType.LOCAL)} />
-          <MobileOutlined className={curDriType === DriverType.MOBILE ? 'text-indigo-600 mx-2' : ' mx-2'} onClick={() => handleDriverStatus(DriverType.MOBILE)} />
-        </div>
-
-        <Input
-          placeholder="search files"
-          allowClear
-          prefix={<SearchOutlined />}
-          value={searchVal}
-          onChange={(event) => setSearchVal(event.target.value)}
-          style={{ width: 304 }}
-        /></div>
-
-    </div>
-    <Table columns={columns} onRow={({ fileName, isDirectory }, rowIndex) => {
-      return {
-        onClick: e => {
-          console.log('fileName', fileName);
-          console.log('isDirectory', isDirectory);
-        },
-        onDoubleClick: event => {
-          console.log(fileName);
-
-          if (isDirectory) {
-            setLoading(true)
-            if(curDriType===DriverType.LOCAL)setLocalPathCollection(paths => [...paths, fileName])
-            if(curDriType===DriverType.MOBILE)setMobilePathCollection(paths => [...paths, fileName])
-
-          }
-
-        },
-        onMouseDown: event => {
-          if (event.button === 2) {
-            // 触发右击
-            console.log(event)
-            const { pageX, pageY } = event.nativeEvent
-            setControlPanelStyle({
-              left: pageX - 98,
-              top: pageY - 80,
-              visibility: 'visible'
-            })
-
-          }
-
         }
-      };
-    }} rowKey='fileName'  loading={loading} scroll={{x:'100%',scrollToFirstRowOnChange:true,y:'380px'}} dataSource={curDriType === DriverType.LOCAL ? localFileNodeList : mobileFileNodeList} />
-  </ Card >
 
-)
+      }
+        curType={curDriType} styles={controlPanelStyle}></Control>
+      <div className={classnames('flex', 'mb-4', 'justify-between')}>
+        <div className={classnames('flex', 'items-center')}>
+          <div className={styles.operationGroup}>
+            <Button type="default" shape="circle" onClick={() => turnBack()}><span className="i-akar-icons:arrow-back" /></Button>
+            <Button type="default" shape="circle" onClick={() => reload()}><span className="i-zondicons:reload" /></Button>
+          </div>
+          <Breadcrumb>
+            {
+              curDriType === DriverType.LOCAL ?
+                localPathCollection.map((item, index) => <Breadcrumb.Item key={item}>{
+                  index === 0 ? (item.slice(0, -2)).toUpperCase() : item
+                }</Breadcrumb.Item>)
+                :
+                MobilePathCollection.map((item) => <Breadcrumb.Item key={item}>{
+                  item
+                }</Breadcrumb.Item>)
+            }
+          </Breadcrumb>
+        </div>
+
+        <div className="flex items-center">
+          <div className="mx-4 text-xl">
+            <DesktopOutlined className={curDriType === DriverType.LOCAL ? 'text-indigo-600 mx-2' : ' mx-2'} onClick={() => handleDriverStatus(DriverType.LOCAL)} />
+            <MobileOutlined className={curDriType === DriverType.MOBILE ? 'text-indigo-600 mx-2' : ' mx-2'} onClick={() => handleDriverStatus(DriverType.MOBILE)} />
+          </div>
+
+          <Input
+            placeholder="search files"
+            allowClear
+            prefix={<SearchOutlined />}
+            value={searchVal}
+            onChange={(event) => setSearchVal(event.target.value)}
+            style={{ width: 304 }}
+          /></div>
+
+      </div>
+      <ConfigProvider renderEmpty={fileListEmpty}>
+      <Table columns={columns}  onRow={({ fileName, isDirectory }, rowIndex) => {
+        return {
+          onClick: e => {
+            console.log('fileName', fileName);
+            console.log('isDirectory', isDirectory);
+          },
+          onDoubleClick: event => {
+            console.log(fileName);
+
+            if (isDirectory) {
+              setLoading(true)
+              if (curDriType === DriverType.LOCAL) setLocalPathCollection(paths => [...paths, fileName])
+              if (curDriType === DriverType.MOBILE) setMobilePathCollection(paths => [...paths, fileName])
+            } else {
+              // 打开文件
+              console.log((localPathCollection.join('/') + fileName));
+              // 处理开头 // 盘符为 /
+              const filePath = [localPathCollection[0].slice(0, -1), ...localPathCollection.slice(1), fileName].join('/')
+
+
+              exec(`start ${filePath}`, (error, stdout, stderr) => {
+                if (error) {
+                  openNotification('error', error.message)
+                  console.log(`error: ${error.message}`);
+                  return;
+                }
+                if (stderr) {
+                  openNotification('error', stderr)
+                  return;
+                }
+              })
+            }
+
+
+          },
+          onMouseDown: event => {
+            if (event.button === 2) {
+              // 触发右击
+              console.log(event)
+              const { pageX, pageY } = event.nativeEvent
+              setControlPanelStyle({
+                left: pageX - 98,
+                top: pageY - 80,
+                visibility: 'visible'
+              })
+
+            }
+
+          }
+        };
+      }} rowKey='fileName' loading={loading} scroll={{ x: '100%', scrollToFirstRowOnChange: true, y: '380px' }} dataSource={curDriType === DriverType.LOCAL ? localFileNodeList : mobileFileNodeList} /></ConfigProvider>
+
+    </ Card >
+
+  )
 
 }
