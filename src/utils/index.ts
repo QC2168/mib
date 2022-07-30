@@ -1,11 +1,17 @@
-import { FileNodeType } from "@/types";
+import { DriverType, FileNodeType } from "@/types";
 import { notification } from "antd";
-const { statSync, pathExistsSync, ensureDirSync } = require("fs-extra");
+const {
+  statSync,
+  pathExistsSync,
+  ensureDirSync,
+  readdirSync,
+} = require("fs-extra");
 // import winston, { format } from "winston";
 import path from "path";
 import { execSync } from "child_process";
 import { home } from "@/config";
 import { devicesType } from "@/types";
+import ignoreFileList from "./ignoreFileList";
 // 文件大小后缀转换
 export function readablizeBytes(bytes: number): string {
   if (bytes === 0) return "";
@@ -34,6 +40,34 @@ export function createFileNode(targetFilePath: string): FileNodeType {
     isDirectory: detail.isDirectory(),
     fileMTime: detail.mtime,
   };
+}
+
+// 获取指定目录下文件节点
+export function getFileNodeList(
+  targetPath: string,
+  mode: DriverType
+): FileNodeType[] {
+  const fileNodeList: FileNodeType[] = [];
+  if (mode === DriverType.LOCAL) {
+    const fileList = readdirSync(targetPath);
+    for (const item of fileList) {
+      if (ignoreFileList.includes(item)) {
+        // 在忽略名单中，跳过
+        continue;
+      }
+      try {
+        const node = createFileNode(path.join(targetPath, item));
+        fileNodeList.push(node);
+      } catch (error) {
+        openNotification(item, "生成节点出错啦");
+      }
+    }
+
+    return fileNodeList;
+  }
+  if (mode === DriverType.MOBILE) {
+  }
+  return fileNodeList;
 }
 // 通过adb方式获取文件路径生成文件节点
 export function createFileNodeWithADB(targetFilePath: string): FileNodeType {
@@ -75,10 +109,15 @@ export function openNotification(
 }
 
 type levelType = "info" | "error" | "warn";
-// find arr1
-// eslint-disable-next-line max-len
-export const diff = (localArr: string[], remoteArr: string[]): string[] =>
-  remoteArr.filter((item) => !localArr.includes(item));
+
+export const diff = (
+  localArr: FileNodeType[],
+  remoteArr: FileNodeType[]
+): FileNodeType[] => {
+  let names: { [key: string]: boolean } = {};
+  localArr.forEach(i=> (names[i.fileName] = true));
+  return remoteArr.filter(i =>!names[i.fileName] );
+};
 // const logger = winston.createLogger({
 //   format: format.combine(
 //     format.timestamp({
@@ -177,6 +216,7 @@ export const execAdb = (code: string) => {
     let res = execSync(command).toString();
     return res;
   } catch (error) {
+    console.log(error);
     openNotification("error", `${code} 执行失败`);
     return "";
   }

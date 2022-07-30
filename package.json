@@ -18,6 +18,7 @@
   "dependencies": {
     "better-scroll": "^2.4.2",
     "classnames": "^2.3.1",
+    "echarts": "^5.3.3",
     "electron-store": "^8.0.1",
     "normalize.css": "^8.0.1",
     "winston": "^3.8.1"
@@ -28,6 +29,7 @@
     "@commitlint/config-angular": "^17.0.3",
     "@commitlint/config-conventional": "^17.0.3",
     "@iconify/json": "^2.1.81",
+    "@types/d3": "^7.4.0",
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^18.0.3",
     "@types/react": "^18.0.12",
@@ -42,6 +44,7 @@
     "antd": "^4.21.5",
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
+    "d3": "^7.6.1",
     "dayjs": "^1.11.3",
     "electron": "^19.0.3",
     "electron-builder": "^23.0.3",
