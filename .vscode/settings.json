@@ -3,9 +3,12 @@
         "ahooks",
         "antd",
         "Appstore",
+        "koale",
+        "mibrc",
         "readablize",
         "Sider",
         "spath",
-        "Unocss"
+        "Unocss",
+        "useworker"
     ]
 }

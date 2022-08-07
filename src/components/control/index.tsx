@@ -17,7 +17,6 @@ const controlPanel = ({
 }: PropType, ref: any) => {
   // 过滤
   const list = options.filter((i) => i.show.includes(curType));
-
   return (
     <div ref={ref} style={styles} className="absolute rounded-md shadow-md overflow-hidden m-2 z-10 min-w-130px wa bg-white">
       {

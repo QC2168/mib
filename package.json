@@ -76,5 +76,8 @@
   "env": {
     "VITE_DEV_SERVER_HOST": "127.0.0.1",
     "VITE_DEV_SERVER_PORT": 7777
+  },
+  "dependencies": {
+    "@shopify/react-web-worker": "^5.0.2"
   }
 }

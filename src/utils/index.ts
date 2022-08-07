@@ -157,6 +157,7 @@ export const diff = (
   });
   return remoteArr.filter((i) => !names[i.fileName]);
 };
+
 // const logger = winston.createLogger({
 //   format: format.combine(
 //     format.timestamp({
