@@ -1,0 +1,10 @@
+# .eslintignore
+*.svg
+*.css
+*.less
+/dist
+*.scss
+*.css
+/node_modules
+/build
+vite.config.ts

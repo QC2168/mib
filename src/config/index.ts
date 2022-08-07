@@ -1,17 +1,18 @@
-const { readJsonSync, pathExistsSync, outputJsonSync } =require("fs-extra") ;
-import { platform, env } from "process";
-import path from "path";
-import { ConfigType } from "@/types";
+import { platform, env } from 'process';
+import path from 'path';
+import { ConfigType } from '@/types';
 
-export const home = platform === "win32" ? env.USERPROFILE : env.HOME;
+const { readJsonSync, pathExistsSync, outputJsonSync } = require('fs-extra');
 
-const CONFIG_PATH: string = path.join(home || "~/", ".mibrc");
+export const home = platform === 'win32' ? env.USERPROFILE : env.HOME;
+
+const CONFIG_PATH: string = path.join(home || '~/', '.mibrc');
 
 const existConf = () => pathExistsSync(CONFIG_PATH);
 const createDefaultConfig = (): ConfigType => {
   const conf: ConfigType = {
     backups: [],
-    output: "C:/",
+    output: 'C:/',
   };
   outputJsonSync(CONFIG_PATH, conf);
   return readJsonSync(CONFIG_PATH);

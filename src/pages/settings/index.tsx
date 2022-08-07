@@ -1,42 +1,43 @@
-import { Button, Card, List, Radio, RadioChangeEvent, Space, Tag } from "antd"
-import { useState } from "react"
-import styles from './index.module.less'
+import {
+  Button, Card, List, Radio, RadioChangeEvent, Space, Tag,
+} from 'antd';
+import { useState } from 'react';
+import { PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useMount } from 'ahooks';
+import Table, { ColumnsType } from 'antd/lib/table';
+import { useNavigate } from 'react-router-dom';
 
-import ignoreFileList from "@/utils/ignoreFileList"
-import { PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons"
-import { useMount } from "ahooks"
-import { getConfig } from "@/config"
-import Table, { ColumnsType } from "antd/lib/table"
-import { BackItemType } from "@/types"
-import { loadTheme, ThemeType } from "@/lib/css/theme"
-import { useNavigate} from 'react-router-dom'
+import ignoreFileList from '@/utils/ignoreFileList';
+import { getConfig } from '@/config';
+import { BackItemType } from '@/types';
+import { loadTheme, ThemeType } from '@/lib/css/theme';
+import styles from './index.module.less';
 
-const ignoreHeaderFn = () => {
-  return (
-    <div className="flex">
-      <Button className="mr-3" type="primary" icon={<PlusCircleOutlined />} size='small'>新增</Button>
-      <Button className="mr-3" type="primary" danger icon={<DeleteOutlined />} size='small'>清空</Button>
-      <div>当前忽略文件个数：{ignoreFileList.length}</div>
+const ignoreHeaderFn = () => (
+  <div className="flex">
+    <Button className="mr-3" type="primary" icon={<PlusCircleOutlined />} size="small">新增</Button>
+    <Button className="mr-3" type="primary" danger icon={<DeleteOutlined />} size="small">清空</Button>
+    <div>
+      当前忽略文件个数：
+      {ignoreFileList.length}
     </div>
-  )
-}
-export default () => {
-  const navigate =useNavigate()
-  const [theme,setTheme]=useState<ThemeType>(localStorage.getItem('theme'))
+  </div>
+);
+export default function Settings() {
+  const navigate = useNavigate();
+  const [theme, setTheme] = useState<ThemeType>(localStorage.getItem('theme') as ThemeType ?? ThemeType.LIGHT);
 
   const [config, setConfig] = useState({
     color: 'auto',
-    backupNode: getConfig()
-  })
-
+    backupNode: getConfig(),
+  });
 
   const handleColor = (event: RadioChangeEvent) => {
-    const theme = event.target.value
-    loadTheme(theme)
-    navigate(0)
-    setTheme(theme)
-  }
-
+    const targetTheme = event.target.value;
+    loadTheme(targetTheme);
+    navigate(0);
+    setTheme(targetTheme);
+  };
 
   const backupNodeColumns: ColumnsType<BackItemType> = [
     {
@@ -54,15 +55,14 @@ export default () => {
       dataIndex: 'output',
       key: 'output',
       align: 'center',
-      render: (i) => <Tag color={i ? 'gold' : ''}>{i ? i : '继承父级'}</Tag >
+      render: (i) => <Tag color={i ? 'gold' : ''}>{i || '继承父级'}</Tag>,
     },
     {
       title: '全量备份',
       dataIndex: 'full',
       key: 'full',
       align: 'center',
-      render: (i) =>
-        <Tag color={i ? 'blue' : 'red'}>{i ? '是' : '否'}</Tag >
+      render: (i) => <Tag color={i ? 'blue' : 'red'}>{i ? '是' : '否'}</Tag>,
 
     },
     {
@@ -70,13 +70,12 @@ export default () => {
       dataIndex: 'actions',
       key: 'actions',
       align: 'center',
-      render: (_: any, record: BackItemType) => (
-        <a>Delete</a>
-      )
+      render: (_: any, record: BackItemType) => <Button type="link">Delete</Button>
+      ,
     },
   ];
   return (
-    <Card >
+    <Card>
       <div className={styles.settingItem}>
         <div className="text-md font-bold mb-3">主题</div>
         <Radio.Group onChange={(event) => handleColor(event)} value={theme}>
@@ -91,10 +90,10 @@ export default () => {
         <List
           size="small"
           header={ignoreHeaderFn()}
-          footer={<div></div>}
+          footer={<div />}
           bordered
           dataSource={ignoreFileList}
-          renderItem={item => <List.Item>{item}</List.Item>}
+          renderItem={(item) => <List.Item>{item}</List.Item>}
         />
       </div>
       <div className={styles.settingItem}>
@@ -103,5 +102,5 @@ export default () => {
       </div>
 
     </Card>
-  )
+  );
 }

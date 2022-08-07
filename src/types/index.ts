@@ -27,7 +27,7 @@ export interface devicesType {
   status: string;
 }
 
-  // 显示数据
+// 显示数据
 export enum DriverType {
     MOBILE,
     LOCAL

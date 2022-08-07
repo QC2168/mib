@@ -1,25 +1,26 @@
-import { rmSync } from "fs";
-import { join } from "path";
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import electron from "vite-plugin-electron";
-import pkg from "./package.json";
-import Unocss from "unocss/vite";
-import presetUno from "@unocss/preset-uno";
-import presetIcons from "@unocss/preset-icons";
-import presetAttributify from "@unocss/preset-attributify";
-import transformerDirective from "@unocss/transformer-directives";
-import { presetScrollbar } from "unocss-preset-scrollbar";
-rmSync(join(__dirname, "dist"), { recursive: true, force: true }); // v14.14.0
+import { rmSync } from 'fs';
+import { join } from 'path';
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import electron from 'vite-plugin-electron';
+import Unocss from 'unocss/vite';
+import presetUno from '@unocss/preset-uno';
+import presetIcons from '@unocss/preset-icons';
+import presetAttributify from '@unocss/preset-attributify';
+import transformerDirective from '@unocss/transformer-directives';
+import { presetScrollbar } from 'unocss-preset-scrollbar';
+import pkg from './package.json';
+
+rmSync(join(__dirname, 'dist'), { recursive: true, force: true }); // v14.14.0
 
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
     alias: {
-      "@": join(__dirname, "src"),
-      styles: join(__dirname, "src/assets/styles"),
+      '@': join(__dirname, 'src'),
+      styles: join(__dirname, 'src/assets/styles'),
     },
-    extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json", ".less"],
+    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.less'],
   },
 
   css: {
@@ -33,24 +34,24 @@ export default defineConfig({
     react(),
     electron({
       main: {
-        entry: "electron/main/index.ts",
+        entry: 'electron/main/index.ts',
         vite: {
           build: {
             sourcemap: false,
-            outDir: "dist/electron/main",
+            outDir: 'dist/electron/main',
           },
         },
       },
       preload: {
         input: {
           // You can configure multiple preload scripts here
-          index: join(__dirname, "electron/preload/index.ts"),
+          index: join(__dirname, 'electron/preload/index.ts'),
         },
         vite: {
           build: {
             // For debug
-            sourcemap: "inline",
-            outDir: "dist/electron/preload",
+            sourcemap: 'inline',
+            outDir: 'dist/electron/preload',
           },
         },
       },
@@ -60,7 +61,7 @@ export default defineConfig({
 
     Unocss({
       presets: [
-        presetUno({ dark: "class" }),
+        presetUno({ dark: 'class' }),
         presetAttributify(),
         presetIcons({
           /* options */
