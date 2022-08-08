@@ -6,7 +6,7 @@ interface PropsType{
   clear:()=>void
 }
 
-export default function tableFooter({
+export default function TableFooter({
   selectedRowKeys,
   clear,
 }:PropsType):ReactElement {

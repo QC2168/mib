@@ -46,7 +46,6 @@ export const execAdb = (code: string) => {
     return res;
   } catch (error) {
     console.log(error);
-    openNotification('error', `${code} 执行失败`);
     return '';
   }
 };
