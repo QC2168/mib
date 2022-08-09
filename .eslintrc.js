@@ -57,6 +57,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'off',
     'no-unused-vars': 'off',
     'import/no-extraneous-dependencies': 'off',
+    'max-len': 'off',
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': ['error'],
     'import/extensions': [
