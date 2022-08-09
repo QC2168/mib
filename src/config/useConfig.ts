@@ -3,9 +3,8 @@ import { platform, env } from 'process';
 import path from 'path';
 import { useEffect } from 'react';
 import { SetState } from 'ahooks/lib/useSetState';
+import { readJsonSync, pathExistsSync, outputJsonSync } from 'fs-extra';
 import { ConfigType } from './types';
-
-const { readJsonSync, pathExistsSync, outputJsonSync } = require('fs-extra');
 
 export const home = platform === 'win32' ? env.USERPROFILE : env.HOME;
 

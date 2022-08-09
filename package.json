@@ -71,6 +71,7 @@
     "unocss-preset-scrollbar": "^0.2.1",
     "vite": "^2.9.10",
     "vite-plugin-electron": "^0.6.2",
+    "vite-plugin-esmodule": "^1.4.2",
     "winston": "^3.8.1"
   },
   "env": {

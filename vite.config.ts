@@ -9,6 +9,7 @@ import presetIcons from '@unocss/preset-icons';
 import presetAttributify from '@unocss/preset-attributify';
 import transformerDirective from '@unocss/transformer-directives';
 import { presetScrollbar } from 'unocss-preset-scrollbar';
+import esmodule from 'vite-plugin-esmodule'
 import pkg from './package.json';
 
 rmSync(join(__dirname, 'dist'), { recursive: true, force: true }); // v14.14.0
@@ -72,6 +73,7 @@ export default defineConfig({
       ],
       transformers: [transformerDirective()],
     }),
+    esmodule(['fs-extra']),
   ],
   server: {
     host: pkg.env.VITE_DEV_SERVER_HOST,

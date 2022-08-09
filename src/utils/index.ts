@@ -6,13 +6,12 @@ import path from 'path';
 import { execSync } from 'child_process';
 import { DriverType, FileNodeType } from '@/types';
 import { getConfig } from '@/config/useConfig';
-
-const {
+import {
   statSync,
   pathExistsSync,
   ensureDirSync,
   readdirSync,
-} = require('fs-extra');
+} from 'fs-extra';
 
 type levelType = 'info' | 'error' | 'warn';
 // 记录输出
