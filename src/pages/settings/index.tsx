@@ -1,5 +1,5 @@
 import {
-  Button, Card, List, Radio, RadioChangeEvent, Space, Tag,
+  Button, Card, Empty, List, Radio, RadioChangeEvent, Space, Tag,
 } from 'antd';
 import { useState } from 'react';
 import { PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -90,13 +90,14 @@ export default function Settings() {
           size="small"
           header={config.ignoreFileList ? ignoreHeaderFn(config.ignoreFileList.length) : undefined}
           bordered
+          locale={{ emptyText: <Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
           dataSource={config.ignoreFileList ?? []}
           renderItem={(item) => <List.Item>{item}</List.Item>}
         />
       </div>
       <div className={styles.settingItem}>
         <div className="text-md font-bold mb-3">备份选项</div>
-        <Table columns={backupNodeColumns} dataSource={config.backups} />
+        <Table columns={backupNodeColumns} locale={{ emptyText: <Empty description="暂无节点数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }} dataSource={config.backups} />
       </div>
 
     </Card>

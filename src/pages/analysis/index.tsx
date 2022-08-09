@@ -1,13 +1,12 @@
 import {
-  Button, Card, Modal, Select, Space,
+  Button, Card, Empty, Modal, Select, Space,
 } from 'antd';
 import {
   useEffect, Key,
   useState,
 } from 'react';
 import Table, { ColumnsType } from 'antd/lib/table';
-import { openNotification
-} from '@/utils';
+import { openNotification } from '@/utils';
 import {
   DriverType, FileNodeType, BackItemType,
 } from '@/types';
@@ -107,7 +106,7 @@ export default function Analysis() {
       <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
         <Card>
           {/* 节点 */}
-          <Table rowSelection={rowSelection} scroll={{ x: '100%', scrollToFirstRowOnChange: true, y: '300px' }} pagination={false} rowKey="comment" columns={backupNodeColumns} dataSource={config.backups} />
+          <Table rowSelection={rowSelection} locale={{ emptyText: <Empty description="暂无节点数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }} scroll={{ x: '100%', scrollToFirstRowOnChange: true, y: '300px' }} pagination={false} rowKey="comment" columns={backupNodeColumns} dataSource={config.backups} />
         </Card>
         <Card>
           <Space size="middle">

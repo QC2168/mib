@@ -297,63 +297,63 @@ export default function FileManage() {
         </div>
 
       </div>
-      <ConfigProvider renderEmpty={() => <FileListEmpty turnBack={() => turnBack()} />}>
-        <Table
-          columns={columns}
-          onRow={({ fileName, isDirectory }, rowIndex) => ({
-            onClick: (e) => {
-              console.log('fileName', fileName);
-              console.log('isDirectory', isDirectory);
-            },
-            onDoubleClick: (event) => {
-              console.log(fileName);
+      <Table
+        columns={columns}
+        onRow={({ fileName, isDirectory }, rowIndex) => ({
+          onClick: (e) => {
+            console.log('fileName', fileName);
+            console.log('isDirectory', isDirectory);
+          },
+          onDoubleClick: (event) => {
+            console.log(fileName);
 
-              if (isDirectory) {
-                setLoading(true);
-                if (curDriType === DriverType.LOCAL) {
-                  setLocalPathCollection((paths) => [...paths, fileName]);
-                }
-                if (curDriType === DriverType.MOBILE) {
-                  setMobilePathCollection((paths) => [...paths, fileName]);
-                }
-              } else {
-                // 打开文件
-                console.log((localPathCollection.join('/') + fileName));
-                // 处理开头 // 盘符为 /
-                const filePath = [localPathCollection[0].slice(0, -1), ...localPathCollection.slice(1), fileName].join('/');
-
-                exec(`start ${filePath}`, (error, stdout, stderr) => {
-                  if (error) {
-                    openNotification('error', error.message);
-                    console.log(`error: ${error.message}`);
-                    return;
-                  }
-                  if (stderr) {
-                    openNotification('error', stderr);
-                  }
-                });
+            if (isDirectory) {
+              setLoading(true);
+              if (curDriType === DriverType.LOCAL) {
+                setLocalPathCollection((paths) => [...paths, fileName]);
               }
-            },
-            onMouseDown: (event) => {
-              if (event.button === 2) {
-                // 触发右击
-                console.log(event);
-                const { pageX, pageY } = event.nativeEvent;
-                setControlPanelStyle({
-                  left: pageX - 98,
-                  top: pageY - 80,
-                  visibility: 'visible',
-                });
+              if (curDriType === DriverType.MOBILE) {
+                setMobilePathCollection((paths) => [...paths, fileName]);
               }
-            },
-          })}
-          rowKey="fileName"
-          loading={loading}
-          scroll={{ x: '100%', scrollToFirstRowOnChange: true, y: '380px' }}
-          dataSource={curDriType === DriverType.LOCAL ? localFileNodeList : mobileFileNodeList}
-        />
+            } else {
+              // 打开文件
+              console.log((localPathCollection.join('/') + fileName));
+              // 处理开头 // 盘符为 /
+              const filePath = [localPathCollection[0].slice(0, -1), ...localPathCollection.slice(1), fileName].join('/');
 
-      </ConfigProvider>
+              exec(`start ${filePath}`, (error, stdout, stderr) => {
+                if (error) {
+                  openNotification('error', error.message);
+                  console.log(`error: ${error.message}`);
+                  return;
+                }
+                if (stderr) {
+                  openNotification('error', stderr);
+                }
+              });
+            }
+          },
+          onMouseDown: (event) => {
+            if (event.button === 2) {
+              // 触发右击
+              console.log(event);
+              const { pageX, pageY } = event.nativeEvent;
+              setControlPanelStyle({
+                left: pageX - 98,
+                top: pageY - 80,
+                visibility: 'visible',
+              });
+            }
+          },
+        })}
+        rowKey="fileName"
+        loading={loading}
+        locale={{
+          emptyText: <Empty description="此文件夹为空" image={Empty.PRESENTED_IMAGE_SIMPLE} />,
+        }}
+        scroll={{ x: '100%', scrollToFirstRowOnChange: true, y: '380px' }}
+        dataSource={curDriType === DriverType.LOCAL ? localFileNodeList : mobileFileNodeList}
+      />
 
     </Card>
 
