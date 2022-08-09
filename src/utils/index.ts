@@ -4,7 +4,7 @@ import { notification } from 'antd';
 // import winston, { format } from "winston";
 import path from 'path';
 import { execSync } from 'child_process';
-import { DriverType, FileNodeType, devicesType } from '@/types';
+import { DriverType, FileNodeType } from '@/types';
 import { getConfig } from '@/config/useConfig';
 
 const {
@@ -36,11 +36,12 @@ export function openNotification(
 }
 
 // 执行adb shell命令
-const currentDeviceName: string = '';
-export const execAdb = (code: string) => {
+export const execAdb = (code: string, d?:string) => {
   const command = `adb ${
-    currentDeviceName ? `-s ${currentDeviceName}` : ''
+    d ? `-s ${d}` : ''
   } ${code}`;
+  console.log('command', command);
+  console.log('d', d);
   try {
     const res = execSync(command).toString();
     return res;
@@ -187,18 +188,6 @@ export const isPath = (dirPath: string): void => {
     ensureDirSync(dirPath);
     log(`已自动创建导出路径-${dirPath}`, 'warn');
   }
-};
-
-// 获取设备
-export const devices = (): devicesType[] => {
-  const res = execSync('adb devices').toString();
-  const arr = res
-    .split(/\n/)
-    .map((line) => line.split('\t'))
-    .filter((line) => line.length > 1)
-    .map((device) => ({ name: device[0].trim(), status: device[1].trim() }));
-
-  return arr;
 };
 
 // 指定设备

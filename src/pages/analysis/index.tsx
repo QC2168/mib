@@ -1,30 +1,38 @@
 import {
-  Button, Card, Modal, Space,
+  Button, Card, Modal, Select, Space,
 } from 'antd';
 import {
   useEffect, Key,
   useState,
 } from 'react';
 import Table, { ColumnsType } from 'antd/lib/table';
-import {
-  diff, execAdb, getFileNodeList, isPath, openNotification, pathRepair,
+import { openNotification
 } from '@/utils';
 import {
   DriverType, FileNodeType, BackItemType,
 } from '@/types';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import useConfig from '@/config/useConfig';
+import { useMount } from 'ahooks';
 import TableFooter from './TableFooter';
+import useDevices, { DeviceStatus } from './hooks/useDevices';
 
+const { Option } = Select;
 const { confirm } = Modal;
 
 export default function Analysis() {
   const [config, setConfig] = useConfig();
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
+  const [devices, setDevices] = useDevices();
   const onSelectChange = (newSelectedRowKeys: Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
-
+  useMount(() => {
+    console.log(devices);
+  });
+  const handleDevice = (name:string) => {
+    setDevices({ current: { name, status: DeviceStatus.DEVICE } });
+  };
   const worker = new Worker(new URL('./worker/backup.ts', import.meta.url), {
     type: 'module',
   });
@@ -78,75 +86,16 @@ export default function Analysis() {
 
   const hasSelected = selectedRowKeys.length > 0;
 
-  // 备份到电脑上
-  function backup(backupNodes:string[]|Key[]) {
-    const c = config;
-    // setInBackup(true);
-    // 判断是否有选择的节点
-    // 备份选择的节点
-    // 获取节点完整信息
-    // eslint-disable-next-line max-len
-    const curBackupNode:BackItemType[] = c.backups.filter((item:BackItemType) => backupNodes.includes(item.comment));
-    const outputRootDir = c.output;
-    // 判断根路径
-    isPath(outputRootDir);
-    curBackupNode.forEach(async (item) => {
-      // 依次读取对比
-      // 获取指定目录下的文件、文件夹列表
-      const waitBackupFileList: FileNodeType[] = [];
-      const dirPath = item.path;
-      const dirList:string[] = execAdb(`shell ls -l ${dirPath}`).toString().split('\r\n').filter((i:string) => i !== '');
-      // 去掉total
-      dirList.shift();
-      dirList.forEach((i) => {
-        const splitItem: string[] = i.split(/\s+/);
-        const fileName = splitItem.slice(7).join(' ');
-        const fileNode: FileNodeType = {
-          fileName,
-          fileSize: Number(splitItem[4]) ?? 0,
-          filePath: pathRepair(dirPath) + fileName,
-          isDirectory: splitItem[0].startsWith('d'),
-          fileMTime: splitItem.slice(5, 7).join(' '),
-        };
-        waitBackupFileList.push(fileNode);
-      });
-      // 判断导出路径是否存在
-      const folderName = item.path.split('/').filter((i: string) => i !== '').at(-1);
-      // 判断节点内是否有备份目录  // 拼接导出路径
-      const itemRootPath = pathRepair(pathRepair(c.output) + folderName);
-      const outputDir = item.output
-        ? item.output && pathRepair(item.output)
-        : itemRootPath;
-      isPath(outputDir);
-      // 获取当前目录下的文件
-      // 获取当前存储空间
-      const localFileNodeList = getFileNodeList(outputDir, DriverType.LOCAL);
-      // 对比文件
-      const diffList: FileNodeType[] = diff(localFileNodeList, waitBackupFileList);
-      console.log(localFileNodeList);
-      console.log(waitBackupFileList);
-      console.log('diffList', diffList);
-      // 备份
-      // const res = await backupWorker(diffList, outputDir);
-      const postItem = {
-        task: 'move',
-        nodeName: item.comment,
-        diffList,
-        outputDir,
-      };
-      worker.postMessage(postItem);
-    });
-  }
   async function backupTip() {
     confirm({
       title: '',
       icon: <ExclamationCircleOutlined />,
       content: '备份可能需要一小段时间，确定么？',
       onOk() {
-        backup(selectedRowKeys);
         const postItem = {
           task: 'backup',
           backupNodes: selectedRowKeys,
+          devices: devices.current!.name,
         };
         worker.postMessage(postItem);
       },
@@ -164,6 +113,11 @@ export default function Analysis() {
           <Space size="middle">
             <Button loading={false} onClick={() => backupTip()} type="primary">极速备份数据</Button>
             <Button>取消</Button>
+            <Select defaultValue={devices.current ? devices.current.name : '未检测到设备'} style={{ width: 160 }} onChange={handleDevice}>
+              {
+              devices.devicesList.map((item) => <Option key={item.name} value={item.name}>{item.name}</Option>)
+             }
+            </Select>
           </Space>
         </Card>
       </Space>

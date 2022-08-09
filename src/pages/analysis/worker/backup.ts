@@ -7,7 +7,7 @@ import { BackItemType, DriverType, FileNodeType } from '@/types';
 import { execSync } from 'child_process';
 import { getConfig } from '@/config/useConfig';
 
-function move(backupQueue: FileNodeType[], outputDir: string): void {
+function move(backupQueue: FileNodeType[], outputDir: string, devices:string): void {
   if (backupQueue.length === 0) {
     console.log('无需备份');
     return;
@@ -15,9 +15,7 @@ function move(backupQueue: FileNodeType[], outputDir: string): void {
   backupQueue.forEach((fileN) => {
     console.log(`正在备份${fileN.fileName}`);
     try {
-      const out: string = execAdb(
-        `pull "${fileN.filePath}" "${outputDir + fileN.fileName}"`,
-      );
+      const out: string = execAdb(`pull "${fileN.filePath}" "${outputDir + fileN.fileName}"`, devices);
       const speed: string | null = out.match(speedReg) !== null ? out.match(speedReg)![0] : '读取速度失败';
       console.log(`平均传输速度${speed}`);
     } catch (e: any) {
@@ -26,7 +24,7 @@ function move(backupQueue: FileNodeType[], outputDir: string): void {
   });
 }
 // 备份到电脑上
-function backup(backupNodes:string[]|Key[]) {
+function backup(backupNodes:string[]|Key[], devices:string) {
   const c = getConfig();
   // setInBackup(true);
   // 判断是否有选择的节点
@@ -42,7 +40,7 @@ function backup(backupNodes:string[]|Key[]) {
     // 获取指定目录下的文件、文件夹列表
     const waitBackupFileList: FileNodeType[] = [];
     const dirPath = item.path;
-    const dirList:string[] = execAdb(`shell ls -l ${dirPath}`).toString().split('\r\n').filter((i:string) => i !== '');
+    const dirList:string[] = execAdb(`shell ls -l ${dirPath}`, devices).toString().split('\r\n').filter((i:string) => i !== '');
     // 去掉total
     dirList.shift();
     dirList.forEach((i) => {
@@ -73,7 +71,7 @@ function backup(backupNodes:string[]|Key[]) {
     console.log(localFileNodeList);
     console.log(waitBackupFileList);
     console.log('diffList', diffList);
-    move(diffList, outputDir);
+    move(diffList, outputDir, devices);
     postMessage({ message: `${item.comment}备份完成` });
   });
 }
@@ -82,10 +80,9 @@ onmessage = (e) => {
   const {
     task,
     backupNodes,
+    devices,
   } = e.data;
   if (task === 'backup') {
-    backup(
-      backupNodes,
-    );
+    backup(backupNodes, devices);
   }
 };
