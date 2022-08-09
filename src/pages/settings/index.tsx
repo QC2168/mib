@@ -7,38 +7,37 @@ import { useMount } from 'ahooks';
 import Table, { ColumnsType } from 'antd/lib/table';
 import { useNavigate } from 'react-router-dom';
 
-import ignoreFileList from '@/utils/ignoreFileList';
-import { getConfig } from '@/config';
 import { BackItemType } from '@/types';
 import { loadTheme, ThemeType } from '@/lib/css/theme';
+import useConfig from '@/config/useConfig';
 import styles from './index.module.less';
 
-const ignoreHeaderFn = () => (
+const ignoreHeaderFn = (size:number) => (
+
   <div className="flex">
     <Button className="mr-3" type="primary" icon={<PlusCircleOutlined />} size="small">新增</Button>
     <Button className="mr-3" type="primary" danger icon={<DeleteOutlined />} size="small">清空</Button>
     <div>
       当前忽略文件个数：
-      {ignoreFileList.length}
+      {size}
     </div>
   </div>
 );
 export default function Settings() {
   const navigate = useNavigate();
   const [theme, setTheme] = useState<ThemeType>(localStorage.getItem('theme') as ThemeType ?? ThemeType.LIGHT);
-
-  const [config, setConfig] = useState({
-    color: 'auto',
-    backupNode: getConfig(),
-  });
-
+  const [config, setConfig] = useConfig();
   const handleColor = (event: RadioChangeEvent) => {
     const targetTheme = event.target.value;
     loadTheme(targetTheme);
     navigate(0);
     setTheme(targetTheme);
   };
-
+  const deleteBackupItem = (item:BackItemType) => {
+    setConfig({
+      backups: config.backups.filter((i) => i.path !== item.path),
+    });
+  };
   const backupNodeColumns: ColumnsType<BackItemType> = [
     {
       title: '备份路径',
@@ -70,7 +69,7 @@ export default function Settings() {
       dataIndex: 'actions',
       key: 'actions',
       align: 'center',
-      render: (_: any, record: BackItemType) => <Button type="link">Delete</Button>
+      render: (_: any, item: BackItemType) => <Button onClick={() => deleteBackupItem(item)} type="link">Delete</Button>
       ,
     },
   ];
@@ -89,16 +88,15 @@ export default function Settings() {
         <div className="text-md font-bold mb-3">忽略扫描文件</div>
         <List
           size="small"
-          header={ignoreHeaderFn()}
-          footer={<div />}
+          header={config.ignoreFileList ? ignoreHeaderFn(config.ignoreFileList.length) : undefined}
           bordered
-          dataSource={ignoreFileList}
+          dataSource={config.ignoreFileList ?? []}
           renderItem={(item) => <List.Item>{item}</List.Item>}
         />
       </div>
       <div className={styles.settingItem}>
         <div className="text-md font-bold mb-3">备份选项</div>
-        <Table columns={backupNodeColumns} dataSource={config.backupNode.backups} />
+        <Table columns={backupNodeColumns} dataSource={config.backups} />
       </div>
 
     </Card>

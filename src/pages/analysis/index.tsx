@@ -9,16 +9,17 @@ import Table, { ColumnsType } from 'antd/lib/table';
 import {
   diff, execAdb, getFileNodeList, isPath, openNotification, pathRepair,
 } from '@/utils';
-import { getConfig } from '@/config';
 import {
   DriverType, FileNodeType, BackItemType,
 } from '@/types';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import useConfig from '@/config/useConfig';
 import TableFooter from './TableFooter';
 
 const { confirm } = Modal;
-const config = getConfig();
+
 export default function Analysis() {
+  const [config, setConfig] = useConfig();
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const onSelectChange = (newSelectedRowKeys: Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -27,7 +28,8 @@ export default function Analysis() {
   const worker = new Worker(new URL('./worker/backup.ts', import.meta.url), {
     type: 'module',
   });
-  worker.onmessage = function (e) {
+
+  worker.onmessage = (e) => {
     const { message } = e.data;
     openNotification('worker', message);
   };
@@ -44,7 +46,9 @@ export default function Analysis() {
     console.log(item);
   };
   const deleteNode = (item: BackItemType) => {
-    console.log(item);
+    setConfig({
+      backups: config.backups.filter((i) => i.path !== item.path),
+    });
   };
   const backupNodeColumns: ColumnsType<BackItemType> = [
     {
@@ -76,7 +80,7 @@ export default function Analysis() {
 
   // 备份到电脑上
   function backup(backupNodes:string[]|Key[]) {
-    const c = getConfig();
+    const c = config;
     // setInBackup(true);
     // 判断是否有选择的节点
     // 备份选择的节点

@@ -5,7 +5,7 @@ import { notification } from 'antd';
 import path from 'path';
 import { execSync } from 'child_process';
 import { DriverType, FileNodeType, devicesType } from '@/types';
-import ignoreFileList from './ignoreFileList';
+import { getConfig } from '@/config/useConfig';
 
 const {
   statSync,
@@ -100,10 +100,12 @@ export function getFileNodeList(
   mode: DriverType,
 ): FileNodeType[] {
   const fileNodeList: FileNodeType[] = [];
+  const config = getConfig();
+  const ignoreList = config.ignoreFileList ?? [];
   if (mode === DriverType.LOCAL) {
     const fileList = readdirSync(targetPath);
     for (const item of fileList) {
-      if (ignoreFileList.includes(item)) {
+      if (ignoreList.includes(item)) {
         // 在忽略名单中，跳过
         continue;
       }

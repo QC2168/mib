@@ -9,4 +9,5 @@ export interface BackItemType {
 export interface ConfigType {
   backups: BackItemType[];
   output: string;
+  ignoreFileList?:string[]
 }

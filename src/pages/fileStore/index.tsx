@@ -14,12 +14,12 @@ import {
 } from 'antd';
 import classnames from 'classnames';
 import { exec } from 'child_process';
-import ignoreFileList from '@/utils/ignoreFileList';
 import {
   createFileNode, execAdb, openNotification, readablizeBytes,
 } from '@/utils';
 import { DriverType, FileNodeType } from '@/types';
 import Control, { ControlOptionType } from '@/components/control';
+import useConfig from '@/config/useConfig';
 import styles from './index.module.less';
 
 const { pathExistsSync, readdirSync } = require('fs-extra');
@@ -57,6 +57,7 @@ function FileListEmpty({ turnBack }: FileListEmptyProps) {
   );
 }
 export default function FileManage() {
+  const [config] = useConfig();
   // 本地文件列表
   const [localFileNodeList, setLocalFileNodeList] = useState<FileNodeType[]>([]);
   // 移动设备文件列表
@@ -64,9 +65,9 @@ export default function FileManage() {
   // loading
   const [loading, setLoading] = useState(true);
   // 当前文件路径
-  const [localPathCollection, setLocalPathCollection] = useState(['d:/']);
+  const [localPathCollection, setLocalPathCollection] = useState([config.output]);
   // 当前路径
-  const [MobilePathCollection, setMobilePathCollection] = useState(['sdcard/', 'DCIM', 'Camera']);
+  const [MobilePathCollection, setMobilePathCollection] = useState(['sdcard/']);
   // 搜索框
   const [searchVal, setSearchVal] = useState<string>('');
 
@@ -147,6 +148,7 @@ export default function FileManage() {
   }
 
   // 读取本地目录
+
   function readDir(target: string) {
     // 清空原列表
     setLocalFileNodeList([]);
@@ -160,7 +162,8 @@ export default function FileManage() {
     // 读取文件名称
     const fileList: string[] = readdirSync(target);
     // 过滤不必要的文件名
-    const filterFileList = fileList.filter((name) => !ignoreFileList.includes(name));
+    const ignoreList = config.ignoreFileList ?? [];
+    const filterFileList = fileList.filter((name) => !ignoreList.includes(name));
     const nodeList = filterFileList.map((name) => createFileNode(path.join(target, name)));
     setLocalFileNodeList(nodeList);
     setLoading(false);

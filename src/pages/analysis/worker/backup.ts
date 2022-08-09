@@ -5,7 +5,7 @@ import {
 import { Key, useState } from 'react';
 import { BackItemType, DriverType, FileNodeType } from '@/types';
 import { execSync } from 'child_process';
-import { getConfig } from '@/config';
+import { getConfig } from '@/config/useConfig';
 
 function move(backupQueue: FileNodeType[], outputDir: string): void {
   if (backupQueue.length === 0) {
