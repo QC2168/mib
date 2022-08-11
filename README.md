@@ -1,89 +1,68 @@
-# electron-vite-react
+# MIB
+一款基于`electron`+`react`+`typescript`的开发的备份工具(GUI)，根据你的配置自动将移动设备上的数据文件迁移备份至电脑上，支持增量备份。
 
-[![awesome-vite](https://awesome.re/mentioned-badge.svg)](https://github.com/vitejs/awesome-vite)
-![GitHub stars](https://img.shields.io/github/stars/caoxiemeihao/vite-react-electron?color=fa6470&style=flat)
-![GitHub issues](https://img.shields.io/github/issues/caoxiemeihao/vite-react-electron?color=d8b22d&style=flat)
-![GitHub license](https://img.shields.io/github/license/caoxiemeihao/vite-react-electron?style=flat)
-[![Required Node.JS >= v14.17.0](https://img.shields.io/static/v1?label=node&message=%3E=14.17.0&logo=node.js&color=3f893e&style=flat)](https://nodejs.org/about/releases)
+![mib-preview](https://github.com/QC2168/mib/blob/client/public/mib.png)
 
-English | [简体中文](README.zh-CN.md)
+## 🌈 功能
+- [x] USB连接备份数据
+- [x] 无线连接备份数据
+- [x] 增量备份
+- [x] 多设备备份选择
+- [ ] 单节点全量备份
+- [ ] 单节点选择备份
+- [x] 主题切换
 
-## Overview
+## 🚀 如何开启adb模式
+[在设备上启用 adb 调试](https://developer.android.com/studio/command-line/adb?hl=zh-cn#Enabling)
 
-📦 Out of the box  
-🎯 Based on the official [react-ts](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) template, less invasive  
-🌱 Simple directory structure，real flexible  
-💪 Support Use Electron、Node.js API and in Electron-Renderer  
-🔩 Support C/C++ native addons  
-🖥 It's easy to implement multiple windows  
+## 🌊 如何使用无线连接
 
-## Quick start
+[通过 Wi-Fi 连接到设备（Android 10 及更低版本）](https://developer.android.com/studio/command-line/adb?hl=zh-cn#wireless)
 
-```sh
-npm create electron-vite
-```
+[通过 Wi-Fi 连接到设备（Android 11 及更高版本）](https://developer.android.com/studio/command-line/adb?hl=zh-cn#connect-to-a-device-over-wi-fi-android-11+)
 
-![electron-vite-react.gif](https://github.com/electron-vite/electron-vite-react/blob/main/public/electron-vite-react.gif?raw=true)
 
-## Debug
+## 📁 MIB 配置文件 .mibrc
 
-![electron-vite-react-debug.gif](https://github.com/electron-vite/electron-vite-react/blob/main/public/electron-vite-react-debug.gif?raw=true)
+> 默认配置文件存放在用户目录下
 
-## Directory structure
-
-*🚨 By default, the files in `electron` folder will be built into the `dist/electron`*
-
-```tree
-├── electron                  Electron-related code
-│   ├── main                  Main-process source code
-│   ├── preload               Preload-script source code
-│   └── resources             Resources for the production build
-│       ├── icon.icns             Icon for the application on macOS
-│       ├── icon.ico              Icon for the application
-│       ├── installerIcon.ico     Icon for the application installer
-│       └── uninstallerIcon.ico   Icon for the application uninstaller
-│
-├── release                   Generated after production build, contains executables
-│   └──{version}
-│       ├── {os}-unpacked     Contains unpacked application executable
-│       └── Setup.{ext}       Installer for the application
-│
-├── public                    Static assets
-└── src                       Renderer source code, your React application
-```
-
-## 🚨 `dependencies` vs `devDependencies`
-
-**Put Node.js packages in `dependencies`**
-
-**e.g.** `electron-store` `sqlite3` `serilaport` `mongodb` ...others
-
-**Put Web packages in `devDependencies`**
-
-**e.g.** `react` `react-dom` `react-router` `mobx` `zustand` `antd` `axios` ...others
-
-See more 👉 [dependencies vs devDependencies](https://github.com/electron-vite/vite-plugin-electron-renderer#dependencies-vs-devdependencies)
-
-## 🚨 ESM packages
-
-**e.g.** `node-fetch` `execa` `got` ...others
-
-1. `npm i vite-plugin-esmodule -D`
-2. Configure in vite.config.ts
-
-```ts
-import esmodule from 'vite-plugin-esmodule'
-export default {
-  plugins: [
-    esmodule(['got', 'execa', 'node-fetch']),
-  ],
+``` JSON
+{
+    "backups": [
+        {
+            "path": "/sdcard/DCIM/Camera/",
+            "comment": "本地相册"
+        },
+        {
+            "path": "/sdcard/DCIM/Screenshots/",
+            "comment": "屏幕截屏"
+        },
+        {
+            "path": "/sdcard/MIUI/sound_recorder/",
+            "comment": "录音"
+        },
+        {
+            "path": "/sdcard/MIUI/sound_recorder/app_rec/",
+            "comment": "应用录音"
+        },
+        {
+            "path": "/sdcard/MIUI/sound_recorder/call_rec/",
+            "comment": "通话录音"
+        }
+        // 添加更多的备份节点
+    ],
+  // 推荐使用绝对路径
+  "output": "E:/files",
+  // 读取扫描忽略文件、文件夹名称
+  "ignoreFileList": []
 }
 ```
 
-<!--
-- First, you need to know if your dependencies are needed after the application is packaged.
+### 🧱 节点选项
 
-- Like [serialport](https://www.npmjs.com/package/serialport), [sqlite3](https://www.npmjs.com/package/sqlite3) they are node-native modules and should be placed in `dependencies`. In addition, Vite will not build them, but treat them as external modules.
-
-- Dependencies like [Vue](https://www.npmjs.com/package/vue) and [React](https://www.npmjs.com/package/react), which are pure javascript modules that can be built with Vite, can be placed in `devDependencies`. This reduces the size of the application.
--->
+| 属性    | 类型    | 描述                 | 是否必选 |
+| ------- | ------- | -------------------- | -------- |
+| path    | String  | 设备备份路径         | 是       |
+| comment | String  | 节点说明             | 是       |
+| full    | Boolean | 当前节点全量备份     | 否       |
+| output  | Boolean | 指定当前节点导出路径 | 否       |
