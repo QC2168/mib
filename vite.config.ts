@@ -67,9 +67,6 @@ export default defineConfig({
         presetIcons({
           /* options */
         }),
-        presetScrollbar({
-          // config
-        }),
       ],
       transformers: [transformerDirective()],
     }),

@@ -3,9 +3,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from './App';
-import 'antd/dist/antd.less';
-import 'styles/index.css';
 import 'uno.css';
+import '@/lib/css/index.less';
+
 import { loadTheme } from './lib/css/theme';
 
 await loadTheme();
