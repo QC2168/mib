@@ -15,6 +15,7 @@ import classNames from 'classnames';
 import Analysis from '@/pages/analysis';
 import Settings from '@/pages/settings';
 import FileManage from '@/pages/fileStore';
+import { loadTheme, ThemeType } from '@/lib/css/theme';
 import styles from './App.module.less';
 
 const {
@@ -57,6 +58,14 @@ function App() {
   const maximizeApp = () => {
     ipcRenderer.invoke('maximize-win');
   };
+  const changeTheme = () => {
+    if (Array.from(document.documentElement.classList).includes('dark')) {
+      loadTheme(ThemeType.LIGHT);
+      navigate(0);
+    } else {
+      loadTheme(ThemeType.DARK);
+    }
+  };
   return (
     <Layout>
       <Header style={{ height: 45 }} className={classNames('flex justify-between items-center text-white', styles['ant-layout-header'])}>
@@ -65,7 +74,7 @@ function App() {
         </div>
         <div>
           <Space size="middle" className="text-md">
-            <button className="opBtn dark:text-white i-carbon-sun dark:i-carbon-moon" />
+            <button className="opBtn dark:text-white i-carbon-sun dark:i-carbon-moon" onClick={() => changeTheme()} />
             <button className="opBtn dark:text-white i-codicon:chrome-minimize" onClick={() => minimizeApp()} />
             <button className="opBtn dark:text-white i-fluent:full-screen-maximize-20-filled" onClick={() => maximizeApp()} />
             <button className="opBtn dark:text-white i-eva:close-fill" onClick={() => closeApp()} />

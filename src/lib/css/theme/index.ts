@@ -10,11 +10,11 @@ export async function loadTheme(type:ThemeType = theme ?? ThemeType.LIGHT) {
   if (type === ThemeType.LIGHT) {
     import('./light/index.less');
     localStorage.setItem('theme', ThemeType.LIGHT);
-    document.documentElement.classList.add(ThemeType.LIGHT);
+    document.documentElement.setAttribute('class', ThemeType.LIGHT);
   }
   if (type === ThemeType.DARK) {
     import('./dark/index.less');
     localStorage.setItem('theme', ThemeType.DARK);
-    document.documentElement.classList.add(ThemeType.DARK);
+    document.documentElement.setAttribute('class', ThemeType.DARK);
   }
 }

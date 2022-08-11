@@ -24,15 +24,7 @@ const ignoreHeaderFn = (size:number) => (
   </div>
 );
 export default function Settings() {
-  const navigate = useNavigate();
-  const [theme, setTheme] = useState<ThemeType>(localStorage.getItem('theme') as ThemeType ?? ThemeType.LIGHT);
   const [config, setConfig] = useConfig();
-  const handleColor = (event: RadioChangeEvent) => {
-    const targetTheme = event.target.value;
-    loadTheme(targetTheme);
-    navigate(0);
-    setTheme(targetTheme);
-  };
   const deleteBackupItem = (item:BackItemType) => {
     setConfig({
       backups: config.backups.filter((i) => i.path !== item.path),
@@ -75,15 +67,6 @@ export default function Settings() {
   ];
   return (
     <Card>
-      <div className={styles.settingItem}>
-        <div className="text-md font-bold mb-3">主题</div>
-        <Radio.Group onChange={(event) => handleColor(event)} value={theme}>
-          <Space direction="horizontal">
-            <Radio value={ThemeType.LIGHT}>浅色</Radio>
-            <Radio value={ThemeType.DARK}>深色</Radio>
-          </Space>
-        </Radio.Group>
-      </div>
       <div className={styles.settingItem}>
         <div className="text-md font-bold mb-3">忽略扫描文件</div>
         <List
