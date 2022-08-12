@@ -1,5 +1,5 @@
 import { useSetState } from 'ahooks';
-import { platform, env } from 'process';
+import { platform, env } from 'node:process';
 import path from 'path';
 import { useEffect } from 'react';
 import { SetState } from 'ahooks/lib/useSetState';
