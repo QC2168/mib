@@ -78,6 +78,10 @@
     "VITE_DEV_SERVER_PORT": 7777
   },
   "dependencies": {
-    "@shopify/react-web-worker": "^5.0.2"
+    "@shopify/react-web-worker": "^5.0.2",
+    "@types/lodash-es": "^4.17.6",
+    "@types/usb": "^2.0.5",
+    "lodash-es": "^4.17.21",
+    "usb": "^2.5.0"
   }
 }

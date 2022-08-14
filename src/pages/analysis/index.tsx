@@ -126,7 +126,7 @@ export default function Analysis() {
           <Space size="middle">
             <Button loading={false} onClick={() => backupTip()} type="primary">极速备份数据</Button>
             <Button>取消</Button>
-            <Select defaultValue={devices.current ? devices.current.name : '未检测到设备'} style={{ width: 160 }} onChange={handleDevice}>
+            <Select defaultValue="请选择设备" value={devices.current?.name ? devices.current?.name : '未连接'} style={{ width: 160 }} onChange={handleDevice}>
               {
               devices.devicesList.map((item) => <Option key={item.name} value={item.name}>{item.name}</Option>)
              }

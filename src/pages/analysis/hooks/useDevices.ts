@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useSetState, useMount } from 'ahooks';
 import { execSync } from 'child_process';
 import { SetState } from 'ahooks/lib/useSetState';
+import { usb } from 'usb';
+import { debounce } from 'lodash-es';
 
 export enum DeviceStatus{
   DEVICE='device',
@@ -40,7 +42,9 @@ const defaultDevices:DevicesStatusType = {
 export default function useDevices():[DevicesStatusType, SetState<DevicesStatusType>, ()=>boolean] {
   const [devices, setDevices] = useSetState<DevicesStatusType>(defaultDevices);
   const isConnect = () => !!devices.current?.name;
-  useMount(() => {
+
+  // 初始化
+  const init = () => {
     // 获取设备
     const devicesList = getDevices();
     let current:DevicesType|null = null;
@@ -52,6 +56,19 @@ export default function useDevices():[DevicesStatusType, SetState<DevicesStatusT
       current,
       devicesList,
     });
+  };
+
+  useMount(() => {
+    init();
+    // 注册监听事件
+    usb.on('attach', debounce((device) => {
+      console.log('attach', device);
+      init();
+    }));
+    usb.on('detach', debounce((device) => {
+      console.log('detach', device);
+      init();
+    }));
   });
   return [devices, setDevices, isConnect];
 }
