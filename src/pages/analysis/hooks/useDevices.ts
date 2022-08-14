@@ -37,8 +37,9 @@ const defaultDevices:DevicesStatusType = {
   devicesList: [],
 };
 
-export default function useDevices():[DevicesStatusType, SetState<DevicesStatusType>] {
+export default function useDevices():[DevicesStatusType, SetState<DevicesStatusType>, ()=>boolean] {
   const [devices, setDevices] = useSetState<DevicesStatusType>(defaultDevices);
+  const isConnect = () => !!devices.current?.name;
   useMount(() => {
     // 获取设备
     const devicesList = getDevices();
@@ -52,5 +53,5 @@ export default function useDevices():[DevicesStatusType, SetState<DevicesStatusT
       devicesList,
     });
   });
-  return [devices, setDevices];
+  return [devices, setDevices, isConnect];
 }

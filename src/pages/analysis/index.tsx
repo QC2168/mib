@@ -1,5 +1,5 @@
 import {
-  Button, Card, Empty, Modal, Select, Space,
+  Button, Card, Empty, message, Modal, Select, Space,
 } from 'antd';
 import {
   useEffect, Key,
@@ -22,7 +22,7 @@ const { confirm } = Modal;
 export default function Analysis() {
   const [config, setConfig] = useConfig();
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
-  const [devices, setDevices] = useDevices();
+  const [devices, setDevices, isConnect] = useDevices();
   const onSelectChange = (newSelectedRowKeys: Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
@@ -37,8 +37,8 @@ export default function Analysis() {
   });
 
   worker.onmessage = (e) => {
-    const { message } = e.data;
-    openNotification('worker', message);
+    const { message: workerMessage } = e.data;
+    openNotification('worker', workerMessage);
   };
   useEffect(() => {
     console.log('备份节点更改');
@@ -50,7 +50,17 @@ export default function Analysis() {
     onChange: onSelectChange,
   };
   const backupNode = (item: BackItemType) => {
-    console.log(item);
+    if (!isConnect()) {
+      message.warning('当前没有设备连接');
+      return;
+    }
+
+    const postItem = {
+      task: 'backup',
+      backupNodes: [item.comment],
+      devices: devices.current!.name,
+    };
+    worker.postMessage(postItem);
   };
   const deleteNode = (item: BackItemType) => {
     setConfig({
@@ -86,6 +96,10 @@ export default function Analysis() {
   const hasSelected = selectedRowKeys.length > 0;
 
   async function backupTip() {
+    if (!isConnect()) {
+      message.warning('当前没有设备连接');
+      return;
+    }
     confirm({
       title: '',
       icon: <ExclamationCircleOutlined />,
