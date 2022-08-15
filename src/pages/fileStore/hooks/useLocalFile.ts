@@ -2,9 +2,9 @@ import useConfig from '@/config/useConfig';
 import { createFileNode } from '@/utils';
 import { useMount } from 'ahooks';
 import path from 'path';
-import { pathExistsSync, readdirSync } from 'fs-extra';
+import { pathExistsSync, readdir } from 'fs-extra';
 import {
-  useState, useEffect, Dispatch, SetStateAction,
+  useState, useEffect, Dispatch, SetStateAction, useCallback,
 } from 'react';
 import { FileNodeType } from '@/types';
 
@@ -15,38 +15,36 @@ export default function useLocalFile(targetPath?:string):[string[], Dispatch<Set
   // 本地文件列表
   const [localFileNodeList, setLocalFileNodeList] = useState<FileNodeType[]>([]);
   // loading
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   // 读取本地目录
-  function readDir(target: string) {
+  const readLocalDir = useCallback((target: string) => {
+    // 当前有任务正在加载,
+    if (loading) return;
     // 清空原列表
     setLocalFileNodeList([]);
     setLoading(true);
-    console.log('trigger readDir');
+    console.log('trigger readLocalDir');
     if (!pathExistsSync(target)) {
       console.log(target);
       throw new Error('无效路径');
     }
     // 读取文件名称
-    const fileList: string[] = readdirSync(target);
+    readdir(target).then((fileList: string[]) => {
     // 过滤不必要的文件名
-    const ignoreList = config.ignoreFileList ?? [];
-    const filterFileList = fileList.filter((name) => !ignoreList.includes(name));
-    const nodeList = filterFileList.map((name) => createFileNode(path.join(target, name)));
-    setLocalFileNodeList(nodeList);
-    setLoading(false);
-  }
+      const ignoreList = config.ignoreFileList ?? [];
+      const filterFileList = fileList.filter((name) => !ignoreList.includes(name));
+      const nodeList = filterFileList.map((name) => createFileNode(path.join(target, name)));
+      setLocalFileNodeList(nodeList);
+      setLoading(false);
+    });
+  }, [config.ignoreFileList, loading]);
 
   // 更新本地文件列表
   useEffect(() => {
     console.log('trigger local path rejoin');
-    setLoading(true);
-    readDir(localPathCollection.join('/'));
+    readLocalDir(localPathCollection.join('/'));
   }, [localPathCollection]);
 
-  // 读取文件
-  useMount(() => {
-    readDir(localPathCollection.join('/'));
-  });
   return [
     localPathCollection,
     setLocalPathCollection,

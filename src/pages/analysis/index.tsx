@@ -13,8 +13,8 @@ import {
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import useConfig from '@/config/useConfig';
 import { useMount } from 'ahooks';
+import useDevices, { DeviceStatus } from '@/hooks/useDevices';
 import TableFooter from './TableFooter';
-import useDevices, { DeviceStatus } from './hooks/useDevices';
 
 const { Option } = Select;
 const { confirm } = Modal;

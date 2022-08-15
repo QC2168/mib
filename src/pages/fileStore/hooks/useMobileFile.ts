@@ -4,14 +4,18 @@ import { useMount } from 'ahooks';
 import {
   Dispatch, SetStateAction, useEffect, useState,
 } from 'react';
+import useDevices from '@/hooks/useDevices';
 
 export default function useMobileFile(targetPath:string = 'sdcard/'):[string[], Dispatch<SetStateAction<string[]>>, FileNodeType[], Dispatch<SetStateAction<FileNodeType[]>>] {
   // 当前路径
   const [mobilePathCollection, setMobilePathCollection] = useState([targetPath]);
   // 移动设备文件列表
   const [mobileFileNodeList, setMobileFileNodeList] = useState<FileNodeType[]>([]);
+  const [devices, , isConnect] = useDevices();
   // 读取移动设备目录
   function readMobileDriverDir(target: string) {
+    // 没有连接则跳过
+    if (!isConnect()) return;
     // 清空原列表
     setMobileFileNodeList([]);
     console.log('trigger readDir');
@@ -39,6 +43,7 @@ export default function useMobileFile(targetPath:string = 'sdcard/'):[string[], 
   useEffect(() => {
     console.log('trigger mobile path rejoin');
     // setLoading(true);
+
     readMobileDriverDir(mobilePathCollection.join('/'));
   }, [mobilePathCollection]);
 
