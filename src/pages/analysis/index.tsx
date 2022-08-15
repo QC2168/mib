@@ -1,5 +1,5 @@
 import {
-  Button, Card, Empty, message, Modal, Select, Space,
+  Button, Card, Empty, message, Modal, Popconfirm, Select, Space,
 } from 'antd';
 import {
   useEffect, Key,
@@ -86,8 +86,17 @@ export default function Analysis() {
       align: 'center',
       render: (_: any, record: BackItemType) => (
         <Space>
+
           <Button type="link" onClick={() => backupNode(record)}>单独备份</Button>
-          <Button type="link" onClick={() => deleteNode(record)}>删除节点</Button>
+
+          <Popconfirm
+            title="确认删除该节点?"
+            onConfirm={() => deleteNode(record)}
+            okText="是"
+            cancelText="否"
+          >
+            <Button type="link">删除节点</Button>
+          </Popconfirm>
         </Space>
       ),
     },

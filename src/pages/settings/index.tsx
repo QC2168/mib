@@ -1,5 +1,5 @@
 import {
-  Button, Card, Empty, List, Radio, RadioChangeEvent, Space, Tag,
+  Button, Card, Empty, List, Popconfirm, Radio, RadioChangeEvent, Space, Tag,
 } from 'antd';
 import { useState } from 'react';
 import { PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -61,7 +61,16 @@ export default function Settings() {
       dataIndex: 'actions',
       key: 'actions',
       align: 'center',
-      render: (_: any, item: BackItemType) => <Button onClick={() => deleteBackupItem(item)} type="link">Delete</Button>
+      render: (_: any, item: BackItemType) => (
+        <Popconfirm
+          title="确认删除该节点?"
+          onConfirm={() => deleteBackupItem(item)}
+          okText="是"
+          cancelText="否"
+        >
+          <Button type="link">Delete</Button>
+        </Popconfirm>
+      )
       ,
     },
   ];
