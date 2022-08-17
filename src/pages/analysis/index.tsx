@@ -26,9 +26,7 @@ export default function Analysis() {
   const onSelectChange = (newSelectedRowKeys: Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
-  useMount(() => {
-    console.log(devices);
-  });
+
   const handleDevice = (name:string) => {
     setDevices({ current: { name, status: DeviceStatus.DEVICE } });
   };
@@ -40,10 +38,6 @@ export default function Analysis() {
     const { message: workerMessage } = e.data;
     openNotification('worker', workerMessage);
   };
-  useEffect(() => {
-    console.log('备份节点更改');
-    console.log(selectedRowKeys);
-  }, [selectedRowKeys]);
 
   const rowSelection = {
     selectedRowKeys,

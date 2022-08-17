@@ -20,7 +20,7 @@ function move(
   devices: string,
 ): void {
   if (backupQueue.length === 0) {
-    console.log('无需备份');
+    // 无需备份
     return;
   }
   backupQueue.forEach((fileN) => {
@@ -116,9 +116,6 @@ function backup(backupNodes: string[] | Key[], devices: string) {
       localFileNodeList,
       waitBackupFileList,
     );
-    console.log(localFileNodeList);
-    console.log(waitBackupFileList);
-    console.log('diffList', diffList);
     move(diffList, outputDir, devices);
 
     postMessage({ message: `${item.comment}备份完成` });

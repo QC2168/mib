@@ -62,11 +62,9 @@ export default function useDevices():[DevicesStatusType, SetState<DevicesStatusT
     init();
     // 注册监听事件
     usb.on('attach', debounce((device) => {
-      console.log('attach', device);
       init();
     }));
     usb.on('detach', debounce((device) => {
-      console.log('detach', device);
       init();
     }));
   });

@@ -23,9 +23,7 @@ export default function useLocalFile(targetPath?:string):[string[], Dispatch<Set
     // 清空原列表
     setLocalFileNodeList([]);
     setLoading(true);
-    console.log('trigger readLocalDir');
     if (!pathExistsSync(target)) {
-      console.log(target);
       throw new Error('无效路径');
     }
     // 读取文件名称
@@ -41,7 +39,6 @@ export default function useLocalFile(targetPath?:string):[string[], Dispatch<Set
 
   // 更新本地文件列表
   useEffect(() => {
-    console.log('trigger local path rejoin');
     readLocalDir(localPathCollection.join('/'));
   }, [localPathCollection]);
 

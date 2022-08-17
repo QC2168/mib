@@ -8,8 +8,7 @@ import presetUno from '@unocss/preset-uno';
 import presetIcons from '@unocss/preset-icons';
 import presetAttributify from '@unocss/preset-attributify';
 import transformerDirective from '@unocss/transformer-directives';
-import { presetScrollbar } from 'unocss-preset-scrollbar';
-import esmodule from 'vite-plugin-esmodule'
+import esmodule from 'vite-plugin-esmodule';
 import pkg from './package.json';
 
 rmSync(join(__dirname, 'dist'), { recursive: true, force: true }); // v14.14.0

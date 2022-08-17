@@ -18,7 +18,6 @@ export default function useMobileFile(targetPath:string = 'sdcard/'):[string[], 
     if (!isConnect()) return;
     // 清空原列表
     setMobileFileNodeList([]);
-    console.log('trigger readDir');
     // todo 判断路径是否存在
     // 获取指定目录下的文件、文件夹列表
     const dirList = execAdb(`shell ls -l ${target}`).toString().split('\r\n').filter((i) => i !== '');
@@ -41,9 +40,7 @@ export default function useMobileFile(targetPath:string = 'sdcard/'):[string[], 
 
   // 更新移动设备文件列表
   useEffect(() => {
-    console.log('trigger mobile path rejoin');
     // setLoading(true);
-
     readMobileDriverDir(mobilePathCollection.join('/'));
   }, [mobilePathCollection]);
 

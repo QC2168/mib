@@ -99,7 +99,6 @@ export default function FileManage() {
         onRow={
           ({ label, key }) => ({
             onClick: () => {
-              console.log(key, label);
               setControlPanelStyle({ ...controlPanelStyle, visibility: 'hidden' });
             },
           })
@@ -123,13 +122,7 @@ export default function FileManage() {
       <Table
         columns={storeTableColumns}
         onRow={({ fileName, isDirectory }, rowIndex) => ({
-          onClick: (e) => {
-            console.log('fileName', fileName);
-            console.log('isDirectory', isDirectory);
-          },
           onDoubleClick: (event) => {
-            console.log(fileName);
-
             if (isDirectory) {
               if (curDriType === DriverType.LOCAL) {
                 setLocalPathCollection((paths) => [...paths, fileName]);
@@ -139,14 +132,12 @@ export default function FileManage() {
               }
             } else {
               // 打开文件
-              console.log((localPathCollection.join('/') + fileName));
               // 处理开头 // 盘符为 /
               const filePath = [localPathCollection[0].slice(0, -1), ...localPathCollection.slice(1), fileName].join('/');
 
               exec(`start ${filePath}`, (error, stdout, stderr) => {
                 if (error) {
                   openNotification('error', error.message);
-                  console.log(`error: ${error.message}`);
                   return;
                 }
                 if (stderr) {
@@ -158,7 +149,6 @@ export default function FileManage() {
           onMouseDown: (event) => {
             if (event.button === 2) {
               // 触发右击
-              console.log(event);
               const { pageX, pageY } = event.nativeEvent;
               setControlPanelStyle({
                 left: pageX - 98,
