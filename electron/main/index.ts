@@ -40,6 +40,8 @@ async function createWindow() {
     title: 'Main window',
     icon: join(ROOT_PATH.public, 'favicon.svg'),
     frame: false,
+    minWidth: 970,
+    minHeight: 580,
     webPreferences: {
       preload,
       nodeIntegration: true,
