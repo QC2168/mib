@@ -85,6 +85,7 @@ function App() {
         <Sider collapsed={collapsed}>
           <div>
             <Menu
+             defaultSelectedKeys={['analysis']}
               onSelect={({ key }) => navigate(key)}
               mode="inline"
               items={items}
@@ -93,6 +94,7 @@ function App() {
         </Sider>
         <Content style={{ padding: '12px', minHeight: 'calc( 100vh - 50px )' }}>
           <Routes>
+            <Route index element={<Analysis />} />
             <Route path="/analysis" element={<Analysis />} />
             <Route path="/fileManage" element={<FileManage />} />
             <Route path="/settings" element={<Settings />} />
