@@ -1,17 +1,19 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-continue */
 import { notification } from 'antd';
-// import winston, { format } from "winston";
-import path from 'path';
-import { execSync } from 'child_process';
 import { DriverType, FileNodeType } from '@/types';
 import { getConfig } from '@/config/useConfig';
-import {
+// import winston, { format } from "winston";
+const path = require('path');
+
+const {
   statSync,
   pathExistsSync,
   ensureDirSync,
   readdirSync,
-} from 'fs-extra';
+} = require('fs-extra');
+
+const { execSync } = require('child_process');
 
 type levelType = 'info' | 'error' | 'warn';
 // 记录输出

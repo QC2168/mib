@@ -1,12 +1,13 @@
-import useConfig from '@/config/useConfig';
-import { createFileNode } from '@/utils';
 import { useMount } from 'ahooks';
-import path from 'path';
-import { pathExistsSync, readdir } from 'fs-extra';
 import {
   useState, useEffect, Dispatch, SetStateAction, useCallback,
 } from 'react';
+import useConfig from '@/config/useConfig';
+import { createFileNode } from '@/utils';
 import { FileNodeType } from '@/types';
+
+const path = require('path');
+const { pathExistsSync, readdir } = require('fs-extra');
 
 export default function useLocalFile(targetPath?:string):[string[], Dispatch<SetStateAction<string[]>>, FileNodeType[], Dispatch<SetStateAction<FileNodeType[]>>, boolean] {
   const [config] = useConfig();

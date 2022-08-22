@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import { useSetState, useMount } from 'ahooks';
-import { execSync } from 'child_process';
 import { SetState } from 'ahooks/lib/useSetState';
 import { usb } from 'usb';
 import { debounce } from 'lodash-es';
+
+const { execSync } = require('child_process');
 
 export enum DeviceStatus{
   DEVICE='device',
@@ -26,9 +26,9 @@ export const getDevices = (): DevicesType[] => {
   const res = execSync('adb devices').toString();
   const arr = res
     .split(/\n/)
-    .map((line) => line.split('\t'))
-    .filter((line) => line.length > 1)
-    .map((device) => ({ name: device[0].trim(), status: device[1].trim() as DeviceStatus }));
+    .map((line: string) => line.split('\t'))
+    .filter((line: string | any[]) => line.length > 1)
+    .map((device: { trim: () => DeviceStatus; }[]) => ({ name: device[0].trim(), status: device[1].trim() as DeviceStatus }));
 
   return arr;
 };

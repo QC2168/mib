@@ -8,7 +8,7 @@ import '@/lib/css/index.less';
 
 import { loadTheme } from './lib/css/theme';
 
-await loadTheme();
+loadTheme();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

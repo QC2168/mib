@@ -1,5 +1,4 @@
 import { rmSync } from 'fs';
-import { join } from 'path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import electron from 'vite-plugin-electron';
@@ -10,6 +9,8 @@ import presetAttributify from '@unocss/preset-attributify';
 import transformerDirective from '@unocss/transformer-directives';
 import esmodule from 'vite-plugin-esmodule';
 import pkg from './package.json';
+
+const { join } = require('path');
 
 rmSync(join(__dirname, 'dist'), { recursive: true, force: true }); // v14.14.0
 

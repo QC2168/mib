@@ -20,10 +20,10 @@ export default function useMobileFile(targetPath:string = 'sdcard/'):[string[], 
     setMobileFileNodeList([]);
     // todo 判断路径是否存在
     // 获取指定目录下的文件、文件夹列表
-    const dirList = execAdb(`shell ls -l ${target}`).toString().split('\r\n').filter((i) => i !== '');
+    const dirList = execAdb(`shell ls -l ${target}`).toString().split('\r\n').filter((i: string) => i !== '');
     // 去掉total
     dirList.shift();
-    dirList.forEach((i) => {
+    dirList.forEach((i: string) => {
       const item: string[] = i.split(/\s+/);
       const fileName = item.slice(7).join(' ');
       const fileNode: FileNodeType = {

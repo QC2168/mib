@@ -12,7 +12,8 @@ import { Key, useState } from 'react';
 import { BackItemType, DriverType, FileNodeType } from '@/types';
 import { execSync } from 'child_process';
 import { getConfig } from '@/config/useConfig';
-import { pathExistsSync, remove } from 'fs-extra';
+
+const { pathExistsSync, remove } = require('fs-extra');
 
 function move(
   backupQueue: FileNodeType[],

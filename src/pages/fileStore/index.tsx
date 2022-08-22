@@ -1,5 +1,4 @@
 import { useClickAway, useMount } from 'ahooks';
-import path from 'path';
 import {
   DesktopOutlined, MobileOutlined, SearchOutlined,
 } from '@ant-design/icons';
@@ -27,6 +26,8 @@ import rightDownOperations from './hooks/rightDownOperations';
 import storeTableColumns from './storeTableColumns';
 import useMobileFile from './hooks/useMobileFile';
 import StorePath from './components/StorePath';
+
+const path = require('path');
 
 export default function FileManage() {
   const [config] = useConfig();
