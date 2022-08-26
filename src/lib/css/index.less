@@ -1,2 +1,11 @@
-@import 'antd/dist/antd.less';
+@import './theme/light.css';
+@import './theme/dark.css';
 @import './scrollbar.less';
+
+// antd表格单元格样式
+.dark-table-cell{
+  --at-apply: cursor-pointer;
+}
+
+.light-table-cell:extend(.dark-table-cell){}
+

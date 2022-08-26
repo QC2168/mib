@@ -6,10 +6,10 @@ import {
   useCallback,
   useEffect, useRef, useState,
 } from 'react';
-import Table, { ColumnsType } from 'antd/lib/table';
+import { ColumnsType } from 'antd/lib/table';
 import dayjs from 'dayjs';
 import {
-  Breadcrumb, Button, Card, ConfigProvider, Empty, Input, message, Switch,
+  Breadcrumb, Button, Card, ConfigProvider, Empty, Input, message, Switch, Table,
 } from 'antd';
 import classnames from 'classnames';
 import { exec } from 'child_process';
@@ -19,7 +19,6 @@ import {
 import { DriverType, FileNodeType } from '@/types';
 import Control, { ControlOptionType } from '@/components/control';
 import useConfig from '@/config/useConfig';
-import styles from './index.module.less';
 import useLocalFile from './hooks/useLocalFile';
 import useControlPanel from './hooks/useControlPanel';
 import rightDownOperations from './hooks/rightDownOperations';

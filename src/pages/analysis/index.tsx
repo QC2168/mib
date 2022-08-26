@@ -1,11 +1,11 @@
 import {
-  Button, Card, Empty, message, Modal, Popconfirm, Select, Space,
+  Button, Card, Empty, message, Modal, Popconfirm, Select, Space, Table,
 } from 'antd';
 import {
   useEffect, Key,
   useState,
 } from 'react';
-import Table, { ColumnsType } from 'antd/lib/table';
+import { ColumnsType } from 'antd/lib/table';
 import { openNotification } from '@/utils';
 import {
   DriverType, FileNodeType, BackItemType,
@@ -27,7 +27,7 @@ export default function Analysis() {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
-  const handleDevice = (name:string) => {
+  const handleDevice = (name: string) => {
     setDevices({ current: { name, status: DeviceStatus.DEVICE } });
   };
   const worker = new Worker(new URL('./worker/backup.ts', import.meta.url), {
@@ -123,16 +123,29 @@ export default function Analysis() {
       <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
         <Card>
           {/* 节点 */}
-          <Table rowSelection={rowSelection} locale={{ emptyText: <Empty description="暂无节点数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }} scroll={{ x: '100%', scrollToFirstRowOnChange: true, y: '300px' }} pagination={false} rowKey="comment" columns={backupNodeColumns} dataSource={config.backups} />
+          <Table
+            rowSelection={rowSelection}
+            locale={{ emptyText: <Empty description="暂无节点数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
+            scroll={{ x: '100%', scrollToFirstRowOnChange: true, y: '300px' }}
+            pagination={false}
+            rowKey="comment"
+            columns={backupNodeColumns}
+            dataSource={config.backups}
+          />
         </Card>
         <Card>
           <Space size="middle">
             <Button loading={false} onClick={() => backupTip()} type="primary">极速备份数据</Button>
             <Button>取消</Button>
-            <Select defaultValue="请选择设备" value={devices.current?.name ? devices.current?.name : '未连接'} style={{ width: 160 }} onChange={handleDevice}>
+            <Select
+              defaultValue="请选择设备"
+              value={devices.current?.name ? devices.current?.name : '未连接'}
+              style={{ width: 160 }}
+              onChange={handleDevice}
+            >
               {
-              devices.devicesList.map((item) => <Option key={item.name} value={item.name}>{item.name}</Option>)
-             }
+                devices.devicesList.map((item) => <Option key={item.name} value={item.name}>{item.name}</Option>)
+              }
             </Select>
           </Space>
         </Card>

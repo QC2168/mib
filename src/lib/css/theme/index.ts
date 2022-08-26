@@ -1,20 +1,27 @@
+import {
+  Dispatch, SetStateAction, useState, useEffect,
+} from 'react';
+
 export enum ThemeType {
   DARK = 'dark',
   LIGHT = 'light',
 }
 
-const theme = localStorage.getItem('theme') as ThemeType;
+const cacheTheme = localStorage.getItem('theme') as ThemeType;
+const AppElement = document.querySelector('.App');
 
-export async function loadTheme(type:ThemeType = theme ?? ThemeType.LIGHT) {
-  // 获取主题
-  if (type === ThemeType.LIGHT) {
-    import('./light/index.less');
-    localStorage.setItem('theme', ThemeType.LIGHT);
-    document.documentElement.setAttribute('class', ThemeType.LIGHT);
-  }
-  if (type === ThemeType.DARK) {
-    import('./dark/index.less');
-    localStorage.setItem('theme', ThemeType.DARK);
-    document.documentElement.setAttribute('class', ThemeType.DARK);
-  }
+export function useTheme(type: ThemeType = cacheTheme ?? ThemeType.LIGHT): [ThemeType, Dispatch<SetStateAction<ThemeType>>] {
+  const [theme, setTheme] = useState<ThemeType>(type);
+  useEffect(() => {
+    if (theme === ThemeType.LIGHT) {
+      localStorage.setItem('theme', ThemeType.LIGHT);
+      AppElement?.setAttribute('class', ThemeType.LIGHT);
+    }
+    if (theme === ThemeType.DARK) {
+      localStorage.setItem('theme', ThemeType.DARK);
+      AppElement?.setAttribute('class', ThemeType.DARK);
+    }
+  }, [theme]);
+
+  return [theme, setTheme];
 }

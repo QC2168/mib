@@ -1,18 +1,17 @@
 import {
-  Button, Card, Empty, List, Popconfirm, Radio, RadioChangeEvent, Space, Tag,
+  Button, Card, Empty, List, Popconfirm, Radio, RadioChangeEvent, Space, Tag, Table,
 } from 'antd';
 import { useState } from 'react';
 import { PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useMount } from 'ahooks';
-import Table, { ColumnsType } from 'antd/lib/table';
+import { ColumnsType } from 'antd/lib/table';
 import { useNavigate } from 'react-router-dom';
 
 import { BackItemType } from '@/types';
-import { loadTheme, ThemeType } from '@/lib/css/theme';
 import useConfig from '@/config/useConfig';
 import styles from './index.module.less';
 
-const ignoreHeaderFn = (size:number) => (
+const ignoreHeaderFn = (size: number) => (
 
   <div className="flex">
     <Button className="mr-3" type="primary" icon={<PlusCircleOutlined />} size="small">新增</Button>
@@ -25,7 +24,7 @@ const ignoreHeaderFn = (size:number) => (
 );
 export default function Settings() {
   const [config, setConfig] = useConfig();
-  const deleteBackupItem = (item:BackItemType) => {
+  const deleteBackupItem = (item: BackItemType) => {
     setConfig({
       backups: config.backups.filter((i) => i.path !== item.path),
     });
@@ -89,7 +88,12 @@ export default function Settings() {
       </div>
       <div className={styles.settingItem}>
         <div className="text-md font-bold mb-3">备份选项</div>
-        <Table columns={backupNodeColumns} locale={{ emptyText: <Empty description="暂无节点数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }} dataSource={config.backups} />
+        <Table
+          columns={backupNodeColumns}
+          rowKey="path"
+          locale={{ emptyText: <Empty description="暂无节点数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
+          dataSource={config.backups}
+        />
       </div>
 
     </Card>
