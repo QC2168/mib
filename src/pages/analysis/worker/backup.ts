@@ -5,12 +5,9 @@ import {
   isPath,
   pathRepair,
   speedReg,
-  log,
 } from '@/utils';
-// import { execSync } from 'node:child_process';
-import { Key, useState } from 'react';
+import { Key } from 'react';
 import { BackItemType, DriverType, FileNodeType } from '@/types';
-import { execSync } from 'child_process';
 import { getConfig } from '@/config/useConfig';
 
 const { pathExistsSync, remove } = require('fs-extra');

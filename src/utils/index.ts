@@ -44,8 +44,7 @@ export const execAdb = (code: string, d?:string) => {
   console.log('command', command);
   console.log('d', d);
   try {
-    const res = execSync(command).toString();
-    return res;
+    return execSync(command).toString();
   } catch (error) {
     console.log(error);
     return '';

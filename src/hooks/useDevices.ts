@@ -1,4 +1,4 @@
-import { useSetState, useMount } from 'ahooks';
+import { useMount, useSetState } from 'ahooks';
 import { SetState } from 'ahooks/lib/useSetState';
 import { usb } from 'usb';
 import { debounce } from 'lodash-es';
@@ -24,13 +24,14 @@ export interface DevicesStatusType{
 // 获取设备
 export const getDevices = (): DevicesType[] => {
   const res = execSync('adb devices').toString();
-  const arr = res
+  return res
     .split(/\n/)
     .map((line: string) => line.split('\t'))
     .filter((line: string | any[]) => line.length > 1)
-    .map((device: { trim: () => DeviceStatus; }[]) => ({ name: device[0].trim(), status: device[1].trim() as DeviceStatus }));
-
-  return arr;
+    .map((device: { trim: () => DeviceStatus; }[]) => ({
+      name: device[0].trim(),
+      status: device[1].trim() as DeviceStatus,
+    }));
 };
 
 // 默认数据
@@ -61,10 +62,10 @@ export default function useDevices():[DevicesStatusType, SetState<DevicesStatusT
   useMount(() => {
     init();
     // 注册监听事件
-    usb.on('attach', debounce((device) => {
+    usb.on('attach', debounce(() => {
       init();
     }));
-    usb.on('detach', debounce((device) => {
+    usb.on('detach', debounce(() => {
       init();
     }));
   });

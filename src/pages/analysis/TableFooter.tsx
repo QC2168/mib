@@ -1,5 +1,5 @@
 import { Button, Space } from 'antd';
-import { FC, Key, ReactElement } from 'react';
+import { Key, ReactElement } from 'react';
 
 interface PropsType{
   selectedRowKeys:Key[];

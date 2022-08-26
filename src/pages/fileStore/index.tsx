@@ -1,23 +1,11 @@
-import { useClickAway, useMount } from 'ahooks';
+import { useRef, useState } from 'react';
 import {
-  DesktopOutlined, MobileOutlined, SearchOutlined,
-} from '@ant-design/icons';
-import {
-  useCallback,
-  useEffect, useRef, useState,
-} from 'react';
-import { ColumnsType } from 'antd/lib/table';
-import dayjs from 'dayjs';
-import {
-  Breadcrumb, Button, Card, ConfigProvider, Empty, Input, message, Switch, Table,
+  Card, Empty, message, Table,
 } from 'antd';
-import classnames from 'classnames';
 import { exec } from 'child_process';
-import {
-  createFileNode, execAdb, openNotification, readablizeBytes,
-} from '@/utils';
-import { DriverType, FileNodeType } from '@/types';
-import Control, { ControlOptionType } from '@/components/control';
+import { openNotification } from '@/utils';
+import { DriverType } from '@/types';
+import Control from '@/components/control';
 import useConfig from '@/config/useConfig';
 import useLocalFile from './hooks/useLocalFile';
 import useControlPanel from './hooks/useControlPanel';
@@ -25,8 +13,6 @@ import rightDownOperations from './hooks/rightDownOperations';
 import storeTableColumns from './storeTableColumns';
 import useMobileFile from './hooks/useMobileFile';
 import StorePath from './components/StorePath';
-
-const path = require('path');
 
 export default function FileManage() {
   const [config] = useConfig();
@@ -68,7 +54,7 @@ export default function FileManage() {
     }
   };
 
-  const search = (val:string) => {
+  const search = (val: string) => {
     setSearchVal(val);
     if (val.trim() === '') {
       return;
@@ -99,6 +85,7 @@ export default function FileManage() {
         onRow={
           ({ label, key }) => ({
             onClick: () => {
+              console.log({ label, key });
               setControlPanelStyle({ ...controlPanelStyle, visibility: 'hidden' });
             },
           })
@@ -121,8 +108,8 @@ export default function FileManage() {
       />
       <Table
         columns={storeTableColumns}
-        onRow={({ fileName, isDirectory }, rowIndex) => ({
-          onDoubleClick: (event) => {
+        onRow={({ fileName, isDirectory }) => ({
+          onDoubleClick: () => {
             if (isDirectory) {
               if (curDriType === DriverType.LOCAL) {
                 setLocalPathCollection((paths) => [...paths, fileName]);

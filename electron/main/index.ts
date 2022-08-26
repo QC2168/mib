@@ -5,7 +5,6 @@ import {
 import { release } from 'os';
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
-  REDUX_DEVTOOLS,
 } from 'electron-devtools-installer';
 
 const { join } = require('path');
@@ -121,14 +120,14 @@ ipcMain.handle('open-win', (event, arg) => {
   }
 });
 
-ipcMain.handle('close-win', (event) => {
+ipcMain.handle('close-win', () => {
   app.exit();
 });
 
-ipcMain.handle('minimize-win', (event) => {
+ipcMain.handle('minimize-win', () => {
   win.minimize();
 });
 
-ipcMain.handle('maximize-win', (event) => {
+ipcMain.handle('maximize-win', () => {
   win.maximize();
 });

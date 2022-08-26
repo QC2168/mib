@@ -2,19 +2,15 @@ import {
   Button, Card, Empty, message, Modal, Popconfirm, Select, Space, Table,
 } from 'antd';
 import {
-  useEffect, Key,
+  Key,
   useState,
 } from 'react';
 import { ColumnsType } from 'antd/lib/table';
 import { openNotification } from '@/utils';
-import {
-  DriverType, FileNodeType, BackItemType,
-} from '@/types';
+import { BackItemType } from '@/types';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import useConfig from '@/config/useConfig';
-import { useMount } from 'ahooks';
 import useDevices, { DeviceStatus } from '@/hooks/useDevices';
-import TableFooter from './TableFooter';
 
 const { Option } = Select;
 const { confirm } = Modal;
@@ -95,8 +91,6 @@ export default function Analysis() {
       ),
     },
   ];
-
-  const hasSelected = selectedRowKeys.length > 0;
 
   async function backupTip() {
     if (!isConnect()) {

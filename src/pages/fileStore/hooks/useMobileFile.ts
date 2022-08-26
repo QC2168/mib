@@ -11,7 +11,7 @@ export default function useMobileFile(targetPath:string = 'sdcard/'):[string[], 
   const [mobilePathCollection, setMobilePathCollection] = useState([targetPath]);
   // 移动设备文件列表
   const [mobileFileNodeList, setMobileFileNodeList] = useState<FileNodeType[]>([]);
-  const [devices, , isConnect] = useDevices();
+  const [, , isConnect] = useDevices();
   // 读取移动设备目录
   function readMobileDriverDir(target: string) {
     // 没有连接则跳过

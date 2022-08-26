@@ -28,6 +28,7 @@ module.exports = {
     'react-hooks',
     '@typescript-eslint',
     'eslint-plugin-import',
+    'unused-imports',
   ],
   settings: {
     'import/extensions': ['.js', '.jsx', '.ts', '.tsx'],
@@ -54,8 +55,7 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error', // 检查 Hook 的规则
     'react-hooks/exhaustive-deps': 'warn', // 检查 effect 的依赖
     'no-console': 'off',
-    '@typescript-eslint/no-unused-vars': 'off',
-    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'warn',
     'import/no-extraneous-dependencies': 'off',
     'max-len': 'off',
     'no-shadow': 'off',
@@ -70,6 +70,6 @@ module.exports = {
         tsx: 'never',
       },
     ],
-
+    'unused-imports/no-unused-imports': 'error',
   },
 };

@@ -21,7 +21,7 @@ const { ipcRenderer } = require('electron');
 
 function App() {
   const navigate = useNavigate();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed] = useState(false);
   const [theme, setTheme] = useTheme();
   type MenuItem = Required<MenuProps>['items'][number];
 
