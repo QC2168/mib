@@ -1,7 +1,8 @@
 import { useMount, useSetState } from 'ahooks';
 import { SetState } from 'ahooks/lib/useSetState';
-import { usb } from 'usb';
 import { debounce } from 'lodash-es';
+
+const { usb } = require('usb');
 
 const { execSync } = require('child_process');
 
