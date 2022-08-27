@@ -32,7 +32,7 @@ export default function Analysis() {
 
   worker.onmessage = (e) => {
     const { message: workerMessage } = e.data;
-    openNotification('worker', workerMessage);
+    openNotification('备份进程', workerMessage);
   };
 
   const rowSelection = {
@@ -95,6 +95,10 @@ export default function Analysis() {
   async function backupTip() {
     if (!isConnect()) {
       message.warning('当前没有设备连接');
+      return;
+    }
+    if (selectedRowKeys.length === 0) {
+      message.warning('当前没有选中任何备份节点');
       return;
     }
     confirm({
