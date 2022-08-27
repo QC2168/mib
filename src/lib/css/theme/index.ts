@@ -1,6 +1,7 @@
 import {
   Dispatch, SetStateAction, useState, useEffect,
 } from 'react';
+import { ConfigProvider } from 'antd';
 
 export enum ThemeType {
   DARK = 'dark',
@@ -21,6 +22,9 @@ export function useTheme(type: ThemeType = cacheTheme ?? ThemeType.LIGHT): [Them
       localStorage.setItem('theme', ThemeType.DARK);
       AppElement?.setAttribute('class', ThemeType.DARK);
     }
+    ConfigProvider.config({
+      prefixCls: theme,
+    });
   }, [theme]);
 
   return [theme, setTheme];
