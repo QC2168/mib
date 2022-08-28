@@ -43,6 +43,8 @@ async function createWindow() {
     frame: false,
     minWidth: 970,
     minHeight: 580,
+    width: 970,
+    height: 580,
     webPreferences: {
       preload,
       nodeIntegration: true,
@@ -55,7 +57,7 @@ async function createWindow() {
     win.loadFile(indexHtml);
   } else {
     win.loadURL(url);
-    // win.webContents.openDevTools()
+    win.webContents.openDevTools();
   }
 
   // Test actively push message to the Electron-Renderer
@@ -68,9 +70,6 @@ async function createWindow() {
     if (event.url.startsWith('https:')) shell.openExternal(event.url);
     return { action: 'deny' };
   });
-
-  // open devtools
-  win.webContents.openDevTools();
 }
 
 app

@@ -2,8 +2,8 @@
  * @see https://www.electron.build/configuration/configuration
  */
 {
-  appId: "YourAppID",
-  productName: "YourAppName",
+  appId: "mib",
+  productName: "MIB",
   copyright: "Copyright © 2022 ${author}",
   asar: true,
   directories: {
