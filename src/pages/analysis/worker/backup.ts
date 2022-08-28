@@ -36,14 +36,16 @@ function move(
   });
 }
 
-const moveFolder = (source: string, target: string, devices: string): void => {
+const moveFolder = (source: string, target: string, devices: string, itemComment: string): void => {
   console.log(`正在备份文件夹${source}`);
   try {
     const out: string = execAdb(`pull "${source}" "${target}"`, devices);
     const speed: string | null = out.match(speedReg) !== null ? out.match(speedReg)![0] : '读取速度失败';
     console.log(`平均传输速度${speed}`);
+    postMessage({ message: `全量备份${itemComment}完成` });
   } catch (e: any) {
     console.log(`备份文件夹${source}失败 error:${e.message}`, 'error');
+    postMessage({ message: `全量备份${itemComment}失败` });
   }
 };
 
@@ -75,11 +77,12 @@ function backup(backupNodes: string[] | Key[], devices: string) {
     if (item.full) {
       // 不文件对比，直接备份
       // 判断导出目录是否存在文件夹，有则删除再移动
+      postMessage({ message: `正在全量备份${item.comment}` });
       if (pathExistsSync(outputDir)) {
-        remove(outputDir.replace(/\/$/, '')).then(() => {
-          moveFolder(item.path, outputDir, devices);
-        });
+        await remove(outputDir.replace(/\/$/, ''));
       }
+      moveFolder(item.path, outputDir, devices, item.comment);
+      return;
     }
     // 依次读取对比
     // 获取指定目录下的文件、文件夹列表
@@ -91,7 +94,7 @@ function backup(backupNodes: string[] | Key[], devices: string) {
       .toString()
       .split('\r\n')
       .filter((i: string) => i !== '');
-      // 去掉total
+    // 去掉total
     dirList.shift();
     dirList.forEach((i) => {
       const splitItem: string[] = i.split(/\s+/);
@@ -114,7 +117,11 @@ function backup(backupNodes: string[] | Key[], devices: string) {
       localFileNodeList,
       waitBackupFileList,
     );
-    move(diffList, outputDir, devices);
+    if (diffList.length === 0) {
+      postMessage({ message: `${item.comment}无需备份` });
+      return;
+    }
+    await move(diffList, outputDir, devices);
 
     postMessage({ message: `${item.comment}备份完成` });
   });

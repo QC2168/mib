@@ -134,7 +134,7 @@ export default function Analysis() {
         <Card>
           <Space size="middle">
             <Button loading={false} onClick={() => backupTip()} type="primary">极速备份数据</Button>
-            <Button>取消</Button>
+            {/* <Button>取消</Button> */}
             <Select
               defaultValue="请选择设备"
               value={devices.current?.name ? devices.current?.name : '未连接'}
