@@ -7,10 +7,10 @@ import "core-js/stable/string/at";
 import { home } from "./config";
 import { devicesType } from "./types";
 
+const util = require('util');
+
 type levelType = "info" | "error" | "warn";
-// find arr1
-// eslint-disable-next-line max-len
-export const diff = (localArr: string[], remoteArr: string[]): string[] => remoteArr.filter((item) => !localArr.includes(item));
+
 const logger = winston.createLogger({
   format: format.combine(
     format.timestamp({
@@ -119,3 +119,7 @@ export const isPathAdb = (folderPath: string): boolean => {
 
 // 路径后面补上斜杠
 export const pathRepair = (spath: string): string => (spath.at(-1) === "/" ? spath : `${spath}/`);
+
+export const deepLog = <T=any>(object:T, depth:null|number = null) => {
+  console.log(util.inspect(object, { showHidden: false, depth, colors: true }));
+};
