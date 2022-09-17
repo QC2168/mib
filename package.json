@@ -4,9 +4,9 @@
   "description": "data backup tool",
   "main": "bin/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "swc src -d bin -w",
-    "lint": "eslint ./src/**/*.ts --fix"
+    "lint": "eslint ./src/**/*.ts --fix",
+    "dev": "node scripts/dev.js",
+    "build":"pnpm lint && node scripts/build.js"
   },
   "repository": {
     "type": "git",
@@ -14,7 +14,7 @@
   },
   "keywords": [],
   "author": "QC2168",
-  "license": "ISC",
+  "license": "MIT",
   "files": [
     "bin"
   ],
@@ -30,26 +30,22 @@
   },
   "homepage": "https://github.com/QC2168/MIB#readme",
   "devDependencies": {
-    "@swc/cli": "^0.1.55",
-    "@swc/core": "^1.2.133",
     "@types/core-js": "^2.5.5",
     "@types/node": "^17.0.10",
     "@types/prompts": "^2.0.14",
     "@typescript-eslint/eslint-plugin": "^5.11.0",
     "@typescript-eslint/parser": "^5.11.0",
-    "chokidar": "^3.5.3",
     "eslint": "^8.8.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
-    "rollup-plugin-swc": "^0.2.1",
-    "typescript": "^4.5.5"
+    "typescript": "^4.5.5",
+    "@types/fs-extra": "^9.0.13",
+    "@types/winston": "^2.4.4"
   },
   "dependencies": {
-    "@types/fs-extra": "^9.0.13",
-    "@types/winston": "^2.4.4",
     "core-js": "^3.21.1",
+    "esbuild": "^0.15.7",
     "fs-extra": "^10.0.0",
-    "prettier": "^2.5.1",
     "prompts": "^2.4.2",
     "regenerator-runtime": "^0.13.9",
     "winston": "^3.5.1"
