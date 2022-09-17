@@ -1,4 +1,4 @@
-import { pathExistsSync, ensureDirSync } from "fs-extra";
+import { ensureDirSync, pathExistsSync } from "fs-extra";
 import winston, { format } from "winston";
 import path from "path";
 import { execSync } from "child_process";
@@ -61,13 +61,14 @@ export const replace = (str: string): string => {
 // 获取设备
 export const devices = (): devicesType[] => {
   const res = execSync("adb devices").toString();
-  const arr = res
+  return res
     .split(/\n/)
     .map((line) => line.split("\t"))
     .filter((line) => line.length > 1)
-    .map((device) => ({ name: device[0].trim(), status: device[1].trim() }));
-
-  return arr;
+    .map((device) => ({
+      name: device[0].trim(),
+      status: device[1].trim()
+    }));
 };
 
 let currentDeviceName: string = "";
