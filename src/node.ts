@@ -1,19 +1,10 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-restricted-syntax */
 import { readdirSync, statSync } from "fs";
+import { FileNodeType } from "./types";
 import { execAdb, isPathAdb, pathRepair } from './utils';
 
 export default {};
-
-export interface FileNodeType {
-  fileSize: number;
-  fileName: string;
-  filePath: string;
-  isDirectory: boolean;
-  fileMTime?: string | Date;
-  children: FileNodeType[] | null;
-}
-
 // 获取文件列表
 export function getMobileFileNodeList(targetPath: string, deep = true): FileNodeType[] {
   if (!isPathAdb(targetPath)) return [];

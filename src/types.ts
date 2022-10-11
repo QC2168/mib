@@ -1,4 +1,12 @@
 // 文件节点
+export interface FileNodeType {
+  fileSize: number;
+  fileName: string;
+  filePath: string;
+  isDirectory: boolean;
+  fileMTime?: string | Date;
+  children: FileNodeType[] | null;
+}
 
 // 备份节点
 export interface SaveItemType {
