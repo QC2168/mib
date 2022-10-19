@@ -67,7 +67,7 @@ export const devices = (): devicesType[] => {
     .filter((line) => line.length > 1)
     .map((device) => ({
       name: device[0].trim(),
-      status: device[1].trim()
+      status: device[1].trim(),
     }));
 };
 
@@ -95,6 +95,7 @@ export const selectDevice = async (): Promise<string | false> => {
   if (deviceStatus === "unauthorized") {
     log("该设备无权访问权限", "warn");
     log("请在设备上允许USB调试", "warn");
+    return false;
   }
   currentDeviceName = value;
   return currentDeviceName;
@@ -122,5 +123,6 @@ export const isPathAdb = (folderPath: string): boolean => {
 export const pathRepair = (spath: string): string => (spath.at(-1) === "/" ? spath : `${spath}/`);
 
 export const deepLog = <T=any>(object:T, depth:null|number = null) => {
+  // eslint-disable-next-line no-console
   console.log(util.inspect(object, { showHidden: false, depth, colors: true }));
 };
