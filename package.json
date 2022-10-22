@@ -3,10 +3,14 @@
   "version": "1.0.1",
   "description": "data backup tool",
   "main": "bin/index.js",
+  "types": "bin/index.d.ts",
+  "module": "bin/index.js",
   "scripts": {
     "lint": "eslint ./src/**/*.ts --fix",
     "dev": "node scripts/dev.js",
-    "build": "pnpm lint && node scripts/build.js"
+    "types": "tsc --emitDeclarationOnly --outDir bin",
+    "build": "pnpm lint && node scripts/build.js && pnpm types",
+    "commit": "gitmoji -c"
   },
   "repository": {
     "type": "git",
@@ -37,7 +41,7 @@
     "@types/winston": "^2.4.4",
     "@typescript-eslint/eslint-plugin": "^5.11.0",
     "@typescript-eslint/parser": "^5.11.0",
-    "eslint": "^8.8.0",
+    "eslint": "^8.25.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
     "gitmoji-cli": "^6.2.0",
