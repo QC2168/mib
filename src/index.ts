@@ -1,11 +1,9 @@
 import { SaveItemType } from "./types";
-import {
-  log,
-  isPath,
-  isPathAdb,
-  selectDevice,
-  pathRepair,
-} from "./utils";
+import { isPathAdb } from "./utils/adb";
+import pathRepair from "./utils/pathRepair";
+import isPath from "./utils/isPath";
+import log from "./utils/logger";
+import { selectDevice } from "./devices";
 import "core-js/stable/array/at";
 import { getConfig } from "./config";
 import { backup } from "./backup";

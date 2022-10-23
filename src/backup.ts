@@ -1,6 +1,8 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable no-restricted-syntax */
-import { deepLog, execAdb, log } from "./utils";
+import deepLog from "./utils/deepLog";
+import { execAdb } from "./utils/adb";
+import log from './utils/logger';
 import {
   getLocalFileNodeList,
   getMobileFileNodeList,

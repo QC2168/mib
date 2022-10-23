@@ -1,6 +1,7 @@
-const config = require("./confg.js");
+import config from "./confg.js";
+import esbuild from "esbuild";
 
-require("esbuild")
+esbuild
   .build({
     ...config,
     watch: true,

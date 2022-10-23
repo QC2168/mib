@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   entryPoints: ["src/index.ts"],
   bundle: true,
   external: ["./node_modules/*"],

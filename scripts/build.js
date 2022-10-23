@@ -1,4 +1,4 @@
-const config = require("./confg.js");
+import  config from "./confg.js"
 
 require("esbuild")
   .build({
