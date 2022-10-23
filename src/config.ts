@@ -7,7 +7,7 @@ import getCParams from "./utils/getCParams";
 const params = getCParams();
 export const home = platform === "win32" ? env.USERPROFILE : env.HOME;
 // 获取配置文件名称
-const CONFIG_FILE_NAME = ".mibDevrc";
+const CONFIG_FILE_NAME = ".mib";
 const CONFIG_PATH: string = (params.config && existsSync(params.config) && params.config)
   || path.join(home || "~/", CONFIG_FILE_NAME);
 
