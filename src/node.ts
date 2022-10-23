@@ -1,3 +1,4 @@
+/* eslint-disable no-continue */
 /* eslint-disable no-undef */
 /* eslint-disable no-restricted-syntax */
 import { readdirSync, statSync } from "fs";
@@ -88,11 +89,34 @@ export function diff(
   localArr: FileNodeType[],
   remoteArr: FileNodeType[],
 ): FileNodeType[] {
-  const names: { [key: string]: boolean } = {};
-  localArr.forEach((i) => {
-    names[i.fileName] = true;
-  });
-  return remoteArr.filter((i) => !names[i.fileName]);
+  const temp: FileNodeType[] = [];
+  for (let i = 0; i < remoteArr.length; i += 1) {
+    const item = remoteArr[i];
+    const name = item.fileName;
+    for (let j = 0; j < localArr.length; j += 1) {
+      if (name === localArr[j].fileName) {
+        if (item.children && item.children.length > 0) {
+          const node = {
+            ...item,
+            children: diff(localArr[j].children || [], item.children),
+          };
+          if (node.children.length > 0) temp.push(node);
+        }
+        break;
+      }
+      if (j === localArr.length - 1) {
+        temp.push(item);
+        break;
+      }
+    }
+  }
+
+  return temp;
+  // const names: { [key: string]: boolean } = {};
+  // localArr.forEach((i) => {
+  //   names[i.fileName] = true;
+  // });
+  // return remoteArr.filter((i) => !names[i.fileName])
 }
 
 export function computeNodeListSize(list: FileNodeType[]): number {

@@ -1,8 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable no-restricted-syntax */
-import deepLog from "./utils/deepLog";
 import { execAdb } from "./utils/adb";
-import log from './utils/logger';
+import log from "./utils/logger";
 import {
   getLocalFileNodeList,
   getMobileFileNodeList,
@@ -61,7 +60,6 @@ export const backup = (
     // 备份非备份的文件数据
     // 获取手机中的文件信息,对比本地
     const { diffList } = initData(target, output);
-    deepLog(diffList);
     // 计算体积和数量
     computeNodeListSize(diffList);
     // 执行备份程序
@@ -70,9 +68,9 @@ export const backup = (
       log("无需备份");
       return;
     }
-
     move(orders);
+  } else {
+    // 不文件对比，直接备份
+    moveFolder(target, output);
   }
-  // 不文件对比，直接备份
-  moveFolder(target, output);
 };
