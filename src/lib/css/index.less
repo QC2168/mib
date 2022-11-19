@@ -1,11 +1,12 @@
-@import './theme/light.css';
-@import './theme/dark.css';
+// 重置样式
+@import 'antd/dist/reset.css';
 @import './scrollbar.less';
-
 // antd表格单元格样式
-.dark-table-cell{
+.ant-table-cell{
   --at-apply: cursor-pointer;
 }
 
-.light-table-cell:extend(.dark-table-cell){}
-
+.allow-drag {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+}

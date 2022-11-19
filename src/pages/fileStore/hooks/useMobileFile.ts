@@ -42,6 +42,7 @@ export default function useMobileFile(targetPath:string = 'sdcard/'):[string[], 
   useEffect(() => {
     // setLoading(true);
     readMobileDriverDir(mobilePathCollection.join('/'));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mobilePathCollection]);
 
   useMount(() => {

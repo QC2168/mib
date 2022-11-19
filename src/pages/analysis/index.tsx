@@ -5,7 +5,7 @@ import {
   Key,
   useState,
 } from 'react';
-import { ColumnsType } from 'antd/lib/table';
+import type { ColumnsType } from 'antd/es/table';
 import { openNotification } from '@/utils';
 import { BackItemType } from '@/types';
 import { ExclamationCircleOutlined } from '@ant-design/icons';

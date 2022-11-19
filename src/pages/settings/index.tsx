@@ -2,7 +2,7 @@ import {
   Button, Card, Empty, List, Popconfirm, Tag, Table,
 } from 'antd';
 import { PlusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
-import { ColumnsType } from 'antd/lib/table';
+import type { ColumnsType } from 'antd/es/table';
 
 import { BackItemType } from '@/types';
 import useConfig from '@/config/useConfig';

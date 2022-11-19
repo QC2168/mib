@@ -1,6 +1,6 @@
 import { FileNodeType } from '@/types';
 import { readablizeBytes } from '@/utils';
-import { ColumnsType } from 'antd/lib/table';
+import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 
 export default [

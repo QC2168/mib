@@ -40,6 +40,7 @@ export default function useLocalFile(targetPath?:string):[string[], Dispatch<Set
   // 更新本地文件列表
   useEffect(() => {
     readLocalDir(localPathCollection.join('/'));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localPathCollection]);
 
   return [

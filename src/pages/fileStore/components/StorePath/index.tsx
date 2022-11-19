@@ -1,5 +1,7 @@
 import { DriverType } from '@/types';
-import { DesktopOutlined, MobileOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+  DesktopOutlined, MobileOutlined, RetweetOutlined, RollbackOutlined, SearchOutlined,
+} from '@ant-design/icons';
 import { Breadcrumb, Button, Input } from 'antd';
 import classnames from 'classnames';
 import styles from './index.module.less';
@@ -28,8 +30,9 @@ export default function StorePath({
     <div className={classnames('flex', 'mb-4', 'justify-between')}>
       <div className={classnames('flex', 'items-center')}>
         <div className={styles.operationGroup}>
-          <Button type="default" shape="circle" onClick={turnBack}><span className="i-akar-icons:arrow-back" /></Button>
-          <Button type="default" shape="circle" onClick={reload}><span className="i-zondicons:reload" /></Button>
+          <Button shape="circle" onClick={turnBack} icon={<RollbackOutlined style={{ fontSize: '12px' }} />} />
+          <Button shape="circle" onClick={reload} icon={<RetweetOutlined style={{ fontSize: '12px' }} />} />
+
         </div>
         <Breadcrumb>
           {
@@ -54,12 +57,12 @@ export default function StorePath({
 
       <div className="flex items-center">
         <div className="mx-4 text-xl">
-          <DesktopOutlined className={curDriType === DriverType.LOCAL ? 'text-indigo-600 mx-2' : ' mx-2'} onClick={() => handleDriverStatus(DriverType.LOCAL)} />
-          <MobileOutlined className={curDriType === DriverType.MOBILE ? 'text-indigo-600 mx-2' : ' mx-2'} onClick={() => handleDriverStatus(DriverType.MOBILE)} />
+          <DesktopOutlined className={curDriType === DriverType.LOCAL ? 'text-[#7d53b0] mx-2' : ' mx-2'} onClick={() => handleDriverStatus(DriverType.LOCAL)} />
+          <MobileOutlined className={curDriType === DriverType.MOBILE ? 'text-[#7d53b0] mx-2' : ' mx-2'} onClick={() => handleDriverStatus(DriverType.MOBILE)} />
         </div>
 
         <Input
-          placeholder="search files"
+          placeholder="搜索文件名/文件夹名~"
           allowClear
           prefix={<SearchOutlined />}
           value={searchVal}
