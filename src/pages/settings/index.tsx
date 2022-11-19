@@ -63,7 +63,7 @@ export default function Settings() {
           okText="是"
           cancelText="否"
         >
-          <Button type="link">Delete</Button>
+          <Button type="link">删除</Button>
         </Popconfirm>
       )
       ,
