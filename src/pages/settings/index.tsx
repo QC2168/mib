@@ -6,7 +6,6 @@ import type { ColumnsType } from 'antd/es/table';
 
 import { BackItemType } from '@/types';
 import useConfig from '@/config/useConfig';
-import styles from './index.module.less';
 
 const ignoreHeaderFn = (size: number) => (
 
@@ -71,9 +70,8 @@ export default function Settings() {
     },
   ];
   return (
-    <Card>
-      <div className={styles.settingItem}>
-        <div className="text-md font-bold mb-3">忽略扫描文件</div>
+    <>
+      <Card title="忽略扫描文件" className="mb-4" bordered>
         <List
           size="small"
           header={config.ignoreFileList ? ignoreHeaderFn(config.ignoreFileList.length) : undefined}
@@ -82,17 +80,16 @@ export default function Settings() {
           dataSource={config.ignoreFileList ?? []}
           renderItem={(item) => <List.Item>{item}</List.Item>}
         />
-      </div>
-      <div className={styles.settingItem}>
-        <div className="text-md font-bold mb-3">备份选项</div>
+      </Card>
+
+      <Card title="忽略扫描文件" bordered>
         <Table
           columns={backupNodeColumns}
           rowKey="path"
           locale={{ emptyText: <Empty description="暂无节点数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
           dataSource={config.backups}
         />
-      </div>
-
-    </Card>
+      </Card>
+    </>
   );
 }
