@@ -2,10 +2,13 @@ import { DriverType } from '@/types';
 import {
   DesktopOutlined, MobileOutlined, RetweetOutlined, RollbackOutlined, SearchOutlined,
 } from '@ant-design/icons';
-import { Breadcrumb, Button, Input } from 'antd';
+import {
+  Breadcrumb, Button, Input, Typography,
+} from 'antd';
 import classnames from 'classnames';
 import styles from './index.module.less';
 
+const { Text } = Typography;
 interface PropsType{
   curDriType:DriverType;
   localPathCollection:string[];
@@ -39,9 +42,12 @@ export default function StorePath({
           curDriType === DriverType.LOCAL
             ? localPathCollection.map((item, index) => (
               <Breadcrumb.Item key={item}>
-                {
+                <Text strong>
+                  {
                   index === 0 ? (item.slice(0, -2)).toUpperCase() : item
                 }
+                </Text>
+
               </Breadcrumb.Item>
             ))
             : mobilePathCollection.map((item) => (
