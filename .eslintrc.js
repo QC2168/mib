@@ -71,5 +71,6 @@ module.exports = {
       },
     ],
     'unused-imports/no-unused-imports': 'error',
+    'linebreak-style': 'off',
   },
 };
