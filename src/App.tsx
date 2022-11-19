@@ -68,7 +68,7 @@ function App() {
     <ConfigProvider theme={themeConfig}>
       <div>
         <Layout style={{ minHeight: '100vh' }}>
-          <Sider collapsible collapsed={collapsed} theme={mode === ThemeType.DARK ? 'dark' : 'light'} className="relative" onCollapse={(value) => setCollapsed(value)}>
+          <Sider collapsible collapsed={collapsed} style={{ background: mode === ThemeType.DARK ? '#0a0a0a' : '' }} theme={mode === ThemeType.DARK ? 'dark' : 'light'} className="relative" onCollapse={(value) => setCollapsed(value)}>
             <Title level={collapsed ? 4 : 2} className={classNames('allow-drag cursor-pointer text-center transition-all', { 'pt-4': collapsed, 'pt-2 ': !collapsed })}>MIB</Title>
 
             <div className={classNames('w-full flex justify-center mt-2 mb-4', { '!hidden': collapsed })}>
@@ -98,6 +98,7 @@ function App() {
             </div>
             <Menu
               theme={mode === ThemeType.DARK ? 'dark' : 'light'}
+              style={{ background: mode === ThemeType.DARK ? '#0a0a0a' : '' }}
               defaultSelectedKeys={['analysis']}
               onSelect={({ key }) => navigate(key)}
               mode="inline"
@@ -105,16 +106,6 @@ function App() {
             />
           </Sider>
           <Layout>
-            {/* <Sider collapsed={collapsed}>
-              <div>
-                <Menu
-                  defaultSelectedKeys={['analysis']}
-                  onSelect={({ key }) => navigate(key)}
-                  mode="inline"
-                  items={items}
-                />
-              </div>
-            </Sider> */}
             <Content style={{ padding: '12px', minHeight: 'calc( 100vh - 45px )' }}>
               <Routes>
                 <Route index element={<Analysis />} />

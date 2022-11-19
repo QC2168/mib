@@ -12,16 +12,19 @@ export enum ThemeType {
 
 const { darkAlgorithm, defaultAlgorithm } = theme;
 const cacheTheme = localStorage.getItem('theme') as ThemeType;
-
+const TOKEN = {
+  colorPrimary: '#C539B4',
+  colorSuccess: '#852999',
+  colorInfoText: '#986dc6',
+  colorWarning: '#EF9A53',
+  colorError: '#FB2576',
+};
 export function useTheme(type: ThemeType = cacheTheme ?? ThemeType.LIGHT): [ThemeConfig, ThemeType, Dispatch<SetStateAction<ThemeType>>] {
   const [mode, setMode] = useState<ThemeType>(type);
   const [themeConfig, setThemeConfig] = useSetState<ThemeConfig>({
     token: {
-      colorPrimary: '#7d53b0',
-      colorSuccess: '#986dc6',
-      colorInfoText: '#986dc6',
-      colorWarning: '#faad14',
-      colorError: '#f5222d',
+      ...TOKEN,
+      colorError: '#FB2576',
     },
     algorithm: [defaultAlgorithm],
   });
@@ -29,11 +32,20 @@ export function useTheme(type: ThemeType = cacheTheme ?? ThemeType.LIGHT): [Them
     console.log({ mode });
     if (mode === ThemeType.LIGHT) {
       localStorage.setItem('theme', ThemeType.LIGHT);
-      setThemeConfig({ algorithm: [defaultAlgorithm] });
+      setThemeConfig({
+        algorithm: [defaultAlgorithm],
+        token: {
+          ...TOKEN,
+          colorPrimaryBgHover: '#fdd2f3',
+        },
+      });
     }
     if (mode === ThemeType.DARK) {
       localStorage.setItem('theme', ThemeType.DARK);
-      setThemeConfig({ algorithm: [darkAlgorithm] });
+      setThemeConfig({
+        algorithm: [darkAlgorithm],
+        token: TOKEN,
+      });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
