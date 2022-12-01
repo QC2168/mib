@@ -17,6 +17,7 @@ const { confirm } = Modal;
 
 export default function Analysis() {
   const [config, setConfig] = useConfig();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const [devices, setDevices, isConnect] = useDevices();
   const onSelectChange = (newSelectedRowKeys: Key[]) => {
@@ -29,9 +30,15 @@ export default function Analysis() {
   const worker = new Worker(new URL('./worker/backup.ts', import.meta.url), {
     type: 'module',
   });
-
+  worker.onerror = () => {
+    openNotification('备份进程', '进程出错了');
+  };
   worker.onmessage = (e) => {
     const { message: workerMessage } = e.data;
+    if (workerMessage === 'done') {
+      setIsLoading(false);
+      return;
+    }
     openNotification('备份进程', workerMessage);
   };
 
@@ -50,6 +57,7 @@ export default function Analysis() {
       backupNodes: [item.comment],
       devices: devices.current!.name,
     };
+    setIsLoading(true);
     worker.postMessage(postItem);
   };
   const deleteNode = (item: BackItemType) => {
@@ -93,10 +101,12 @@ export default function Analysis() {
   ];
 
   async function backupTip() {
+    // 判断是否连接状态
     if (!isConnect()) {
       message.warning('当前没有设备连接');
       return;
     }
+    // 判断备份节点
     if (selectedRowKeys.length === 0) {
       message.warning('当前没有选中任何备份节点');
       return;
@@ -111,6 +121,7 @@ export default function Analysis() {
           backupNodes: selectedRowKeys,
           devices: devices.current!.name,
         };
+        setIsLoading(true);
         worker.postMessage(postItem);
       },
     });
@@ -133,11 +144,11 @@ export default function Analysis() {
         </Card>
         <Card>
           <Space size="middle">
-            <Button loading={false} onClick={() => backupTip()} type="primary">极速备份数据</Button>
+            <Button loading={isLoading} onClick={() => backupTip()} type="primary">极速备份数据</Button>
             {/* <Button>取消</Button> */}
             <Select
               defaultValue="请选择设备"
-              value={devices.current?.name ? devices.current?.name : '未连接'}
+              value={devices.current?.name ? devices.current.name : '未连接'}
               style={{ width: 160 }}
               onChange={handleDevice}
             >
