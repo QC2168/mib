@@ -150,6 +150,7 @@ export default function FileManage() {
         locale={{
           emptyText: <Empty description="此文件夹为空" image={Empty.PRESENTED_IMAGE_SIMPLE} />,
         }}
+        pagination={false}
         scroll={{ x: '100%', scrollToFirstRowOnChange: true, y: '380px' }}
         dataSource={curDriType === DriverType.LOCAL ? localFileNodeList : mobileFileNodeList}
       />
