@@ -1,15 +1,12 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import {
   Card, Empty, message, Table,
 } from 'antd';
 import { exec } from 'child_process';
 import { openNotification } from '@/utils';
 import { DriverType } from '@/types';
-import Control from '@/components/control';
 import useConfig from '@/config/useConfig';
 import useLocalFile from './hooks/useLocalFile';
-import useControlPanel from './hooks/useControlPanel';
-import rightDownOperations from './hooks/rightDownOperations';
 import storeTableColumns from './storeTableColumns';
 import useMobileFile from './hooks/useMobileFile';
 import StorePath from './components/StorePath';
@@ -29,10 +26,6 @@ export default function FileManage() {
 
   // 显示状态
   const [curDriType, setCurDriType] = useState<DriverType>(DriverType.LOCAL);
-
-  // 右击
-  const controlPanelRef = useRef<HTMLDivElement | null>(null);
-  const [controlPanelStyle, setControlPanelStyle] = useControlPanel(controlPanelRef);
 
   // 返回上一级
   const turnBack = () => {
@@ -78,22 +71,6 @@ export default function FileManage() {
 
   return (
     <Card className="overflow-hidden">
-      {/* 右击菜单面板 */}
-      <Control
-        ref={controlPanelRef}
-        options={rightDownOperations}
-        onRow={
-          ({ label, key }) => ({
-            onClick: () => {
-              console.log({ label, key });
-              setControlPanelStyle({ ...controlPanelStyle, visibility: 'hidden' });
-            },
-          })
-
-        }
-        curType={curDriType}
-        styles={controlPanelStyle}
-      />
       <StorePath
         {...{
           curDriType,
@@ -130,17 +107,6 @@ export default function FileManage() {
                 if (stderr) {
                   openNotification('error', stderr);
                 }
-              });
-            }
-          },
-          onMouseDown: (event) => {
-            if (event.button === 2) {
-              // 触发右击
-              const { pageX, pageY } = event.nativeEvent;
-              setControlPanelStyle({
-                left: pageX - 98,
-                top: pageY - 80,
-                visibility: 'visible',
               });
             }
           },
