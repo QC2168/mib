@@ -1,12 +1,13 @@
 import { Key } from 'react';
 import { getConfig } from '@/config/useConfig';
 import { BackItemType } from '@/types';
-import {
+
+const {
   isPath,
   isPathAdb,
   pathRepair,
-  backup as mibBackup,
-} from '@qc2168/mib';
+  backup: mibBackup,
+} = require('@qc2168/mib');
 
 // 备份到电脑上
 function run(backupNodes: string[] | Key[]) {
