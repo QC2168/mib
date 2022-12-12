@@ -12,7 +12,7 @@
     "build": "tsc && vite build && electron-builder",
     "commit": "cz",
     "prepare": "husky install",
-    "postinstall": "pnpm prepare",
+    "postinstall": "yarn prepare",
     "lint": "eslint . --ext .js,.ts,.tsx --fix --ignore-path .gitignore"
   },
   "engines": {
@@ -79,6 +79,7 @@
     "@qc2168/mib": "^1.2.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "fs-extra": "^10.1.0",
+    "only-allow": "^1.1.1",
     "usb": "^2.5.0"
   }
 }
