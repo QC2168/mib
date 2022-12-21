@@ -3,12 +3,13 @@ import {
 } from 'react';
 import useConfig from '@/config/useConfig';
 import { createFileNode } from '@/utils';
-import { FileNodeType } from '@/types';
+import type { FileNodeType } from '@qc2168/mib/dist/types';
+import { useMount } from 'ahooks';
 
-const path = require('path');
-const { pathExistsSync, readdir } = require('fs-extra');
+const { getLocalFileNodeList } = require('@qc2168/mib');
 
-export default function useLocalFile(targetPath?:string):[string[], Dispatch<SetStateAction<string[]>>, FileNodeType[], Dispatch<SetStateAction<FileNodeType[]>>, boolean] {
+
+export default function useLocalFile(targetPath?: string): [string[], Dispatch<SetStateAction<string[]>>, FileNodeType[], Dispatch<SetStateAction<FileNodeType[]>>, boolean] {
   const [config] = useConfig();
   // 当前文件路径
   const [localPathCollection, setLocalPathCollection] = useState<string[]>([targetPath ?? config.output]);
@@ -16,31 +17,23 @@ export default function useLocalFile(targetPath?:string):[string[], Dispatch<Set
   const [localFileNodeList, setLocalFileNodeList] = useState<FileNodeType[]>([]);
   // loading
   const [loading, setLoading] = useState(false);
-  // 读取本地目录
-  const readLocalDir = useCallback((target: string) => {
-    // 当前有任务正在加载,
-    if (loading) return;
-    // 清空原列表
-    setLocalFileNodeList([]);
-    setLoading(true);
-    if (!pathExistsSync(target)) {
-      throw new Error('无效路径');
-    }
-    // 读取文件名称
-    readdir(target).then((fileList: string[]) => {
-    // 过滤不必要的文件名
-      const ignoreList = config.ignoreFileList ?? [];
-      const filterFileList = fileList.filter((name) => !ignoreList.includes(name));
-      const nodeList = filterFileList.map((name) => createFileNode(path.join(target, name)));
-      setLocalFileNodeList(nodeList);
-      setLoading(false);
-    });
-  }, [config.ignoreFileList, loading]);
-
   // 更新本地文件列表
+  useMount(() => {
+    setLoading(true);
+    try {
+      const list = getLocalFileNodeList(config.output, false);
+      console.log({ list });
+      setLocalFileNodeList(list);
+    } catch (e) {
+      console.log('获取本地文件列表失败');
+    } finally {
+      setLoading(false);
+    }
+  });
   useEffect(() => {
-    readLocalDir(localPathCollection.join('/'));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    const list = getLocalFileNodeList(localPathCollection.join('/'), false);
+    console.log({ list });
+    setLocalFileNodeList(list);
   }, [localPathCollection]);
 
   return [

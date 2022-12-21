@@ -1,13 +1,20 @@
-import { FileNodeType } from '@/types';
 import { readablizeBytes } from '@/utils';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
+import type { FileNodeType } from '@qc2168/mib/dist/types';
+import styles from '@/pages/fileStore/index.module.less';
 
 export default [
   {
     title: '文件名称',
     dataIndex: 'fileName',
     key: 'fileName',
+    width:270,
+    render: (fileName: string) => (
+      <div title={fileName} className={styles.tableFileName}>
+              {fileName}
+            </div>
+    )
   },
   {
     title: '文件大小',
@@ -20,7 +27,7 @@ export default [
     title: '修改时间',
     dataIndex: 'fileMTime',
     key: 'fileMTime',
-    render: (time) => <span>{dayjs(time).format('YYYY-MM-DD hh:mm:ss')}</span>,
+    render: (time:string) => <span>{dayjs(time).format('YYYY-MM-DD hh:mm:ss')}</span>,
   },
 
 ] as ColumnsType<FileNodeType>;
