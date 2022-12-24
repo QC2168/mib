@@ -1,13 +1,11 @@
 import {
-  useState, useEffect, Dispatch, SetStateAction, useCallback,
+  useState, useEffect, Dispatch, SetStateAction,
 } from 'react';
 import useConfig from '@/config/useConfig';
-import { createFileNode } from '@/utils';
 import type { FileNodeType } from '@qc2168/mib/dist/types';
 import { useMount } from 'ahooks';
 
 const { getLocalFileNodeList } = require('@qc2168/mib');
-
 
 export default function useLocalFile(targetPath?: string): [string[], Dispatch<SetStateAction<string[]>>, FileNodeType[], Dispatch<SetStateAction<FileNodeType[]>>, boolean] {
   const [config] = useConfig();

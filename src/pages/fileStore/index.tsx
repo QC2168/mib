@@ -1,32 +1,39 @@
 import {
-  Card, Empty, Table, Button, message, Space, Tag
+  Breadcrumb,
+  Button,
+  Card,
+  Empty,
+  message,
+  Radio,
+  RadioChangeEvent,
+  Space,
+  Table,
 } from 'antd';
 import useConfig from '@/config/useConfig';
 import useLocalFile from '@/pages/fileStore/hooks/useLocalFile';
-import storeTableColumns from './storeTableColumns';
 import { DriverType } from '@/types';
 import { useState } from 'react';
 import classNames from 'classnames';
 import { exec } from 'node:child_process';
-
+import storeTableColumns from './storeTableColumns';
+import useDevices from '@/hooks/useDevices';
+import useMobileFile from './hooks/useMobileFile';
+import { HomeOutlined, RollbackOutlined } from '@ant-design/icons';
 export default function FileManage() {
   const [config] = useConfig();
   const [messageApi, contextHolder] = message.useMessage();
+  const [devices, setDevices, isConnect] = useDevices();
   const [localPathCollection,
     setLocalPathCollection,
     localFileNodeList,
-    setLocalFileNodeList,
     loading] = useLocalFile(config.output);
-  // // const [mobilePathCollection, setMobilePathCollection,
-  // //   mobileFileNodeList, setMobileFileNodeList] = useMobileFile();
+  const [mobilePathCollection, setMobilePathCollection,
+    mobileFileNodeList, setMobileFileNodeList] = useMobileFile(devices.current?.name);
 
-  // // 搜索框
-  // const [searchVal, setSearchVal] = useState<string>('');
-
-  // // 显示状态
+  // 显示状态
   const [curDriType, setCurDriType] = useState<DriverType>(DriverType.LOCAL);
 
-  // // 返回上一级
+  // 返回上一级
   const turnBack = () => {
     if (curDriType === DriverType.LOCAL) {
       // 如果是最上一层，不处理
@@ -36,68 +43,64 @@ export default function FileManage() {
       }
       setLocalPathCollection((cPath) => cPath.slice(0, -1));
     }
-    // if (curDriType === DriverType.MOBILE) {
-    //   // 如果是最上一层，不处理
-    //   if (mobilePathCollection.length === 1) {
-    //     message.warning('当前位置处于根目录，无法再返回上一级了');
-    //     return;
-    //   }
-    //   setMobilePathCollection((cPath) => cPath.slice(0, -1));
-    // }
+    if (curDriType === DriverType.MOBILE) {
+      // 如果是最上一层，不处理
+      if (mobilePathCollection.length === 1) {
+        message.warning('当前位置处于根目录，无法再返回上一级了');
+        return;
+      }
+      setMobilePathCollection((cPath) => cPath.slice(0, -1));
+    }
   };
 
-  // const search = (val: string) => {
-  //   setSearchVal(val);
-  //   if (val.trim() === '') {
-  //     return;
-  //   }
-  //   if (curDriType === DriverType.LOCAL) {
-  //     const filterList = localFileNodeList.filter((item) => item.fileName.includes(val));
-  //     setLocalFileNodeList(filterList);
-  //   }
-  //   if (curDriType === DriverType.MOBILE) {
-  //     const filterList = mobileFileNodeList.filter((item) => item.fileName.includes(val));
-  //     setMobileFileNodeList(filterList);
-  //   }
-  // };
-  // const reload = () => {
-  //   search(searchVal);
-  // };
-  // // 切换状态
-  // const handleDriverStatus = (targetStatus: DriverType) => {
-  //   setCurDriType(targetStatus);
-  // };
+  const radioChange = (e: RadioChangeEvent) => {
+    console.log(`radio checked:${e.target.value}`);
+    if (e.target.value === DriverType.LOCAL) {
+      setCurDriType(DriverType.LOCAL);
+    } else {
+      setCurDriType(DriverType.MOBILE);
+    }
+  };
 
   return (
     <Card className="overflow-hidden">
-      <Space className={classNames('mb-4')}>
-        <Button type="primary" onClick={() => turnBack()}>
-          返回上一级
-        </Button>
-        <Button type="primary">
-          刷新
-        </Button>
-        <Tag>{localPathCollection}</Tag>
+      <div className="flex justify-between">
+      <Space className={classNames('mb-4')} size={16}>
+        <Button onClick={() => turnBack()} title='返回上一级目录' type="primary" shape="circle" icon={<RollbackOutlined />}  />
+        <Breadcrumb>
+          <Breadcrumb.Item>
+            <HomeOutlined />
+          </Breadcrumb.Item>
+          {
+            localPathCollection.slice(1).map(item=>(
+              <Breadcrumb.Item>
+                <span>{item}</span>
+              </Breadcrumb.Item>
+            ))
+          }
+        </Breadcrumb>
       </Space>
+      <Radio.Group onChange={radioChange} defaultValue={curDriType}>
+        <Radio.Button value={DriverType.LOCAL}>本地储存</Radio.Button>
+        <Radio.Button value={DriverType.MOBILE}>移动设备</Radio.Button>
+      </Radio.Group>
+      </div>
       <Table
         columns={storeTableColumns}
         expandable={{ childrenColumnName: 'false' }}
         rowKey="fileName"
-        loading={loading}
         onRow={({
           fileName,
           isDirectory,
-          children
+          children,
         }) => ({
           onDoubleClick: () => {
             if (isDirectory) {
               if (curDriType === DriverType.LOCAL) {
-
                 setLocalPathCollection([...localPathCollection, fileName]);
               }
-
               if (curDriType === DriverType.MOBILE) {
-                // setMobilePathCollection((paths) => [...paths, fileName]);
+                setMobilePathCollection([...mobilePathCollection, fileName]);
               }
             } else {
               // 打开文件
@@ -124,9 +127,9 @@ export default function FileManage() {
         scroll={{
           x: '100%',
           scrollToFirstRowOnChange: true,
-          y: '340px'
+          y: '340px',
         }}
-        dataSource={localFileNodeList}
+        dataSource={curDriType === DriverType.LOCAL ? localFileNodeList : mobileFileNodeList}
       />
 
     </Card>

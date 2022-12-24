@@ -9,12 +9,12 @@ export default [
     title: '文件名称',
     dataIndex: 'fileName',
     key: 'fileName',
-    width:270,
+    width: 270,
     render: (fileName: string) => (
       <div title={fileName} className={styles.tableFileName}>
-              {fileName}
-            </div>
-    )
+        {fileName}
+      </div>
+    ),
   },
   {
     title: '文件大小',
