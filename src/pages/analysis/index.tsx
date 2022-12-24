@@ -25,7 +25,12 @@ export default function Analysis() {
   };
 
   const handleDevice = (name: string) => {
-    setDevices({ current: { name, status: DeviceStatus.DEVICE } });
+    setDevices({
+      current: {
+        name,
+        status: DeviceStatus.DEVICE,
+      },
+    });
   };
   const worker = new Worker(new URL('./worker/backup.ts', import.meta.url), {
     type: 'module',
@@ -119,7 +124,7 @@ export default function Analysis() {
         const postItem = {
           task: 'backup',
           backupNodes: selectedRowKeys,
-          devices: devices.current!.name,
+          device: devices.current!.name,
         };
         setIsLoading(true);
         worker.postMessage(postItem);
@@ -135,7 +140,11 @@ export default function Analysis() {
           <Table
             rowSelection={rowSelection}
             locale={{ emptyText: <Empty description="暂无节点数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
-            scroll={{ x: '100%', scrollToFirstRowOnChange: true, y: '300px' }}
+            scroll={{
+              x: '100%',
+              scrollToFirstRowOnChange: true,
+              y: '300px',
+            }}
             pagination={false}
             rowKey="comment"
             columns={backupNodeColumns}

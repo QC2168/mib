@@ -10,7 +10,7 @@ const {
 } = require('@qc2168/mib');
 
 // 备份到电脑上
-function run(backupNodes: string[] | Key[]) {
+function run(device:string, backupNodes: string[] | Key[]) {
   const c = getConfig();
   // 判断是否有选择的节点
   // 备份选择的节点
@@ -33,24 +33,23 @@ function run(backupNodes: string[] | Key[]) {
     const outputDir = item.output
       ? item.output && pathRepair(item.output)
       : itemRootPath;
-
     // 判断备份路径是否存在
     if (!isPathAdb(backupDir)) {
       postMessage({ message: `备份路径:${backupDir} 不存在已跳过` });
     } else {
       // 判断导出路径
       isPath(outputDir);
-      mibBackup(backupDir, outputDir, item.full);
+      mibBackup(device, backupDir, outputDir, item.full);
       postMessage({ message: `备份完成 ${item.comment} ` });
     }
   });
 }
 
 onmessage = (e) => {
-  const { task, backupNodes, devices } = e.data;
-  console.log('work', { task, backupNodes, devices });
+  const { task, backupNodes, device } = e.data;
+  console.log('work', { task, backupNodes, device });
   if (task === 'backup') {
-    run(backupNodes);
+    run(device, backupNodes);
     postMessage({ message: 'done' });
   }
 };
