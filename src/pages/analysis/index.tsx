@@ -1,8 +1,8 @@
 import {
-  Button, Card, Empty, message, Modal, Popconfirm, Select, Space, Table,
+  Button, Card, Empty, message, Modal, Popconfirm, Select, Space, Table, Tag,
 } from 'antd';
 import {
-  Key,
+  Key, useRef,
   useState,
 } from 'react';
 import type { ColumnsType } from 'antd/es/table';
@@ -11,6 +11,7 @@ import { BackItemType } from '@/types';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import useConfig from '@/config/useConfig';
 import useDevices, { DeviceStatus } from '@/hooks/useDevices';
+import JSONEditor, { JSONEditorMode } from 'jsoneditor';
 
 const { Option } = Select;
 const { confirm } = Modal;
@@ -20,6 +21,32 @@ export default function Analysis() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const [devices, setDevices, isConnect] = useDevices();
+  const [jsonEditor, setJsonEditor] = useState<JSONEditor | null>(null);
+  const jsonEditorRef = useRef<HTMLDivElement | null>(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const saveCfg = () => {
+    const t = jsonEditor?.get();
+    setConfig(t);
+    setIsModalOpen(false);
+  };
+  const openCfgModal = () => {
+    setIsModalOpen(true);
+    const options = {
+      mode: 'text' as JSONEditorMode,
+      mainMenuBar: false,
+      navigationBar: false,
+      statusBar: false,
+    };
+    if (!jsonEditor) {
+      const instance: JSONEditor = new JSONEditor(jsonEditorRef.current as HTMLElement, options);
+      instance.set(config);
+      setJsonEditor(instance);
+    } else {
+      jsonEditor.update(config);
+    }
+  };
+
   const onSelectChange = (newSelectedRowKeys: Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
@@ -81,7 +108,21 @@ export default function Analysis() {
       dataIndex: 'path',
       key: 'path',
     },
+    {
+      title: '节点导出路径',
+      dataIndex: 'output',
+      key: 'output',
+      align: 'center',
+      render: (i) => <Tag color={i ? 'gold' : ''}>{i || '继承父级'}</Tag>,
+    },
+    {
+      title: '全量备份',
+      dataIndex: 'full',
+      key: 'full',
+      align: 'center',
+      render: (i) => <Tag color={i ? 'blue' : 'red'}>{i ? '是' : '否'}</Tag>,
 
+    },
     {
       title: '操作',
       dataIndex: 'actions',
@@ -135,7 +176,7 @@ export default function Analysis() {
   return (
     <div>
       <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-        <Card>
+        <Card title="备份节点" bordered extra={<Button type="link" onClick={() => openCfgModal()}>配置文件</Button>}>
           {/* 节点 */}
           <Table
             rowSelection={rowSelection}
@@ -160,6 +201,7 @@ export default function Analysis() {
               value={devices.current?.name ? devices.current.name : '未连接'}
               style={{ width: 160 }}
               onChange={handleDevice}
+              notFoundContent={<div>无设备连接</div>}
             >
               {
                 devices.devicesList.map((item) => <Option key={item.name} value={item.name}>{item.name}</Option>)
@@ -168,6 +210,16 @@ export default function Analysis() {
           </Space>
         </Card>
       </Space>
+      <Modal
+        title="配置文件"
+        open={isModalOpen}
+        onOk={() => saveCfg()}
+        onCancel={() => setIsModalOpen(false)}
+        cancelText="取消"
+        okText="更新"
+      >
+        <div ref={jsonEditorRef} />
+      </Modal>
     </div>
   );
 }

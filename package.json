@@ -25,6 +25,7 @@
     "@commitlint/config-conventional": "^17.0.3",
     "@iconify/json": "^2.1.81",
     "@types/fs-extra": "^9.0.13",
+    "@types/jsoneditor": "^9.9.0",
     "@types/lodash-es": "^4.17.6",
     "@types/node": "^18.0.3",
     "@types/react": "^18.0.12",
@@ -79,6 +80,7 @@
     "@qc2168/mib": "^1.2.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "fs-extra": "^10.1.0",
+    "jsoneditor": "^9.9.2",
     "only-allow": "^1.1.1",
     "usb": "^2.5.0"
   }

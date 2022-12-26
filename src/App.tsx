@@ -1,7 +1,7 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useState } from 'react';
-import { FileTextOutlined, RadarChartOutlined, SettingOutlined } from '@ant-design/icons';
+import { FileTextOutlined, RadarChartOutlined } from '@ant-design/icons';
 import {
   Button, MenuProps, Typography,
   ConfigProvider, Layout, Menu, Space,
@@ -9,7 +9,6 @@ import {
 
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import Analysis from '@/pages/analysis';
-import Settings from '@/pages/settings';
 import FileManage from '@/pages/fileStore';
 import classNames from 'classnames';
 import { ThemeType, useTheme } from './lib/css/theme';
@@ -41,9 +40,8 @@ function App() {
   }
 
   const items: MenuItem[] = [
-    getItem('状态', 'analysis', <RadarChartOutlined />),
+    getItem('数据备份', 'analysis', <RadarChartOutlined />),
     getItem('文件管理', 'fileManage', <FileTextOutlined />),
-    getItem('设置', 'settings', <SettingOutlined />),
   ];
   const [collapsed, setCollapsed] = useState(false);
   const closeApp = () => {
@@ -111,7 +109,6 @@ function App() {
                 <Route index element={<Analysis />} />
                 <Route path="/analysis" element={<Analysis />} />
                 <Route path="/fileManage" element={<FileManage />} />
-                <Route path="/settings" element={<Settings />} />
               </Routes>
             </Content>
           </Layout>
