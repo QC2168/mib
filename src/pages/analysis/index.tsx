@@ -2,7 +2,7 @@ import {
   Button, Card, Empty, message, Modal, Popconfirm, Select, Space, Table, Tag,
 } from 'antd';
 import {
-  Key, useRef,
+  Key, useEffect, useRef,
   useState,
 } from 'react';
 import type { ColumnsType } from 'antd/es/table';
@@ -11,6 +11,7 @@ import { BackItemType } from '@/types';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import useConfig from '@/config/useConfig';
 import useDevices, { DeviceStatus } from '@/hooks/useDevices';
+import 'jsoneditor/dist/jsoneditor.css';
 import JSONEditor, { JSONEditorMode } from 'jsoneditor';
 
 const { Option } = Select;
@@ -32,6 +33,9 @@ export default function Analysis() {
   };
   const openCfgModal = () => {
     setIsModalOpen(true);
+  };
+  useEffect(() => {
+    if (!isModalOpen) return;
     const options = {
       mode: 'text' as JSONEditorMode,
       mainMenuBar: false,
@@ -45,7 +49,7 @@ export default function Analysis() {
     } else {
       jsonEditor.update(config);
     }
-  };
+  }, [isModalOpen, config, jsonEditor]);
 
   const onSelectChange = (newSelectedRowKeys: Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
