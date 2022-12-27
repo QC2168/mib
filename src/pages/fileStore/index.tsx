@@ -11,24 +11,24 @@ import {
 } from 'antd';
 import useConfig from '@/config/useConfig';
 import useLocalFile from '@/pages/fileStore/hooks/useLocalFile';
-import { DriverType } from '@/types';
 import { useState } from 'react';
 import classNames from 'classnames';
 import { exec } from 'node:child_process';
-import storeTableColumns from './storeTableColumns';
 import useDevices from '@/hooks/useDevices';
-import useMobileFile from './hooks/useMobileFile';
 import { HomeOutlined, RollbackOutlined } from '@ant-design/icons';
+import { DriverType } from './types';
+import storeTableColumns from './storeTableColumns';
+import useMobileFile from './hooks/useMobileFile';
+
 export default function FileManage() {
   const [config] = useConfig();
-  const [messageApi, contextHolder] = message.useMessage();
-  const [devices, setDevices, isConnect] = useDevices();
+  const [messageApi] = message.useMessage();
+  const [devices] = useDevices();
   const [localPathCollection,
     setLocalPathCollection,
-    localFileNodeList,
-    loading] = useLocalFile(config.output);
+    localFileNodeList] = useLocalFile(config.output);
   const [mobilePathCollection, setMobilePathCollection,
-    mobileFileNodeList, setMobileFileNodeList] = useMobileFile(devices.current?.name);
+    mobileFileNodeList] = useMobileFile(devices.current?.name);
 
   // 显示状态
   const [curDriType, setCurDriType] = useState<DriverType>(DriverType.LOCAL);
@@ -65,25 +65,25 @@ export default function FileManage() {
   return (
     <Card className="overflow-hidden">
       <div className="flex justify-between">
-      <Space className={classNames('mb-4')} size={16}>
-        <Button onClick={() => turnBack()} title='返回上一级目录' type="primary" shape="circle" icon={<RollbackOutlined />}  />
-        <Breadcrumb>
-          <Breadcrumb.Item>
-            <HomeOutlined />
-          </Breadcrumb.Item>
-          {
-            localPathCollection.slice(1).map(item=>(
+        <Space className={classNames('mb-4')} size={16}>
+          <Button onClick={() => turnBack()} title="返回上一级目录" type="primary" shape="circle" icon={<RollbackOutlined />} />
+          <Breadcrumb>
+            <Breadcrumb.Item>
+              <HomeOutlined />
+            </Breadcrumb.Item>
+            {
+            localPathCollection.slice(1).map((item) => (
               <Breadcrumb.Item>
                 <span>{item}</span>
               </Breadcrumb.Item>
             ))
           }
-        </Breadcrumb>
-      </Space>
-      <Radio.Group onChange={radioChange} defaultValue={curDriType}>
-        <Radio.Button value={DriverType.LOCAL}>本地储存</Radio.Button>
-        <Radio.Button value={DriverType.MOBILE}>移动设备</Radio.Button>
-      </Radio.Group>
+          </Breadcrumb>
+        </Space>
+        <Radio.Group onChange={radioChange} defaultValue={curDriType}>
+          <Radio.Button value={DriverType.LOCAL}>本地储存</Radio.Button>
+          <Radio.Button value={DriverType.MOBILE}>移动设备</Radio.Button>
+        </Radio.Group>
       </div>
       <Table
         columns={storeTableColumns}
@@ -92,7 +92,6 @@ export default function FileManage() {
         onRow={({
           fileName,
           isDirectory,
-          children,
         }) => ({
           onDoubleClick: () => {
             if (isDirectory) {
@@ -120,10 +119,9 @@ export default function FileManage() {
           },
         })}
         locale={{
-          emptyText: <Empty description="此文件夹为空" image={Empty.PRESENTED_IMAGE_SIMPLE}/>,
+          emptyText: <Empty description="此文件夹为空" image={Empty.PRESENTED_IMAGE_SIMPLE} />,
         }}
         pagination={false}
-
         scroll={{
           x: '100%',
           scrollToFirstRowOnChange: true,

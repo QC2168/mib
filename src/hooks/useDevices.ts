@@ -1,19 +1,14 @@
 import { useMount, useSetState } from 'ahooks';
 import { SetState } from 'ahooks/lib/useSetState';
 import { debounce } from 'lodash-es';
+import type { DevicesType } from '@qc2168/mib';
 
 const { usb } = require('usb');
-
-const { execSync } = require('child_process');
+const { devices: getAdbDevices } = require('@qc2168/mib');
 
 export enum DeviceStatus{
   DEVICE='device',
   UNAUTHORIZED= 'unauthorized'
-}
-
-export interface DevicesType {
-  name: string;
-  status: DeviceStatus;
 }
 
 // 设备
@@ -23,17 +18,7 @@ export interface DevicesStatusType{
 }
 
 // 获取设备
-export const getDevices = (): DevicesType[] => {
-  const res = execSync('adb devices').toString();
-  return res
-    .split(/\n/)
-    .map((line: string) => line.split('\t'))
-    .filter((line: string | any[]) => line.length > 1)
-    .map((device: { trim: () => DeviceStatus; }[]) => ({
-      name: device[0].trim(),
-      status: device[1].trim() as DeviceStatus,
-    }));
-};
+export const getDevices = (): DevicesType[] => getAdbDevices();
 
 // 默认数据
 const defaultDevices:DevicesStatusType = {

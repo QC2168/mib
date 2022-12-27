@@ -11,7 +11,7 @@ export default function useMobileFile(device?: string, targetPath: string = 'sdc
   const [mobilePathCollection, setMobilePathCollection] = useState([targetPath]);
   // 移动设备文件列表
   const [mobileFileNodeList, setMobileFileNodeList] = useState<FileNodeType[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
   // 更新本地文件列表
   useMount(() => {
     if (!device) {
