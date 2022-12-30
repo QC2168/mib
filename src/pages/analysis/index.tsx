@@ -7,12 +7,15 @@ import {
 } from 'react';
 import type { ColumnsType } from 'antd/es/table';
 import { openNotification } from '@/utils';
-import { BackItemType } from '@/types';
+import type { SaveItemType as BackItemType } from '@qc2168/mib';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import useConfig from '@/config/useConfig';
 import useDevices, { DeviceStatus } from '@/hooks/useDevices';
 import 'jsoneditor/dist/jsoneditor.css';
 import JSONEditor, { JSONEditorMode } from 'jsoneditor';
+import BackupModal from './components/BackupModal';
+import type{ ExposeType as BackupModalExposeType } from './components/BackupModal';
+import styles from './index.module.less';
 
 const { Option } = Select;
 const { confirm } = Modal;
@@ -26,6 +29,8 @@ export default function Analysis() {
   const jsonEditorRef = useRef<HTMLDivElement | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const backupModalRef = useRef<BackupModalExposeType|null>(null);
   const saveCfg = () => {
     const t = jsonEditor?.get();
     setConfig(t);
@@ -42,6 +47,7 @@ export default function Analysis() {
       navigationBar: false,
       statusBar: false,
     };
+
     if (!jsonEditor) {
       const instance: JSONEditor = new JSONEditor(jsonEditorRef.current as HTMLElement, options);
       instance.set(config);
@@ -106,11 +112,24 @@ export default function Analysis() {
       title: '节点描述',
       dataIndex: 'comment',
       key: 'comment',
+      width: '150px',
+
+      render: (comment: string) => (
+        <div title={comment} className={styles.tableTableNodeComment}>
+          {comment}
+        </div>
+      ),
     },
     {
       title: '备份路径',
       dataIndex: 'path',
       key: 'path',
+      width: '200px',
+      render: (path: string) => (
+        <div title={path} className={styles.tableTablePath}>
+          {path}
+        </div>
+      ),
     },
     {
       title: '节点导出路径',
@@ -132,18 +151,18 @@ export default function Analysis() {
       dataIndex: 'actions',
       key: 'actions',
       align: 'center',
+      fixed: 'right',
+      width: '160px',
       render: (_: any, record: BackItemType) => (
-        <Space>
-
-          <Button type="link" onClick={() => backupNode(record)}>单独备份</Button>
-
+        <Space size="small">
+          <Button type="link" onClick={() => backupNode(record)}>备份</Button>
           <Popconfirm
             title="确认删除该节点?"
             onConfirm={() => deleteNode(record)}
             okText="是"
             cancelText="否"
           >
-            <Button type="link">删除节点</Button>
+            <Button type="link">删除</Button>
           </Popconfirm>
         </Space>
       ),
@@ -177,10 +196,19 @@ export default function Analysis() {
     });
   }
 
+  function cardRightBtn() {
+    return (
+      <Space size="middle">
+        <Button type="link" onClick={() => backupModalRef.current?.open()}>新增节点</Button>
+        <Button type="link" onClick={() => openCfgModal()}>查看配置文件</Button>
+      </Space>
+    );
+  }
+
   return (
-    <div>
-      <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-        <Card title="备份节点" bordered extra={<Button type="link" onClick={() => openCfgModal()}>配置文件</Button>}>
+    <>
+      <Card title="备份节点" bordered extra={cardRightBtn()}>
+        <div>
           {/* 节点 */}
           <Table
             rowSelection={rowSelection}
@@ -188,17 +216,15 @@ export default function Analysis() {
             scroll={{
               x: '100%',
               scrollToFirstRowOnChange: true,
-              y: '300px',
+              y: document.documentElement.clientHeight - 250,
             }}
             pagination={false}
             rowKey="comment"
             columns={backupNodeColumns}
             dataSource={config.backups}
           />
-        </Card>
-        <Card>
-          <Space size="middle">
-            <Button loading={isLoading} onClick={() => backupTip()} type="primary">极速备份数据</Button>
+          <div className="mt-8 flex justify-end">
+            <Button className="mr-3" loading={isLoading} onClick={() => backupTip()} type="primary">一键备份</Button>
             {/* <Button>取消</Button> */}
             <Select
               defaultValue="请选择设备"
@@ -208,12 +234,13 @@ export default function Analysis() {
               notFoundContent={<div>无设备连接</div>}
             >
               {
-                devices.devicesList.map((item) => <Option key={item.name} value={item.name}>{item.name}</Option>)
-              }
+                  devices.devicesList.map((item) => <Option key={item.name} value={item.name}>{item.name}</Option>)
+                }
             </Select>
-          </Space>
-        </Card>
-      </Space>
+          </div>
+        </div>
+      </Card>
+
       <Modal
         title="配置文件"
         open={isModalOpen}
@@ -224,6 +251,7 @@ export default function Analysis() {
       >
         <div ref={jsonEditorRef} />
       </Modal>
-    </div>
+      <BackupModal ref={backupModalRef} />
+    </>
   );
 }

@@ -1,6 +1,6 @@
 import { Key } from 'react';
 import { getConfig } from '@/config/useConfig';
-import { BackItemType } from '@/types';
+import { SaveItemType as BackItemType } from '@qc2168/mib';
 
 const {
   isPath,
