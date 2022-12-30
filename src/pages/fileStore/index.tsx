@@ -1,13 +1,5 @@
 import {
-  Breadcrumb,
-  Button,
-  Card,
-  Empty,
-  message,
-  Radio,
-  RadioChangeEvent,
-  Space,
-  Table,
+  Breadcrumb, Button, Card, Empty, message, Radio, RadioChangeEvent, Space, Table,
 } from 'antd';
 import useConfig from '@/config/useConfig';
 import useLocalFile from '@/pages/fileStore/hooks/useLocalFile';
@@ -16,6 +8,7 @@ import classNames from 'classnames';
 import { exec } from 'node:child_process';
 import useDevices from '@/hooks/useDevices';
 import { HomeOutlined, RollbackOutlined } from '@ant-design/icons';
+import { pathRepair } from '@qc2168/mib';
 import { DriverType } from './types';
 import storeTableColumns from './storeTableColumns';
 import useMobileFile from './hooks/useMobileFile';
@@ -63,7 +56,7 @@ export default function FileManage() {
   };
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden h-full">
       <div className="flex justify-between">
         <Space className={classNames('mb-4')} size={16}>
           <Button onClick={() => turnBack()} title="返回上一级目录" type="primary" shape="circle" icon={<RollbackOutlined />} />
@@ -73,7 +66,7 @@ export default function FileManage() {
             </Breadcrumb.Item>
             {
             localPathCollection.slice(1).map((item) => (
-              <Breadcrumb.Item>
+              <Breadcrumb.Item key={item}>
                 <span>{item}</span>
               </Breadcrumb.Item>
             ))
@@ -104,17 +97,22 @@ export default function FileManage() {
             } else {
               // 打开文件
               // 处理开头 // 盘符为 /
-              const filePath = [localPathCollection[0].slice(0, -1), ...localPathCollection.slice(1), fileName].join('/');
-              messageApi.info(`正在打开${fileName}`);
-              exec(`start ${filePath}`, (error, stdout, stderr) => {
-                if (error) {
-                  messageApi.error(error.message);
-                  return;
-                }
-                if (stderr) {
-                  messageApi.error(stderr);
-                }
-              });
+              if (curDriType === DriverType.LOCAL) {
+                const filePath = [...localPathCollection.map((p) => pathRepair(p)), fileName].join('/');
+                messageApi.info(`正在打开${fileName}`);
+                exec(`start ${filePath}`, (error, stdout, stderr) => {
+                  if (error) {
+                    messageApi.error(error.message);
+                    return;
+                  }
+                  if (stderr) {
+                    messageApi.error(stderr);
+                  }
+                });
+              }
+              if (curDriType === DriverType.MOBILE) {
+                message.warning('暂无法打开移动设备中的文件');
+              }
             }
           },
         })}
