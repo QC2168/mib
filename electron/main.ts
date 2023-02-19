@@ -1,11 +1,11 @@
 /* eslint-disable import/prefer-default-export */
 import {
-  app, BrowserWindow, shell, ipcMain,
+  app, BrowserWindow, ipcMain,
 } from 'electron';
 import { release } from 'os';
-import installExtension, {
-  REACT_DEVELOPER_TOOLS,
-} from 'electron-devtools-installer';
+// import installExtension, {
+//   REACT_DEVELOPER_TOOLS,
+// } from 'electron-devtools-installer';
 
 const { join } = require('path');
 // Disable GPU Acceleration for Windows 7
@@ -23,17 +23,18 @@ process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
 
 export const ROOT_PATH = {
   // /dist
-  dist: join(__dirname, '../..'),
+  dist: join(__dirname, './..'),
   // /dist or /public
-  public: join(__dirname, app.isPackaged ? '../..' : '../../../public'),
+  public: join(__dirname, app.isPackaged ? './..' : './../../public'),
 };
 
 let win: BrowserWindow | null = null;
 // Here, you can also use other preload
-const preload = join(__dirname, '../preload/index.js');
+// const preload = join(__dirname, './preload/index.js');
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin
 // eslint-disable-next-line dot-notation
-const url = `http://${process.env['VITE_DEV_SERVER_HOST']}:${process.env['VITE_DEV_SERVER_PORT']}`;
+const url = 'http://127.0.0.1:7777';
+// const url = `http://${process.env['VITE_DEV_SERVER_HOST']}:${process.env['VITE_DEV_SERVER_PORT']}`;
 const indexHtml = join(ROOT_PATH.dist, 'index.html');
 
 async function createWindow() {
@@ -46,40 +47,38 @@ async function createWindow() {
     width: 970,
     height: 580,
     webPreferences: {
-      preload,
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
       contextIsolation: false,
     },
   });
-
   if (app.isPackaged) {
-    win.loadFile(indexHtml);
+    await win.loadFile(indexHtml);
   } else {
-    win.loadURL(url);
+    await win.loadURL(url);
     win.webContents.openDevTools();
   }
 
   // Test actively push message to the Electron-Renderer
-  win.webContents.on('did-finish-load', () => {
-    win?.webContents.send('main-process-message', new Date().toLocaleString());
-  });
-
-  // Make all links open with the browser, not with the application
-  win.webContents.setWindowOpenHandler((event) => {
-    if (event.url.startsWith('https:')) shell.openExternal(event.url);
-    return { action: 'deny' };
-  });
+  // win.webContents.on('did-finish-load', () => {
+  //   win?.webContents.send('main-process-message', new Date().toLocaleString());
+  // });
+  //
+  // // Make all links open with the browser, not with the application
+  // win.webContents.setWindowOpenHandler((event) => {
+  //   if (event.url.startsWith('https:')) shell.openExternal(event.url);
+  //   return { action: 'deny' };
+  // });
 }
 
 app
   .whenReady()
-  .then(createWindow)
-  .then(() => {
-    installExtension(REACT_DEVELOPER_TOOLS.id)
-      .then((name) => console.log(`Added Extension:  ${name}`))
-      .catch((err) => console.log('An error occurred: ', err));
-  });
+  .then(createWindow);
+// .then(() => {
+//   installExtension(REACT_DEVELOPER_TOOLS.id)
+//     .then((name) => console.log(`Added Extension:  ${name}`))
+//     .catch((err) => console.log('An error occurred: ', err));
+// });
 
 app.on('window-all-closed', () => {
   win = null;
@@ -107,7 +106,6 @@ app.on('activate', () => {
 ipcMain.handle('open-win', (event, arg) => {
   const childWindow = new BrowserWindow({
     webPreferences: {
-      preload,
     },
   });
 

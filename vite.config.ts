@@ -12,7 +12,7 @@ import pkg from './package.json';
 
 const { join } = require('path');
 
-rmSync(join(__dirname, 'dist'), { recursive: true, force: true }); // v14.14.0
+rmSync(join(__dirname, 'dist-electron'), { recursive: true, force: true }); // v14.14.0
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -34,30 +34,36 @@ export default defineConfig({
   plugins: [
     react(),
     electron({
-      main: {
-        entry: 'electron/main/index.ts',
-        vite: {
-          build: {
-            sourcemap: false,
-            outDir: 'dist/electron/main',
-          },
+      entry: 'electron/main.ts',
+      vite: {
+        build: {
+          sourcemap: true,
         },
       },
-      preload: {
-        input: {
-          // You can configure multiple preload scripts here
-          index: join(__dirname, 'electron/preload/index.ts'),
-        },
-        vite: {
-          build: {
-            // For debug
-            sourcemap: 'inline',
-            outDir: 'dist/electron/preload',
-          },
-        },
-      },
+      // main: {
+      //   entry: 'electron/main/main.ts',
+      //   vite: {
+      //     build: {
+      //       sourcemap: false,
+      //       outDir: 'dist/electron/main',
+      //     },
+      //   },
+      // },
+      // preload: {
+      //   input: {
+      //     // You can configure multiple preload scripts here
+      //     index: join(__dirname, 'electron/preload/main.ts'),
+      //   },
+      //   vite: {
+      //     build: {
+      //       // For debug
+      //       sourcemap: 'inline',
+      //       outDir: 'dist/electron/preload',
+      //     },
+      //   },
+      // },
       // Enables use of Node.js API in the Electron-Renderer
-      renderer: {},
+      // renderer: {},
     }),
 
     Unocss({
