@@ -1,13 +1,17 @@
 /* eslint-disable import/prefer-default-export */
-import {
-  app, BrowserWindow, ipcMain,
-} from 'electron';
+import Mib from '@qc2168/mib';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import { release } from 'os';
 // import installExtension, {
 //   REACT_DEVELOPER_TOOLS,
 // } from 'electron-devtools-installer';
 
 const { join } = require('path');
+
+const preload = join(__dirname, './preload.js');
+
+const mibInstance = new Mib();
+
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration();
 
@@ -41,15 +45,16 @@ async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
     icon: join(ROOT_PATH.public, 'favicon.svg'),
-    frame: false,
+    frame: true,
     minWidth: 970,
     minHeight: 580,
     width: 970,
     height: 580,
     webPreferences: {
-      nodeIntegration: true,
-      nodeIntegrationInWorker: true,
-      contextIsolation: false,
+      preload,
+      // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
+      // Consider using contextBridge.exposeInMainWorld
+      // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
     },
   });
   if (app.isPackaged) {
@@ -71,9 +76,7 @@ async function createWindow() {
   // });
 }
 
-app
-  .whenReady()
-  .then(createWindow);
+app.whenReady().then(createWindow);
 // .then(() => {
 //   installExtension(REACT_DEVELOPER_TOOLS.id)
 //     .then((name) => console.log(`Added Extension:  ${name}`))
@@ -105,8 +108,7 @@ app.on('activate', () => {
 // new window example arg: new windows url
 ipcMain.handle('open-win', (event, arg) => {
   const childWindow = new BrowserWindow({
-    webPreferences: {
-    },
+    webPreferences: {},
   });
 
   if (app.isPackaged) {
@@ -128,3 +130,5 @@ ipcMain.handle('minimize-win', () => {
 ipcMain.handle('maximize-win', () => {
   win.maximize();
 });
+
+ipcMain.handle('mibInstance', () => mibInstance);

@@ -1,7 +1,9 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable react-hooks/rules-of-hooks */
-function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
+function domReady(
+  condition: DocumentReadyState[] = ['complete', 'interactive'],
+) {
   return new Promise((resolve) => {
     if (condition.includes(document.readyState)) {
       resolve(true);
@@ -94,3 +96,21 @@ window.onmessage = (ev) => {
 };
 
 setTimeout(removeLoading, 4999);
+
+const { contextBridge, ipcRenderer } = require('electron');
+
+contextBridge.exposeInMainWorld('versions', {
+  node: () => process.versions.node,
+  chrome: () => process.versions.chrome,
+  electron: () => process.versions.electron,
+});
+
+contextBridge.exposeInMainWorld('win', {
+  close: () => ipcRenderer.invoke('close-win'),
+  minimize: () => ipcRenderer.invoke('minimize-win'),
+  maximize: () => ipcRenderer.invoke('maximize-win'),
+});
+
+contextBridge.exposeInMainWorld('core', {
+  instance: () => ipcRenderer.invoke('mibInstance'),
+});

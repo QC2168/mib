@@ -33,38 +33,21 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    electron({
+    electron([{
       entry: 'electron/main.ts',
       vite: {
         build: {
           sourcemap: true,
         },
       },
-      // main: {
-      //   entry: 'electron/main/main.ts',
-      //   vite: {
-      //     build: {
-      //       sourcemap: false,
-      //       outDir: 'dist/electron/main',
-      //     },
-      //   },
-      // },
-      // preload: {
-      //   input: {
-      //     // You can configure multiple preload scripts here
-      //     index: join(__dirname, 'electron/preload/main.ts'),
-      //   },
-      //   vite: {
-      //     build: {
-      //       // For debug
-      //       sourcemap: 'inline',
-      //       outDir: 'dist/electron/preload',
-      //     },
-      //   },
-      // },
-      // Enables use of Node.js API in the Electron-Renderer
-      // renderer: {},
-    }),
+    },
+    {
+      entry: 'electron/preload.ts',
+      onstart(options) {
+        options.reload();
+      },
+    },
+    ]),
 
     Unocss({
       presets: [
