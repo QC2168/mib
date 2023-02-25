@@ -59,7 +59,7 @@ module.exports = {
     'import/no-extraneous-dependencies': 'off',
     'max-len': 'off',
     'no-shadow': 'off',
-    '@typescript-eslint/no-shadow': ['error'],
+    '@typescript-eslint/no-shadow': ['off'],
     'import/extensions': [
       'error',
       'ignorePackages',
