@@ -8,21 +8,20 @@ import {
 } from 'antd';
 
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import Analysis from '@/pages/analysis';
-import FileManage from '@/pages/fileStore';
 import classNames from 'classnames';
 import { ThemeType, useTheme } from './lib/css/theme';
+import Analysis from './pages/analysis';
 
 const {
   Sider, Content,
 } = Layout;
 const { Title } = Typography;
-const { ipcRenderer } = require('electron');
 
 function App() {
   const navigate = useNavigate();
   const [themeConfig, mode, setMode] = useTheme();
   type MenuItem = Required<MenuProps>['items'][number];
+
   function getItem(
     label: React.ReactNode,
     key: React.Key,
@@ -45,13 +44,13 @@ function App() {
   ];
   const [collapsed, setCollapsed] = useState(false);
   const closeApp = () => {
-    ipcRenderer.invoke('close-win');
+    window.win.close();
   };
   const minimizeApp = () => {
-    ipcRenderer.invoke('minimize-win');
+    window.win.minimize();
   };
   const maximizeApp = () => {
-    ipcRenderer.invoke('maximize-win');
+    window.win.maximize();
   };
   const changeTheme = () => {
     console.log('changeTheme');
@@ -66,8 +65,23 @@ function App() {
     <ConfigProvider theme={themeConfig}>
       <div>
         <Layout style={{ minHeight: '100vh' }}>
-          <Sider collapsible collapsed={collapsed} style={{ background: mode === ThemeType.DARK ? '#0a0a0a' : '' }} theme={mode === ThemeType.DARK ? 'dark' : 'light'} className="relative" onCollapse={(value) => setCollapsed(value)}>
-            <Title level={collapsed ? 4 : 2} className={classNames('allow-drag cursor-pointer text-center transition-all', { 'pt-4': collapsed, 'pt-2 ': !collapsed })}>MIB</Title>
+          <Sider
+            collapsible
+            collapsed={collapsed}
+            style={{ background: mode === ThemeType.DARK ? '#0a0a0a' : '' }}
+            theme={mode === ThemeType.DARK ? 'dark' : 'light'}
+            className="relative"
+            onCollapse={(value) => setCollapsed(value)}
+          >
+            <Title
+              level={collapsed ? 4 : 2}
+              className={classNames('allow-drag cursor-pointer text-center transition-all', {
+                'pt-4': collapsed,
+                'pt-2 ': !collapsed,
+              })}
+            >
+              MIB
+            </Title>
 
             <div className={classNames('w-full flex justify-center mt-2 mb-4', { '!hidden': collapsed })}>
               <Space>
@@ -108,7 +122,8 @@ function App() {
               <Routes>
                 <Route index element={<Analysis />} />
                 <Route path="/analysis" element={<Analysis />} />
-                <Route path="/fileManage" element={<FileManage />} />
+                {/* <Route path="/fileManage" element={<FileManage />} /> */}
+                {/* <Route path="/fileManage" element={<Start />} /> */}
               </Routes>
             </Content>
           </Layout>

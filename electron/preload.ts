@@ -1,5 +1,8 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-expressions */
+
+import { type SaveItemType } from '@qc2168/mib';
+
 /* eslint-disable react-hooks/rules-of-hooks */
 function domReady(
   condition: DocumentReadyState[] = ['complete', 'interactive'],
@@ -113,4 +116,7 @@ contextBridge.exposeInMainWorld('win', {
 
 contextBridge.exposeInMainWorld('core', {
   instance: () => ipcRenderer.invoke('mibInstance'),
+  devices: () => ipcRenderer.invoke('getDevices'),
+  setDevice: (id:string) => ipcRenderer.invoke('setDevice', id),
+  backup: (id:SaveItemType|SaveItemType[]) => ipcRenderer.invoke('backup', id),
 });

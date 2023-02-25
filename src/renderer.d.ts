@@ -1,4 +1,4 @@
-import type Mib from '@qc2168/mib';
+import type Mib, { type DevicesType, type SaveItemType } from '@qc2168/mib';
 
 export interface WinApi {
   close: () => Promise<void>,
@@ -7,6 +7,9 @@ export interface WinApi {
 }
 export interface MibApi {
   instance: () => Promise<Mib>,
+  devices: () => Promise<DevicesType[]>,
+  setDevice: (id:string) => Promise<void>,
+  backup: (id:SaveItemType|SaveItemType[]) => Promise<void>,
 }
 
 declare global {

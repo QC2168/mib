@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import Mib from '@qc2168/mib';
+import Mib, { devices as getDevices, type SaveItemType } from '@qc2168/mib';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { release } from 'os';
 // import installExtension, {
@@ -132,3 +132,17 @@ ipcMain.handle('maximize-win', () => {
 });
 
 ipcMain.handle('mibInstance', () => mibInstance);
+
+ipcMain.handle('setDevice', (event, id:string) => mibInstance.setDevice(id));
+
+ipcMain.handle('getDevices', () => getDevices(mibInstance.adbOpt.adbPath));
+
+ipcMain.handle('backup', (event, id:SaveItemType|SaveItemType[]) => {
+  if (Array.isArray(id)) {
+    for (let i = 0; i < id.length; i += 1) {
+      mibInstance.start(id[i]);
+    }
+  } else {
+    mibInstance.start(id);
+  }
+});
