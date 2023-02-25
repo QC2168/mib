@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+dist-electron
 
 # Editor directories and files
 .idea
@@ -26,3 +27,6 @@ release
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+
+electron/adb
