@@ -2,10 +2,7 @@ import {
   Modal, Form, Input, Switch,
 } from 'antd';
 
-import {
-  useState, useImperativeHandle, forwardRef,
-} from 'react';
-import useConfig from '@/config/useConfig';
+import { useImperativeHandle, forwardRef, useState } from 'react';
 import { createSuccessMessage } from '@/hooks/useMessage';
 
 const { useForm } = Form;
@@ -17,7 +14,7 @@ export interface ExposeType {
 
 export default forwardRef((props, ref) => {
   const [isOpenBackupModal, setOpenBackupModal] = useState(false);
-  const [config, setConfig] = useConfig();
+  // const [config, setConfig] = useConfig();
   const [form] = useForm();
   const defaultState = {
     comment: '',
@@ -38,9 +35,11 @@ export default forwardRef((props, ref) => {
   };
 
   const onFinish = (values: any) => {
-    setConfig({
-      backups: [...config.backups, values],
-    });
+    console.log(values);
+
+    // setConfig({
+    //   backups: [...config.backups, values],
+    // });
     createSuccessMessage('添加成功');
     close();
   };

@@ -1,7 +1,7 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useState } from 'react';
-import { FileTextOutlined, RadarChartOutlined } from '@ant-design/icons';
+import { InboxOutlined, FolderOpenOutlined} from '@ant-design/icons';
 import {
   Button, MenuProps, Typography,
   ConfigProvider, Layout, Menu, Space, Result,
@@ -10,7 +10,7 @@ import {
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
 import { ThemeType, useTheme } from './lib/css/theme';
-import Analysis from './pages/analysis';
+import Home from './pages/home';
 
 const {
   Sider, Content,
@@ -39,8 +39,8 @@ function App() {
   }
 
   const items: MenuItem[] = [
-    getItem('数据备份', 'analysis', <RadarChartOutlined />),
-    getItem('文件管理', 'fileManage', <FileTextOutlined />),
+    getItem('数据备份', 'home', <InboxOutlined />),
+    getItem('文件管理', 'file', <FolderOpenOutlined />),
   ];
   const [collapsed, setCollapsed] = useState(false);
   const closeApp = () => {
@@ -111,7 +111,7 @@ function App() {
             <Menu
               theme={mode === ThemeType.DARK ? 'dark' : 'light'}
               style={{ background: mode === ThemeType.DARK ? '#0a0a0a' : '' }}
-              defaultSelectedKeys={['analysis']}
+              defaultSelectedKeys={['home']}
               onSelect={({ key }) => navigate(key)}
               mode="inline"
               items={items}
@@ -120,10 +120,10 @@ function App() {
           <Layout>
             <Content style={{ padding: '12px', minHeight: 'calc( 100vh - 45px )' }}>
               <Routes>
-                <Route index element={<Analysis />} />
-                <Route path="/analysis" element={<Analysis />} />
+                <Route index element={<Home />} />
+                <Route path="/home" element={<Home />} />
                 <Route
-                  path="/fileManage"
+                  path="/file"
                   element={(
                     <Result
                       title="正在开发中"
