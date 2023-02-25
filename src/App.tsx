@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { FileTextOutlined, RadarChartOutlined } from '@ant-design/icons';
 import {
   Button, MenuProps, Typography,
-  ConfigProvider, Layout, Menu, Space,
+  ConfigProvider, Layout, Menu, Space, Result,
 } from 'antd';
 
 import { Route, Routes, useNavigate } from 'react-router-dom';
@@ -122,8 +122,14 @@ function App() {
               <Routes>
                 <Route index element={<Analysis />} />
                 <Route path="/analysis" element={<Analysis />} />
-                {/* <Route path="/fileManage" element={<FileManage />} /> */}
-                {/* <Route path="/fileManage" element={<Start />} /> */}
+                <Route
+                  path="/fileManage"
+                  element={(
+                    <Result
+                      title="正在开发中"
+                    />
+                  )}
+                />
               </Routes>
             </Content>
           </Layout>
