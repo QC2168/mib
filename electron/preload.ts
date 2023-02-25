@@ -119,4 +119,5 @@ contextBridge.exposeInMainWorld('core', {
   devices: () => ipcRenderer.invoke('getDevices'),
   setDevice: (id:string) => ipcRenderer.invoke('setDevice', id),
   backup: (id:SaveItemType|SaveItemType[]) => ipcRenderer.invoke('backup', id),
+  backupDone: (callback) => ipcRenderer.on('backupDone', callback),
 });

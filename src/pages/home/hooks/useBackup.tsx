@@ -8,7 +8,7 @@ import {
 import type { ColumnsType } from 'antd/es/table';
 import type { SaveItemType as BackItemType, SaveItemType } from '@qc2168/mib';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { createErrorMessage, createWarningMessage } from '@/utils/message';
+import { createErrorMessage, createSuccessMessage, createWarningMessage } from '@/utils/message';
 import styles from '../index.module.less';
 import useMib from './useMib';
 
@@ -63,7 +63,14 @@ export default function useBackup() {
       },
     });
   }
-
+  // 监听备份任务
+  window.core.backupDone((event, data) => {
+    if (data.result) {
+      createSuccessMessage(data.msg);
+    } else {
+      createErrorMessage(data.msg);
+    }
+  });
   const backupNodeColumns: ColumnsType<BackItemType> = [
     {
       title: '节点描述',

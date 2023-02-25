@@ -138,11 +138,22 @@ ipcMain.handle('setDevice', (event, id:string) => mibInstance.setDevice(id));
 ipcMain.handle('getDevices', () => getDevices(mibInstance.adbOpt.adbPath));
 
 ipcMain.handle('backup', (event, id:SaveItemType|SaveItemType[]) => {
-  if (Array.isArray(id)) {
-    for (let i = 0; i < id.length; i += 1) {
-      mibInstance.start(id[i]);
+  try {
+    if (Array.isArray(id)) {
+      for (let i = 0; i < id.length; i += 1) {
+        mibInstance.start(id[i]);
+      }
+    } else {
+      mibInstance.start(id);
     }
-  } else {
-    mibInstance.start(id);
+    win.webContents.send('backupDone', {
+      msg: '备份任务完成',
+      result: true,
+    });
+  } catch (error) {
+    win.webContents.send('backupDone', {
+      msg: '备份进程出错了',
+      result: false,
+    });
   }
 });
