@@ -46,6 +46,7 @@ async function createWindow() {
     title: 'Main window',
     icon: join(ROOT_PATH.public, 'favicon.svg'),
     frame: true,
+    autoHideMenuBar: true,
     minWidth: 970,
     minHeight: 580,
     width: 970,
