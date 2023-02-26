@@ -47,6 +47,12 @@ export default defineConfig({
         options.reload();
       },
     },
+    {
+      entry: 'electron/worker/backup.ts',
+      onstart(options) {
+        options.reload();
+      },
+    },
     ]),
 
     Unocss({

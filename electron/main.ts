@@ -7,7 +7,9 @@ import { release } from 'os';
 // } from 'electron-devtools-installer';
 
 const { join } = require('path');
+const { Worker } = require('worker_threads');
 
+const workerSrc = join(__dirname, './backup.js');
 const preload = join(__dirname, './preload.js');
 
 const mibInstance = new Mib();
@@ -53,6 +55,7 @@ async function createWindow() {
     height: 580,
     webPreferences: {
       preload,
+      nodeIntegrationInWorker: true,
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
       // Consider using contextBridge.exposeInMainWorld
       // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
@@ -106,6 +109,15 @@ app.on('activate', () => {
   }
 });
 
+const runBackupWorker = (workerData) => new Promise((resolve, reject) => {
+  const worker = new Worker(workerSrc, { workerData });
+  worker.on('message', resolve);
+  worker.on('error', reject);
+  worker.on('exit', (code) => {
+    if (code !== 0) reject(new Error(`stopped with  ${code} exit code`));
+  });
+});
+
 // new window example arg: new windows url
 ipcMain.handle('open-win', (event, arg) => {
   const childWindow = new BrowserWindow({
@@ -134,24 +146,22 @@ ipcMain.handle('maximize-win', () => {
 
 ipcMain.handle('mibInstance', () => mibInstance);
 
-ipcMain.handle('setDevice', (event, id:string) => mibInstance.setDevice(id));
+ipcMain.handle('setDevice', (event, id: string) => mibInstance.setDevice(id));
 
 ipcMain.handle('getDevices', () => getDevices(mibInstance.adbOpt.adbPath));
 
-ipcMain.handle('backup', (event, id:SaveItemType|SaveItemType[]) => {
+ipcMain.handle('backup', async (event, id: SaveItemType | SaveItemType[]) => {
   try {
-    if (Array.isArray(id)) {
-      for (let i = 0; i < id.length; i += 1) {
-        mibInstance.start(id[i]);
-      }
-    } else {
-      mibInstance.start(id);
-    }
-    win.webContents.send('backupDone', {
-      msg: '备份任务完成',
-      result: true,
+    const result = await runBackupWorker({
+      task: 'backup',
+      cfg: {
+        current: mibInstance.adbOpt.current,
+      },
+      params: id,
     });
-  } catch (error) {
+    win.webContents.send('backupDone', result);
+  } catch (e) {
+    console.log(e);
     win.webContents.send('backupDone', {
       msg: '备份进程出错了',
       result: false,
