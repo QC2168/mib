@@ -9,6 +9,7 @@ import type { ColumnsType } from 'antd/es/table';
 import type { SaveItemType as BackItemType, SaveItemType } from '@qc2168/mib';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { createErrorMessage, createSuccessMessage, createWarningMessage } from '@/utils/message';
+import useDevices from '@/pages/home/hooks/useDevices';
 import styles from '../index.module.less';
 import useMib from './useMib';
 
@@ -16,6 +17,9 @@ const { confirm } = Modal;
 export default function useBackup() {
   const [instance] = useMib();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const {
+    devices, handleDevice, currentDevices, updateDevices, check,
+  } = useDevices();
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const onSelectChange = (newSelectedRowKeys: Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -31,7 +35,7 @@ export default function useBackup() {
     createWarningMessage('该功能正在开发中~');
   };
 
-  async function backup(data:SaveItemType|SaveItemType[]) {
+  async function backup(data: SaveItemType | SaveItemType[]) {
     try {
       await window.core.backup(data);
     } catch (e) {
@@ -40,15 +44,27 @@ export default function useBackup() {
       setIsLoading(false);
     }
   }
+
   const backupNode = (item: BackItemType) => {
+    // 检测设备连接
+    if (!check()) {
+      createWarningMessage('请先连接设备，再执行操作');
+      return;
+    }
     setIsLoading(true);
     backup(item);
   };
+
   async function backupTip() {
     // 判断是否连接状态
     // 判断备份节点
     if (selectedRowKeys.length === 0) {
       message.warning('当前没有选中任何备份节点');
+      return;
+    }
+    // 检测设备连接
+    if (!check()) {
+      createWarningMessage('请先连接设备，再执行操作');
       return;
     }
     confirm({
@@ -63,6 +79,7 @@ export default function useBackup() {
       },
     });
   }
+
   // 监听备份任务
   window.core.backupDone((event, data) => {
     if (data.result) {
@@ -138,5 +155,8 @@ export default function useBackup() {
     backupNodeColumns,
     isLoading,
     backupTip,
+    devices,
+    handleDevice,
+    currentDevices,
   };
 }

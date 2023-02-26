@@ -5,12 +5,16 @@ import { type DevicesType } from '@qc2168/mib';
 
 export default function useDevices() {
   const [devices, setDevices] = useState<DevicesType[]>([]);
-  const [currentDevices, setCurrentDevices] = useState<string>('未连接');
+  const [currentDevices, setCurrentDevices] = useState<string | null>(null);
   const updateDevices = async () => {
-    const result = await window.core.devices();
-    setDevices(result);
+    try {
+      const result = await window.core.devices();
+      setDevices(result);
+    } catch {
+      createErrorMessage('获取设备列表失败');
+    }
   };
-  const handleDevice = async (id:string) => {
+  const handleDevice = async (id: string) => {
     try {
       await window.core.setDevice(id);
       setCurrentDevices(id);
@@ -18,8 +22,12 @@ export default function useDevices() {
       createErrorMessage('切换设备失败');
     }
   };
+
+  const check = () => currentDevices !== null;
   useMount(() => {
     updateDevices();
   });
-  return { devices, handleDevice, currentDevices };
+  return {
+    devices, handleDevice, currentDevices, updateDevices, check,
+  };
 }

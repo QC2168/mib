@@ -3,19 +3,18 @@ import {
 } from 'antd';
 
 import useMib from './hooks/useMib';
-import useDevices from './hooks/useDevices';
 import useBackup from './hooks/useBackup';
 
 const { Option } = Select;
 
 export default function Analysis() {
   const [instance] = useMib();
-  const { devices, handleDevice, currentDevices } = useDevices();
+
   const {
     rowSelection,
     backupNodeColumns,
     isLoading,
-    backupTip,
+    backupTip, devices, handleDevice, currentDevices,
   } = useBackup();
   return (
     <Card title="备份节点" bordered>
