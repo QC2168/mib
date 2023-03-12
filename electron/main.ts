@@ -50,9 +50,10 @@ async function createWindow() {
     frame: true,
     autoHideMenuBar: true,
     minWidth: 970,
-    minHeight: 580,
+    minHeight: 600,
+    resizable: false,
     width: 970,
-    height: 580,
+    height: 600,
     webPreferences: {
       preload,
       nodeIntegrationInWorker: true,

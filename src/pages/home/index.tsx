@@ -2,6 +2,7 @@ import {
   Button, Card, Empty, Select, Table,
 } from 'antd';
 
+import { VerticalAlignBottomOutlined } from '@ant-design/icons';
 import useMib from './hooks/useMib';
 import useBackup from './hooks/useBackup';
 
@@ -26,7 +27,7 @@ export default function Analysis() {
           scroll={{
             x: '100%',
             scrollToFirstRowOnChange: true,
-            y: document.documentElement.clientHeight - 250,
+            y: 280,
           }}
           pagination={false}
           rowKey="comment"
@@ -34,10 +35,11 @@ export default function Analysis() {
           dataSource={instance?.config.backups || []}
         />
         <div className="mt-8 flex justify-end">
-          <Button className="mr-3" loading={isLoading} onClick={() => backupTip()} type="primary">一键备份</Button>
+
           <Select
+            className="mr-3"
             defaultValue="请选择设备"
-            value={currentDevices || '未连接'}
+            value={currentDevices || '请选择设备'}
             style={{ width: 160 }}
             onChange={handleDevice}
             notFoundContent={<div>无设备连接</div>}
@@ -46,6 +48,7 @@ export default function Analysis() {
               devices.map((item) => <Option key={item.name} value={item.name}>{item.name}</Option>)
             }
           </Select>
+          <Button className="" loading={isLoading} icon={<VerticalAlignBottomOutlined />} onClick={() => backupTip()} type="primary">一键备份</Button>
         </div>
       </div>
     </Card>

@@ -31,7 +31,7 @@ function App() {
             mode="horizontal"
             items={menuItems}
           />
-          <Content className="p-5 pt-16">
+          <Content className="p-2 pt-14">
             <Routes>
               <Route index element={<Home />} />
               <Route path="/home" element={<Home />} />
