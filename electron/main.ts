@@ -11,9 +11,10 @@ const { Worker } = require('worker_threads');
 
 const workerSrc = join(__dirname, './backup.js');
 const preload = join(__dirname, './preload.js');
+const AdbPath = app.isPackaged ? join(process.cwd(), '/resources/resources/adb/adb.exe') : join(__dirname, '../resources/adb/adb.exe');
 
 const mibInstance = new Mib();
-
+mibInstance.setAdbPath(AdbPath);
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration();
 
@@ -157,6 +158,7 @@ ipcMain.handle('backup', async (event, id: SaveItemType | SaveItemType[]) => {
       task: 'backup',
       cfg: {
         current: mibInstance.adbOpt.current,
+        path: AdbPath,
       },
       params: id,
     });

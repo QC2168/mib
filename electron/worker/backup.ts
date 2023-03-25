@@ -13,8 +13,10 @@ function post(data) {
 if (task === 'backup') {
   const {
     current,
+    path,
   } = cfg;
   instance = new Mib();
+  instance.setAdbPath(path);
   instance.setDevice(current);
   try {
     if (Array.isArray(params)) {
