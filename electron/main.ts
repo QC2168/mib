@@ -30,7 +30,7 @@ process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
 
 export const ROOT_PATH = {
   // /dist
-  dist: join(__dirname, './..'),
+  dist: join(__dirname, './../dist'),
   // /dist or /public
   public: join(__dirname, app.isPackaged ? './..' : './../../public'),
 };
@@ -46,7 +46,7 @@ const indexHtml = join(ROOT_PATH.dist, 'index.html');
 
 async function createWindow() {
   win = new BrowserWindow({
-    title: 'Main window',
+    title: 'MIB',
     icon: join(ROOT_PATH.public, 'favicon.svg'),
     frame: true,
     autoHideMenuBar: true,

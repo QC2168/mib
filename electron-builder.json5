@@ -6,11 +6,13 @@
   productName: "MIB",
   copyright: "Copyright © 2022 ${author}",
   asar: true,
+  extraResources: ['resources'],
   directories: {
     output: "release/${version}",
     buildResources: "electron/resources",
   },
-  files: ["dist"],
+  asarUnpack: ["resources"],
+  files: ["dist-electron","dist"],
   win: {
     target: [
       {
@@ -18,7 +20,8 @@
         arch: ["x64"]
       },
     ],
-    artifactName: "${productName}-Windows-${version}.${ext}"
+    artifactName: "${productName}-Windows-${version}.${ext}",
+    compression: 'maximum'
   },
   nsis: {
     oneClick: false,
