@@ -1,7 +1,7 @@
 # MIB
 一款基于`electron`+`react`+`typescript`的开发的备份工具(GUI)，根据你的配置自动将移动设备上的数据文件迁移备份至电脑上，支持增量备份。
 
-![mib-preview](https://github.com/QC2168/mib/blob/client/public/mib.png)
+![Home](https://github.com/QC2168/mib/blob/client/public/home.png)
 
 ## 🌈 功能
 - [x] USB连接备份数据
