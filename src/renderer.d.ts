@@ -1,6 +1,6 @@
 import type Mib, { type DevicesType, type SaveItemType } from '@qc2168/mib';
 
-export interface ResponseType{
+export interface ResponseType {
   msg:string;
   result:boolean;
 }
@@ -13,7 +13,7 @@ export interface MibApi {
   instance: () => Promise<Mib>,
   devices: () => Promise<DevicesType[]>,
   setDevice: (id:string) => Promise<void>,
-  backup: (id:SaveItemType|SaveItemType[]) => Promise<void>,
+  backup: (id:SaveItemType | SaveItemType[]) => Promise<void>,
   backupDone: (cb:(event:any, data:ResponseType)=>void)=>void
 }
 

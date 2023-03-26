@@ -1,7 +1,7 @@
-import { ThemeType, useTheme } from '@/lib/css/theme';
-import { MenuProps } from 'antd';
+import { type MenuProps } from 'antd';
 import { ReactNode, Key } from 'react';
 import { InboxOutlined, FolderOpenOutlined } from '@ant-design/icons';
+import { ThemeType, useTheme } from '@/lib/css/theme';
 
 type MenuItem = Required<MenuProps>['items'][number];
 export default function useLayout() {
@@ -18,19 +18,15 @@ export default function useLayout() {
     label: ReactNode,
     key: Key,
     icon?: ReactNode,
-    children?: MenuItem[],
-    type?: 'group',
   ): MenuItem {
     return {
       key,
       icon,
-      children,
       label,
-      type,
-    } as MenuItem;
+    };
   }
 
-  const menuItems: MenuItem[] = [
+  const menuItems: MenuProps['items'] = [
     getItem('数据备份', 'home', <InboxOutlined />),
     getItem('文件管理', 'file', <FolderOpenOutlined />),
   ];

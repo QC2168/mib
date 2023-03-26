@@ -6,14 +6,14 @@ import type { DevicesType } from '@qc2168/mib';
 const { usb } = require('usb');
 const { devices: getAdbDevices } = require('@qc2168/mib');
 
-export enum DeviceStatus{
-  DEVICE='device',
-  UNAUTHORIZED= 'unauthorized'
+export enum DeviceStatus {
+  DEVICE = 'device',
+  UNAUTHORIZED = 'unauthorized',
 }
 
 // 设备
-export interface DevicesStatusType{
-  current:DevicesType|null
+export interface DevicesStatusType {
+  current:DevicesType | null
   devicesList:DevicesType[]
 }
 
@@ -34,7 +34,7 @@ export default function useDevices():[DevicesStatusType, SetState<DevicesStatusT
   const init = () => {
     // 获取设备
     const devicesList = getDevices();
-    let current:DevicesType|null = null;
+    let current:DevicesType | null = null;
     // 有设备且活跃，将第一个设备设置为当前设备
     if (devicesList.length > 0 && devicesList[0] && devicesList[0].status === DeviceStatus.DEVICE) {
       current = devicesList.at(0)!;

@@ -10,7 +10,7 @@ import transformerDirective from '@unocss/transformer-directives';
 import esmodule from 'vite-plugin-esmodule';
 import pkg from './package.json';
 
-const { join } = require('path');
+const { join, resolve } = require('path');
 
 rmSync(join(__dirname, 'dist-electron'), { recursive: true, force: true }); // v14.14.0
 
@@ -18,8 +18,8 @@ rmSync(join(__dirname, 'dist-electron'), { recursive: true, force: true }); // v
 export default defineConfig({
   resolve: {
     alias: {
-      '@': join(__dirname, 'src'),
-      styles: join(__dirname, 'src/assets/styles'),
+      '@': resolve(__dirname, 'src'),
+      styles: resolve(__dirname, 'src/assets/styles'),
     },
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.less'],
   },

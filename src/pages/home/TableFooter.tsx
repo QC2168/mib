@@ -1,7 +1,7 @@
 import { Button, Space } from 'antd';
 import { Key, ReactElement } from 'react';
 
-interface PropsType{
+interface PropsType {
   selectedRowKeys:Key[];
   clear:()=>void
 }

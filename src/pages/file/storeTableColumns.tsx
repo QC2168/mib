@@ -1,8 +1,8 @@
-import { readablizeBytes } from '@/utils';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import type { FileNodeType } from '@qc2168/mib/dist/types';
-import styles from '@/pages/fileStore/index.module.less';
+import { readablizeBytes } from '@/utils';
+import styles from '@/pages/file/index.module.less';
 
 export default [
   {
