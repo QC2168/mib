@@ -1,11 +1,12 @@
-import { createErrorMessage } from '@/utils/message';
 import { useState } from 'react';
 import { useMount } from 'ahooks';
 import { type DevicesType } from '@qc2168/mib';
+import useMessage from '@/utils/message';
 
 export default function useDevices() {
   const [devices, setDevices] = useState<DevicesType[]>([]);
   const [currentDevices, setCurrentDevices] = useState<string | null>(null);
+  const { createErrorMessage } = useMessage();
   const updateDevices = async () => {
     try {
       const result = await window.core.devices();

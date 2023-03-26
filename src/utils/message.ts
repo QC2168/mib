@@ -1,17 +1,26 @@
 import { message } from 'antd';
 
-export function createSuccessMessage(msg: string) {
-  message.success(msg);
-}
+export default function useMessage() {
+  const [messageApi] = message.useMessage();
 
-export function createWarningMessage(msg: string) {
-  message.warning(msg);
-}
+  function createSuccessMessage(msg: string) {
+    message.success(msg);
+  }
 
-export function createErrorMessage(msg: string) {
-  message.error(msg);
-}
-
-export function createInfoMessage(msg: string) {
-  message.info(msg);
+  function createWarningMessage(msg: string) {
+    message.warning(msg);
+  }
+  function createErrorMessage(msg: string) {
+    message.error(msg);
+  }
+  function createInfoMessage(msg: string) {
+    message.info(msg);
+  }
+  return {
+    messageApi,
+    createSuccessMessage,
+    createWarningMessage,
+    createErrorMessage,
+    createInfoMessage,
+  };
 }

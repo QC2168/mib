@@ -3,7 +3,7 @@ import {
 } from 'antd';
 
 import { useImperativeHandle, forwardRef, useState } from 'react';
-import { createSuccessMessage } from '@/hooks/useMessage';
+import useMessage from '@/utils/message';
 
 const { useForm } = Form;
 
@@ -14,6 +14,7 @@ export interface ExposeType {
 
 export default forwardRef((props, ref) => {
   const [isOpenBackupModal, setOpenBackupModal] = useState(false);
+  const { createSuccessMessage } = useMessage();
   // const [config, setConfig] = useConfig();
   const [form] = useForm();
   const defaultState = {

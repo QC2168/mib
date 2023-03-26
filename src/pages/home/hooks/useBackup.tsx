@@ -1,5 +1,5 @@
 import {
-  Button, message, Modal, Popconfirm, Space, Tag,
+  Button, Modal, Popconfirm, Space, Tag,
 } from 'antd';
 import {
   Key,
@@ -8,7 +8,7 @@ import {
 import type { ColumnsType } from 'antd/es/table';
 import type { SaveItemType as BackItemType, SaveItemType } from '@qc2168/mib';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { createErrorMessage, createSuccessMessage, createWarningMessage } from '@/utils/message';
+import useMessage from '@/utils/message';
 import useDevices from '@/pages/home/hooks/useDevices';
 import styles from '../index.module.less';
 import useMib from './useMib';
@@ -18,9 +18,10 @@ export default function useBackup() {
   const [instance] = useMib();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
-    devices, handleDevice, currentDevices, updateDevices, check,
+    devices, handleDevice, currentDevices, check,
   } = useDevices();
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
+  const { createErrorMessage, createSuccessMessage, createWarningMessage } = useMessage();
   const onSelectChange = (newSelectedRowKeys: Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
@@ -59,7 +60,7 @@ export default function useBackup() {
     // 判断是否连接状态
     // 判断备份节点
     if (selectedRowKeys.length === 0) {
-      message.warning('当前没有选中任何备份节点');
+      createWarningMessage('当前没有选中任何备份节点');
       return;
     }
     // 检测设备连接
