@@ -7,6 +7,7 @@ import { release } from 'os';
 // } from 'electron-devtools-installer';
 
 const { join } = require('path');
+const { usb } = require('usb');
 const { Worker } = require('worker_threads');
 
 const workerSrc = join(__dirname, './backup.js');
@@ -82,7 +83,26 @@ async function createWindow() {
   // });
 }
 
-app.whenReady().then(createWindow);
+app.whenReady()
+  .then(createWindow)
+  .then(() => {
+    // 监听设备
+    console.log(usb);
+    usb.on('attach', () => {
+      console.log('electron attach');
+      win.webContents.send('attachDevice', {
+        msg: '检测到设备接入',
+        result: true,
+      });
+    });
+    usb.on('detach', () => {
+      console.log('electron detach');
+      win.webContents.send('detachDevice', {
+        msg: '检测到设备移除',
+        result: false,
+      });
+    });
+  });
 // .then(() => {
 //   installExtension(REACT_DEVELOPER_TOOLS.id)
 //     .then((name) => console.log(`Added Extension:  ${name}`))

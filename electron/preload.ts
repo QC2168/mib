@@ -166,4 +166,6 @@ contextBridge.exposeInMainWorld('core', {
   setDevice: (id: string) => ipcRenderer.invoke('setDevice', id),
   backup: (id: SaveItemType | SaveItemType[]) => ipcRenderer.invoke('backup', id),
   backupDone: (callback) => ipcRenderer.on('backupDone', callback),
+  attachDevice: (callback) => ipcRenderer.on('attachDevice', callback),
+  detachDevice: (callback) => ipcRenderer.on('detachDevice', callback),
 });
