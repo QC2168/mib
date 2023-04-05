@@ -1,9 +1,9 @@
 {
   "name": "mib-client",
-  "productName": "Electron",
+  "productName": "mib-client",
   "private": true,
   "version": "1.0.0",
-  "description": "Vite React Electron boilerplate.",
+  "description": "data backup tool",
   "author": "QC2168",
   "license": "MIT",
   "main": "dist-electron/main.js",
