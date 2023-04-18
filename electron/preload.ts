@@ -168,4 +168,6 @@ contextBridge.exposeInMainWorld('core', {
   backupDone: (callback) => ipcRenderer.on('backupDone', callback),
   attachDevice: (callback) => ipcRenderer.on('attachDevice', callback),
   detachDevice: (callback) => ipcRenderer.on('detachDevice', callback),
+  addNode: (data:SaveItemType) => ipcRenderer.invoke('addNode', data),
+  removeNode: (nodePath:string) => ipcRenderer.invoke('removeNode', nodePath),
 });

@@ -17,6 +17,8 @@ export interface MibApi {
   backupDone: (cb:(event:any, data:ResponseType)=>void)=>void
   attachDevice: (cb:(event:any, data:ResponseType)=>void)=>void
   detachDevice: (cb:(event:any, data:ResponseType)=>void)=>void
+  addNode: (data:SaveItemType)=>Promise<void>,
+  removeNode: (nodePath:string)=>Promise<void>,
 }
 
 declare global {

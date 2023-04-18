@@ -1,5 +1,8 @@
 /* eslint-disable import/prefer-default-export */
-import Mib, { devices as getDevices, type SaveItemType } from '@qc2168/mib';
+import Mib, {
+  devices as getDevices, type SaveItemType, addNode, removeNode,
+} from '@qc2168/mib';
+
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { release } from 'os';
 // import installExtension, {
@@ -17,7 +20,10 @@ const AdbPath = app.isPackaged ? join(process.cwd(), '/resources/resources/adb/a
 const mibInstance = new Mib();
 mibInstance.setAdbPath(AdbPath);
 // Disable GPU Acceleration for Windows 7
-if (release().startsWith('6.1')) app.disableHardwareAcceleration();
+if (release()
+  .startsWith('6.1')) {
+  app.disableHardwareAcceleration();
+}
 
 // Set application name for Windows 10+ notifications
 if (process.platform === 'win32') app.setAppUserModelId(app.getName());
@@ -70,7 +76,6 @@ async function createWindow() {
     await win.loadURL(url);
     win.webContents.openDevTools();
   }
-
   // Test actively push message to the Electron-Renderer
   // win.webContents.on('did-finish-load', () => {
   //   win?.webContents.send('main-process-message', new Date().toLocaleString());
@@ -87,7 +92,6 @@ app.whenReady()
   .then(createWindow)
   .then(() => {
     // 监听设备
-    console.log(usb);
     usb.on('attach', () => {
       console.log('electron attach');
       win.webContents.send('attachDevice', {
@@ -190,4 +194,12 @@ ipcMain.handle('backup', async (event, id: SaveItemType | SaveItemType[]) => {
       result: false,
     });
   }
+});
+
+ipcMain.handle('addNode', (event, data) => {
+  console.log('addNode');
+  addNode(data);
+});
+ipcMain.handle('removeNode', (event, i: string) => {
+  removeNode(i);
 });
