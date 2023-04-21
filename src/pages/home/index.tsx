@@ -2,7 +2,11 @@ import {
   Button, Card, Empty, Select, Table,
 } from 'antd';
 
-import { VerticalAlignBottomOutlined } from '@ant-design/icons';
+import { VerticalAlignBottomOutlined, PlusOutlined } from '@ant-design/icons';
+import BackupModal, { BackupModalRef as BackupModalRefExpose, MODAL_STATUS } from '@/pages/home/components/BackupModal';
+import { useRef } from 'react';
+import useMessage from '@/utils/message';
+import Mib from '@qc2168/mib';
 import useMib from './hooks/useMib';
 import useBackup from './hooks/useBackup';
 
@@ -10,15 +14,47 @@ const { Option } = Select;
 
 export default function Analysis() {
   const [instance] = useMib();
-
+  const { createErrorMessage } = useMessage();
+  const BackupModalRef = useRef<BackupModalRefExpose|null>(null);
+  const delNode = async (index: string) => {
+    try {
+      await window.core.removeNode(index);
+    } catch {
+      createErrorMessage('删除失败');
+    }
+  };
   const {
     rowSelection,
     backupNodeColumns,
     isLoading,
-    backupTip, devices, handleDevice, currentDevices,
-  } = useBackup();
+    backupTip,
+    devices,
+    handleDevice,
+    currentDevices,
+  } = useBackup({
+    open: BackupModalRef.current!.open,
+    delNode,
+  });
+  const addNode = () => {
+    BackupModalRef.current?.open(MODAL_STATUS.ADD);
+  };
+
   return (
-    <Card title="备份节点" bordered>
+    <Card
+      title="备份节点"
+      extra={(
+        <Button
+          type="link"
+          className=""
+          loading={isLoading}
+          icon={<PlusOutlined />}
+          onClick={() => addNode()}
+        >
+          新增节点
+        </Button>
+      )}
+      bordered
+    >
       <div>
         {/* 节点 */}
         <Table
@@ -32,7 +68,7 @@ export default function Analysis() {
           pagination={false}
           rowKey="comment"
           columns={backupNodeColumns}
-          dataSource={instance?.config.backups || []}
+          dataSource={(instance as Mib)?.config.backups || []}
         />
         <div className="mt-8 flex justify-end">
 
@@ -48,8 +84,17 @@ export default function Analysis() {
               devices.map((item) => <Option key={item.name} value={item.name}>{item.name}</Option>)
             }
           </Select>
-          <Button className="" loading={isLoading} icon={<VerticalAlignBottomOutlined />} onClick={() => backupTip()} type="primary">一键备份</Button>
+          <Button
+            loading={isLoading}
+            icon={<VerticalAlignBottomOutlined />}
+            onClick={() => backupTip()}
+            type="primary"
+          >
+            一键备份
+          </Button>
+
         </div>
+        <BackupModal ref={BackupModalRef} />
       </div>
     </Card>
   );

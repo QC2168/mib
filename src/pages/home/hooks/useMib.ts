@@ -11,5 +11,5 @@ export default function useMib() {
   useMount(() => {
     updateInstance();
   });
-  return [i];
+  return [i, updateInstance];
 }

@@ -10,18 +10,27 @@ import type { SaveItemType as BackItemType, SaveItemType } from '@qc2168/mib';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import useMessage from '@/utils/message';
 import useDevices from '@/pages/home/hooks/useDevices';
+import { BackupModalRef, MODAL_STATUS } from '@/pages/home/components/BackupModal';
+import Mib from '@qc2168/mib';
 import styles from '../index.module.less';
 import useMib from './useMib';
 
 const { confirm } = Modal;
-export default function useBackup() {
+export default function useBackup(opt: Pick<BackupModalRef, 'open'> & { delNode: (i: string) => void}) {
   const [instance] = useMib();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
-    devices, handleDevice, currentDevices, check,
+    devices,
+    handleDevice,
+    currentDevices,
+    check,
   } = useDevices();
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
-  const { createErrorMessage, createSuccessMessage, createWarningMessage } = useMessage();
+  const {
+    createErrorMessage,
+    createSuccessMessage,
+    createWarningMessage,
+  } = useMessage();
   const onSelectChange = (newSelectedRowKeys: Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
@@ -31,9 +40,11 @@ export default function useBackup() {
     onChange: onSelectChange,
   };
 
+  const editNode = (data: SaveItemType) => {
+    opt.open(MODAL_STATUS.EDIT, data);
+  };
   const deleteNode = (item: BackItemType) => {
-    console.log(item);
-    createWarningMessage('该功能正在开发中~');
+    opt.delNode(item.path);
   };
 
   async function backup(data: SaveItemType | SaveItemType[]) {
@@ -74,7 +85,7 @@ export default function useBackup() {
       content: '备份可能需要一小段时间，确定么？',
       onOk() {
         console.log(selectedRowKeys);
-        const data = instance?.config.backups.filter((j) => selectedRowKeys.includes(j.comment)) ?? [];
+        const data = (instance as Mib)?.config.backups.filter((j) => selectedRowKeys.includes(j.comment)) ?? [];
         setIsLoading(true);
         backup(data);
       },
@@ -134,10 +145,11 @@ export default function useBackup() {
       key: 'actions',
       align: 'center',
       fixed: 'right',
-      width: '160px',
+      width: '220px',
       render: (_: any, record: BackItemType) => (
         <Space size="small">
           <Button type="link" onClick={() => backupNode(record)}>备份</Button>
+          <Button type="link" onClick={() => editNode(record)}>修改</Button>
           <Popconfirm
             title="确认删除该节点?"
             onConfirm={() => deleteNode(record)}
