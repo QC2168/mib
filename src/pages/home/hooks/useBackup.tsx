@@ -16,7 +16,7 @@ import styles from '../index.module.less';
 import useMib from './useMib';
 
 const { confirm } = Modal;
-export default function useBackup(opt: Pick<BackupModalRef, 'open'> & { delNode: (i: string) => void}) {
+export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'>& { delNode: (i: string) => void}>) {
   const [instance] = useMib();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
@@ -41,10 +41,10 @@ export default function useBackup(opt: Pick<BackupModalRef, 'open'> & { delNode:
   };
 
   const editNode = (data: SaveItemType) => {
-    opt.open(MODAL_STATUS.EDIT, data);
+    opt.open?.(MODAL_STATUS.EDIT, data);
   };
   const deleteNode = (item: BackItemType) => {
-    opt.delNode(item.path);
+    opt.delNode?.(item.path);
   };
 
   async function backup(data: SaveItemType | SaveItemType[]) {

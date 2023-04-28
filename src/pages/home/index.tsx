@@ -32,7 +32,7 @@ export default function Analysis() {
     handleDevice,
     currentDevices,
   } = useBackup({
-    open: BackupModalRef.current!.open,
+    open: BackupModalRef.current?.open,
     delNode,
   });
   const addNode = () => {
