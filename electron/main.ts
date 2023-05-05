@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import Mib, {
-  devices as getDevices, type SaveItemType, addNode, removeNode,
+  devices as getDevices, type SaveItemType, addNode, removeNode, editNode,
 } from '@qc2168/mib';
 
 import { app, BrowserWindow, ipcMain } from 'electron';
@@ -196,10 +196,6 @@ ipcMain.handle('backup', async (event, id: SaveItemType | SaveItemType[]) => {
   }
 });
 
-ipcMain.handle('addNode', (event, data) => {
-  console.log('addNode');
-  addNode(data);
-});
-ipcMain.handle('removeNode', (event, i: string) => {
-  removeNode(i);
-});
+ipcMain.handle('addNode', (event, data) => addNode(data));
+ipcMain.handle('removeNode', (event, i: string) => removeNode(i));
+ipcMain.handle('editNode', (event, data, index) => editNode(data, index));

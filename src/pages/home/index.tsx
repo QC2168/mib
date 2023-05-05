@@ -6,19 +6,20 @@ import { VerticalAlignBottomOutlined, PlusOutlined } from '@ant-design/icons';
 import BackupModal, { BackupModalRef as BackupModalRefExpose, MODAL_STATUS } from '@/pages/home/components/BackupModal';
 import { useRef } from 'react';
 import useMessage from '@/utils/message';
-import Mib from '@qc2168/mib';
-import useMib from './hooks/useMib';
+import useDataSource from '@/pages/home/hooks/useDataSource';
 import useBackup from './hooks/useBackup';
 
 const { Option } = Select;
 
 export default function Analysis() {
-  const [instance] = useMib();
   const { createErrorMessage } = useMessage();
+  const [data, setData] = useDataSource();
   const BackupModalRef = useRef<BackupModalRefExpose|null>(null);
+
   const delNode = async (index: string) => {
     try {
-      await window.core.removeNode(index);
+      const cfg = await window.core.removeNode(index);
+      setData(cfg.backups);
     } catch {
       createErrorMessage('删除失败');
     }
@@ -68,7 +69,7 @@ export default function Analysis() {
           pagination={false}
           rowKey="comment"
           columns={backupNodeColumns}
-          dataSource={(instance as Mib)?.config.backups || []}
+          dataSource={data || []}
         />
         <div className="mt-8 flex justify-end">
 
@@ -94,7 +95,7 @@ export default function Analysis() {
           </Button>
 
         </div>
-        <BackupModal ref={BackupModalRef} />
+        <BackupModal setSource={setData} ref={BackupModalRef} />
       </div>
     </Card>
   );

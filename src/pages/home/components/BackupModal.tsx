@@ -2,7 +2,9 @@ import {
   Modal, Form, Input, Switch,
 } from 'antd';
 
-import { useImperativeHandle, forwardRef, useState } from 'react';
+import {
+  useImperativeHandle, forwardRef, useState, Dispatch, SetStateAction,
+} from 'react';
 import useMessage from '@/utils/message';
 import { SaveItemType } from '@qc2168/mib';
 
@@ -14,14 +16,19 @@ export enum MODAL_STATUS {
 }
 
 export interface BackupModalRef {
-  open: (status: MODAL_STATUS, data?: any) => void;
+  open: (status: MODAL_STATUS, data?: SaveItemType, index?: number) => void;
   close: () => void;
 }
 
-export default forwardRef<BackupModalRef>((props, ref) => {
+export interface BackupModalProps {
+  setSource: Dispatch<SetStateAction<SaveItemType[]>>;
+}
+
+export default forwardRef<BackupModalRef, BackupModalProps>((props, ref) => {
   const [isOpenBackupModal, setOpenBackupModal] = useState(false);
+  // record the current node index
+  const [currentIndex, setIndex] = useState<null | number>(null);
   const { createSuccessMessage } = useMessage();
-  // const [config, setConfig] = useConfig();
   const [form] = useForm();
   const [currentStatus, setCurrentStatus] = useState(MODAL_STATUS.ADD);
   const defaultState: SaveItemType = {
@@ -30,9 +37,13 @@ export default forwardRef<BackupModalRef>((props, ref) => {
     output: '',
     full: false,
   };
-  const open = (status: MODAL_STATUS, data?: SaveItemType) => {
+  const open = (status: MODAL_STATUS, data?: SaveItemType, index: number | null = null) => {
     setOpenBackupModal(true);
     setCurrentStatus(status);
+    // has index and update the node index
+    if (index) {
+      setIndex(index);
+    }
     form.resetFields();
     if (data) {
       form.setFieldsValue(data);
@@ -47,11 +58,14 @@ export default forwardRef<BackupModalRef>((props, ref) => {
   };
 
   const onFinish = async (values: any) => {
-    console.log(values);
     if (currentStatus === MODAL_STATUS.ADD) {
-      await window.core.addNode(values);
+      const cfg = await window.core.addNode(values);
+      props.setSource(cfg.backups);
       createSuccessMessage('添加成功');
     } else {
+      // 如果是存在的，则是执行修改操作，由mib-cli处理
+      const cfg = await window.core.editNode(values, currentIndex as number);
+      props.setSource(cfg.backups);
       createSuccessMessage('修改成功');
     }
     close();
@@ -63,7 +77,7 @@ export default forwardRef<BackupModalRef>((props, ref) => {
   return (
     <div>
       <Modal
-        title="新增节点"
+        title={currentStatus === MODAL_STATUS.ADD ? '添加节点' : '修改节点'}
         open={isOpenBackupModal}
         onOk={() => createBackupNode()}
         onCancel={() => setOpenBackupModal(false)}

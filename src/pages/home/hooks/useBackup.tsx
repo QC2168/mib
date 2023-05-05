@@ -16,7 +16,7 @@ import styles from '../index.module.less';
 import useMib from './useMib';
 
 const { confirm } = Modal;
-export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'>& { delNode: (i: string) => void}>) {
+export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { delNode: (i: string) => void }>) {
   const [instance] = useMib();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
@@ -40,8 +40,8 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'>& { d
     onChange: onSelectChange,
   };
 
-  const editNode = (data: SaveItemType) => {
-    opt.open?.(MODAL_STATUS.EDIT, data);
+  const editNode = (data: SaveItemType, index: number) => {
+    opt.open?.(MODAL_STATUS.EDIT, data, index);
   };
   const deleteNode = (item: BackItemType) => {
     opt.delNode?.(item.path);
@@ -146,10 +146,10 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'>& { d
       align: 'center',
       fixed: 'right',
       width: '220px',
-      render: (_: any, record: BackItemType) => (
+      render: (_: any, record: BackItemType, index: number) => (
         <Space size="small">
           <Button type="link" onClick={() => backupNode(record)}>备份</Button>
-          <Button type="link" onClick={() => editNode(record)}>修改</Button>
+          <Button type="link" onClick={() => editNode(record, index)}>修改</Button>
           <Popconfirm
             title="确认删除该节点?"
             onConfirm={() => deleteNode(record)}

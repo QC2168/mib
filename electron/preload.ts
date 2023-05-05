@@ -22,13 +22,15 @@ function domReady(
 
 class safeDOM {
   static append(parent: HTMLElement, child: HTMLElement) {
-    if (!Array.from(parent.children).find((e) => e === child)) {
+    if (!Array.from(parent.children)
+      .find((e) => e === child)) {
       parent.appendChild(child);
     }
   }
 
   static remove(parent: HTMLElement, child: HTMLElement) {
-    if (Array.from(parent.children).find((e) => e === child)) {
+    if (Array.from(parent.children)
+      .find((e) => e === child)) {
       parent.removeChild(child);
     }
   }
@@ -137,8 +139,12 @@ function useLoading() {
 
 // ----------------------------------------------------------------------
 
-const { appendLoading, removeLoading } = useLoading();
-domReady().then(appendLoading);
+const {
+  appendLoading,
+  removeLoading,
+} = useLoading();
+domReady()
+  .then(appendLoading);
 
 window.onmessage = (ev) => {
   ev.data.payload === 'removeLoading' && removeLoading();
@@ -146,7 +152,10 @@ window.onmessage = (ev) => {
 
 setTimeout(removeLoading, 4999);
 
-const { contextBridge, ipcRenderer } = require('electron');
+const {
+  contextBridge,
+  ipcRenderer,
+} = require('electron');
 
 contextBridge.exposeInMainWorld('versions', {
   node: () => process.versions.node,
@@ -168,6 +177,7 @@ contextBridge.exposeInMainWorld('core', {
   backupDone: (callback) => ipcRenderer.on('backupDone', callback),
   attachDevice: (callback) => ipcRenderer.on('attachDevice', callback),
   detachDevice: (callback) => ipcRenderer.on('detachDevice', callback),
-  addNode: (data:SaveItemType) => ipcRenderer.invoke('addNode', data),
-  removeNode: (nodePath:string) => ipcRenderer.invoke('removeNode', nodePath),
+  addNode: (data: SaveItemType) => ipcRenderer.invoke('addNode', data),
+  removeNode: (nodePath: string) => ipcRenderer.invoke('removeNode', nodePath),
+  editNode: (data: SaveItemType, index: number) => ipcRenderer.invoke('editNode', data, index),
 });

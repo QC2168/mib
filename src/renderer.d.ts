@@ -1,4 +1,4 @@
-import type Mib, { type DevicesType, type SaveItemType } from '@qc2168/mib';
+import type Mib, { type DevicesType, type SaveItemType, type ConfigType } from '@qc2168/mib';
 
 export interface ResponseType {
   msg:string;
@@ -17,8 +17,9 @@ export interface MibApi {
   backupDone: (cb:(event:any, data:ResponseType)=>void)=>void
   attachDevice: (cb:(event:any, data:ResponseType)=>void)=>void
   detachDevice: (cb:(event:any, data:ResponseType)=>void)=>void
-  addNode: (data:SaveItemType)=>Promise<void>,
-  removeNode: (nodePath:string)=>Promise<void>,
+  addNode: (data:SaveItemType)=>Promise<ConfigType>,
+  removeNode: (nodePath:string)=>Promise<ConfigType>,
+  editNode: (data:SaveItemType, index:number)=>Promise<ConfigType>,
 }
 
 declare global {
