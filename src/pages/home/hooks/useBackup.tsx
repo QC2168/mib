@@ -12,6 +12,7 @@ import useMessage from '@/utils/message';
 import useDevices from '@/pages/home/hooks/useDevices';
 import { BackupModalRef, MODAL_STATUS } from '@/pages/home/components/BackupModal';
 import Mib from '@qc2168/mib';
+import { useMount } from 'ahooks';
 import styles from '../index.module.less';
 import useMib from './useMib';
 
@@ -92,13 +93,15 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
     });
   }
 
+  useMount(() => {
   // 监听备份任务
-  window.core.backupDone((event, data) => {
-    if (data.result) {
-      createSuccessMessage(data.msg);
-    } else {
-      createErrorMessage(data.msg);
-    }
+    window.core.backupDone((event, data) => {
+      if (data.result) {
+        createSuccessMessage(data.msg);
+      } else {
+        createErrorMessage(data.msg);
+      }
+    });
   });
   const backupNodeColumns: ColumnsType<BackItemType> = [
     {

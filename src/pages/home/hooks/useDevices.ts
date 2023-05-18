@@ -23,13 +23,15 @@ export default function useDevices() {
       createErrorMessage('切换设备失败');
     }
   };
-  // 监听设备接入
-  window.core.attachDevice(() => {
-    updateDevices();
-  });
-  // 监听设备移除
-  window.core.detachDevice(() => {
-    updateDevices();
+  useMount(() => {
+    // 监听设备接入
+    window.core.attachDevice(() => {
+      updateDevices();
+    });
+    // 监听设备移除
+    window.core.detachDevice(() => {
+      updateDevices();
+    });
   });
   const check = () => currentDevices !== null;
   useMount(() => {
