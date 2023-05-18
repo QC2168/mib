@@ -1,5 +1,6 @@
 import {
   Button, Card, Empty, Select, Table,
+  Typography,
 } from 'antd';
 
 import { VerticalAlignBottomOutlined, PlusOutlined } from '@ant-design/icons';
@@ -7,13 +8,16 @@ import BackupModal, { BackupModalRef as BackupModalRefExpose, MODAL_STATUS } fro
 import { useRef } from 'react';
 import useMessage from '@/utils/message';
 import useDataSource from '@/pages/home/hooks/useDataSource';
+import useMib from '@/pages/home/hooks/useMib';
 import useBackup from './hooks/useBackup';
 
+const { Text } = Typography;
 const { Option } = Select;
 
 export default function Analysis() {
   const { createErrorMessage } = useMessage();
   const [data, setData] = useDataSource();
+  const [mibInstance] = useMib();
   const BackupModalRef = useRef<BackupModalRefExpose|null>(null);
 
   const delNode = async (index: string) => {
@@ -71,28 +75,36 @@ export default function Analysis() {
           columns={backupNodeColumns}
           dataSource={data || []}
         />
-        <div className="mt-8 flex justify-end">
+        <div className="mt-8 flex justify-between items-center">
 
-          <Select
-            className="mr-3"
-            defaultValue="请选择设备"
-            value={currentDevices || '请选择设备'}
-            style={{ width: 160 }}
-            onChange={handleDevice}
-            notFoundContent={<div>无设备连接</div>}
-          >
-            {
-              devices.map((item) => <Option key={item.name} value={item.name}>{item.name}</Option>)
-            }
-          </Select>
-          <Button
-            loading={isLoading}
-            icon={<VerticalAlignBottomOutlined />}
-            onClick={() => backupTip()}
-            type="primary"
-          >
-            一键备份
-          </Button>
+          <div>
+            <Text strong className="mr-1">
+              当前导出路径:
+            </Text>
+            <Text>{mibInstance?.config.output}</Text>
+          </div>
+          <div>
+            <Select
+              className="mr-3"
+              defaultValue="请选择设备"
+              value={currentDevices || '请选择设备'}
+              style={{ width: 160 }}
+              onChange={handleDevice}
+              notFoundContent={<div>无设备连接</div>}
+            >
+              {
+                devices.map((item) => <Option key={item.name} value={item.name}>{item.name}</Option>)
+              }
+            </Select>
+            <Button
+              loading={isLoading}
+              icon={<VerticalAlignBottomOutlined />}
+              onClick={() => backupTip()}
+              type="primary"
+            >
+              一键备份
+            </Button>
+          </div>
 
         </div>
         <BackupModal setSource={setData} ref={BackupModalRef} />
