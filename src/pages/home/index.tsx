@@ -51,7 +51,6 @@ export default function Analysis() {
         <Button
           type="link"
           className=""
-          loading={isLoading}
           icon={<PlusOutlined />}
           onClick={() => addNode()}
         >
