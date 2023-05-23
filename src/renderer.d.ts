@@ -18,8 +18,8 @@ export interface MibApi {
   attachDevice: (cb:(event:any, data:ResponseType)=>void)=>void
   detachDevice: (cb:(event:any, data:ResponseType)=>void)=>void
   addNode: (data:SaveItemType)=>Promise<ConfigType>,
-  removeNode: (nodePath:string)=>Promise<ConfigType>,
-  editNode: (data:SaveItemType, index:number)=>Promise<ConfigType>,
+  removeNode: (id:number)=>Promise<ConfigType>,
+  editNode: (data:SaveItemType)=>Promise<ConfigType>,
 }
 
 declare global {

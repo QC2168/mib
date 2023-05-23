@@ -20,9 +20,9 @@ export default function Analysis() {
   const [mibInstance] = useMib();
   const BackupModalRef = useRef<BackupModalRefExpose|null>(null);
 
-  const delNode = async (index: string) => {
+  const delNode = async (id: number) => {
     try {
-      const cfg = await window.core.removeNode(index);
+      const cfg = await window.core.removeNode(id);
       setData(cfg.backups);
     } catch {
       createErrorMessage('删除失败');

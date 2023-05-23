@@ -26,8 +26,6 @@ export interface BackupModalProps {
 
 export default forwardRef<BackupModalRef, BackupModalProps>((props, ref) => {
   const [isOpenBackupModal, setOpenBackupModal] = useState(false);
-  // record the current node index
-  const [currentIndex, setIndex] = useState<null | number>(null);
   const { createSuccessMessage } = useMessage();
   const [form] = useForm();
   const [currentStatus, setCurrentStatus] = useState(MODAL_STATUS.ADD);
@@ -36,14 +34,12 @@ export default forwardRef<BackupModalRef, BackupModalProps>((props, ref) => {
     path: '',
     output: '',
     full: false,
+    id: Date.now(),
   };
-  const open = (status: MODAL_STATUS, data?: SaveItemType, index: number | null = null) => {
+
+  const open = (status: MODAL_STATUS, data?: SaveItemType) => {
     setOpenBackupModal(true);
     setCurrentStatus(status);
-    // has index and update the node index
-    if (index) {
-      setIndex(index);
-    }
     form.resetFields();
     if (data) {
       form.setFieldsValue(data);
@@ -57,14 +53,14 @@ export default forwardRef<BackupModalRef, BackupModalProps>((props, ref) => {
     form.submit();
   };
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: SaveItemType) => {
     if (currentStatus === MODAL_STATUS.ADD) {
       const cfg = await window.core.addNode(values);
       props.setSource(cfg.backups);
       createSuccessMessage('添加成功');
     } else {
       // 如果是存在的，则是执行修改操作，由mib-cli处理
-      const cfg = await window.core.editNode(values, currentIndex as number);
+      const cfg = await window.core.editNode(values);
       props.setSource(cfg.backups);
       createSuccessMessage('修改成功');
     }
@@ -92,6 +88,9 @@ export default forwardRef<BackupModalRef, BackupModalProps>((props, ref) => {
           onFinish={onFinish}
           autoComplete="off"
         >
+          <Form.Item hidden name="id" label="id">
+            <Input />
+          </Form.Item>
           <Form.Item
             label="节点备注"
             name="comment"

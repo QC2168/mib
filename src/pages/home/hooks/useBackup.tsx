@@ -17,7 +17,7 @@ import styles from '../index.module.less';
 import useMib from './useMib';
 
 const { confirm } = Modal;
-export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { delNode: (i: string) => void }>) {
+export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { delNode: (i: number) => void }>) {
   const [instance] = useMib();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
@@ -41,11 +41,13 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
     onChange: onSelectChange,
   };
 
-  const editNode = (data: SaveItemType, index: number) => {
-    opt.open?.(MODAL_STATUS.EDIT, data, index);
+  const editNode = (data: SaveItemType) => {
+    if (!data.id) return;
+    opt.open?.(MODAL_STATUS.EDIT, data);
   };
-  const deleteNode = (item: BackItemType) => {
-    opt.delNode?.(item.path);
+  const deleteNode = (data: SaveItemType) => {
+    if (!data.id) return;
+    opt.delNode?.(data.id);
   };
 
   async function backup(data: SaveItemType | SaveItemType[]) {
@@ -58,14 +60,14 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
     }
   }
 
-  const backupNode = (item: BackItemType) => {
+  const backupNode = async (item: BackItemType) => {
     // 检测设备连接
     if (!check()) {
       createWarningMessage('请先连接设备，再执行操作');
       return;
     }
     setIsLoading(true);
-    backup(item);
+    await backup(item);
   };
 
   async function backupTip() {
@@ -86,7 +88,7 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
       content: '备份可能需要一小段时间，确定么？',
       onOk() {
         console.log(selectedRowKeys);
-        const data = (instance as Mib)?.config.backups.filter((j) => selectedRowKeys.includes(j.comment)) ?? [];
+        const data = (instance as Mib)?.config.backups.filter((j:SaveItemType) => selectedRowKeys.includes(j.comment)) ?? [];
         setIsLoading(true);
         backup(data);
       },
@@ -149,10 +151,10 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
       align: 'center',
       fixed: 'right',
       width: '220px',
-      render: (_: any, record: BackItemType, index: number) => (
+      render: (_: any, record: BackItemType) => (
         <Space size="small">
           <Button type="link" onClick={() => backupNode(record)}>备份</Button>
-          <Button type="link" onClick={() => editNode(record, index)}>修改</Button>
+          <Button type="link" onClick={() => editNode(record)}>修改</Button>
           <Popconfirm
             title="确认删除该节点?"
             onConfirm={() => deleteNode(record)}

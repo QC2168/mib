@@ -178,6 +178,6 @@ contextBridge.exposeInMainWorld('core', {
   attachDevice: (callback) => ipcRenderer.on('attachDevice', callback),
   detachDevice: (callback) => ipcRenderer.on('detachDevice', callback),
   addNode: (data: SaveItemType) => ipcRenderer.invoke('addNode', data),
-  removeNode: (nodePath: string) => ipcRenderer.invoke('removeNode', nodePath),
-  editNode: (data: SaveItemType, index: number) => ipcRenderer.invoke('editNode', data, index),
+  removeNode: (id: string) => ipcRenderer.invoke('removeNode', id),
+  editNode: (data: SaveItemType) => ipcRenderer.invoke('editNode', data),
 });

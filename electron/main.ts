@@ -197,5 +197,5 @@ ipcMain.handle('backup', async (event, id: SaveItemType | SaveItemType[]) => {
 });
 
 ipcMain.handle('addNode', (event, data) => addNode(data));
-ipcMain.handle('removeNode', (event, i: string) => removeNode(i));
+ipcMain.handle('removeNode', (event, i: number) => removeNode(i));
 ipcMain.handle('editNode', (event, data, index) => editNode(data, index));
