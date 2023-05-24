@@ -6,6 +6,7 @@
   productName: "MIB",
   copyright: "Copyright © 2022 ${author}",
   asar: true,
+  npmRebuild: false,
   extraResources: ['resources'],
   directories: {
     output: "release/${version}",

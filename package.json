@@ -9,7 +9,7 @@
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && electron-builder",
+    "build": "sh scripts/build.sh",
     "commit": "cz",
     "prepare": "husky install",
     "postinstall": "yarn prepare",
