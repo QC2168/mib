@@ -3,13 +3,14 @@ import {
   Typography, Space,
 } from 'antd';
 
-import { VerticalAlignBottomOutlined, PlusOutlined } from '@ant-design/icons';
+import { VerticalAlignBottomOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons';
 import BackupModal, { BackupModalRef as BackupModalRefExpose, MODAL_STATUS } from '@/pages/home/components/BackupModal';
 import { useRef } from 'react';
 import useMessage from '@/utils/message';
 import useDataSource from '@/pages/home/hooks/useDataSource';
 import useMib from '@/pages/home/hooks/useMib';
 import useEditOutput from '@/pages/home/hooks/useEditOutput';
+import HelpModal, { helpModalExposeType } from '@/components/helpModal/index';
 import useBackup from './hooks/useBackup';
 
 const { Text } = Typography;
@@ -19,6 +20,7 @@ export default function Analysis() {
   const { createErrorMessage } = useMessage();
   const [data, setData] = useDataSource();
   const [mibInstance] = useMib();
+  const helpModalRef = useRef<helpModalExposeType | null>(null);
   const {
     isEditOutput,
     showEditOutputInput,
@@ -56,17 +58,29 @@ export default function Analysis() {
     <Card
       title="备份节点"
       extra={(
-        <Button
-          type="link"
-          className=""
-          icon={<PlusOutlined />}
-          onClick={() => addNode()}
-        >
-          新增节点
-        </Button>
+        <div className="flex">
+          <Button
+            type="link"
+            className=""
+            icon={<PlusOutlined />}
+            onClick={() => addNode()}
+          >
+            新增节点
+          </Button>
+          <Button
+            type="link"
+            className=""
+            icon={<UserOutlined />}
+            onClick={() => helpModalRef?.current?.showModal()}
+          >
+            关于作者
+          </Button>
+
+        </div>
       )}
       bordered
     >
+      <HelpModal ref={helpModalRef} />
       <div>
         {/* 节点 */}
         <Table
