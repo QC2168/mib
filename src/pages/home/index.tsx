@@ -105,7 +105,7 @@ export default function Analysis() {
             {
               isEditOutput ? (
                 <Space.Compact>
-                  <Input allowClear onChange={(e) => tempOutputChange(e)} defaultValue={mibInstance?.config.output} />
+                  <Input allowClear onChange={(e) => tempOutputChange(e)} defaultValue={outputPath} />
                   <Button onClick={() => saveOutput()} type="primary">确定</Button>
                 </Space.Compact>
               ) : (

@@ -7,14 +7,13 @@ export default function useEditOutput() {
   const [isEditOutput, setIsEditOutput] = useState(false);
   const [tempOutput, setTempOutput] = useState('');
   const [outputPath, setOutputPath] = useState('');
-  const [i, u] = useMib();
+  const [, u] = useMib();
   const { createSuccessMessage, createErrorMessage } = useMessage();
   const tempOutputChange = (event:any) => {
     setTempOutput(event.target!.value!);
   };
   const showEditOutputInput = () => {
     setIsEditOutput(true);
-    setOutputPath(outputPath);
   };
   const saveOutput = async () => {
     try {
@@ -33,6 +32,7 @@ export default function useEditOutput() {
   });
   return {
     outputPath,
+    tempOutput,
     isEditOutput,
     showEditOutputInput,
     saveOutput,
