@@ -1,6 +1,6 @@
 import {
-  Button, Card, Empty, Select, Table,
-  Typography,
+  Button, Card, Empty, Select, Table, Input,
+  Typography, Space,
 } from 'antd';
 
 import { VerticalAlignBottomOutlined, PlusOutlined } from '@ant-design/icons';
@@ -9,6 +9,7 @@ import { useRef } from 'react';
 import useMessage from '@/utils/message';
 import useDataSource from '@/pages/home/hooks/useDataSource';
 import useMib from '@/pages/home/hooks/useMib';
+import useEditOutput from '@/pages/home/hooks/useEditOutput';
 import useBackup from './hooks/useBackup';
 
 const { Text } = Typography;
@@ -18,7 +19,14 @@ export default function Analysis() {
   const { createErrorMessage } = useMessage();
   const [data, setData] = useDataSource();
   const [mibInstance] = useMib();
-  const BackupModalRef = useRef<BackupModalRefExpose|null>(null);
+  const {
+    isEditOutput,
+    showEditOutputInput,
+    saveOutput,
+    tempOutputChange,
+    outputPath,
+  } = useEditOutput();
+  const BackupModalRef = useRef<BackupModalRefExpose | null>(null);
 
   const delNode = async (id: number) => {
     try {
@@ -76,11 +84,25 @@ export default function Analysis() {
         />
         <div className="mt-8 flex justify-between items-center">
 
-          <div>
+          <div className="flex items-center">
             <Text strong className="mr-1">
               当前导出路径:
             </Text>
-            <Text>{mibInstance?.config.output}</Text>
+            {
+              isEditOutput ? (
+                <Space.Compact>
+                  <Input allowClear onChange={(e) => tempOutputChange(e)} defaultValue={mibInstance?.config.output} />
+                  <Button onClick={() => saveOutput()} type="primary">确定</Button>
+                </Space.Compact>
+              ) : (
+                <Text
+                  onDoubleClick={() => showEditOutputInput()}
+                >
+                  {outputPath ?? '双击设置导出路径'}
+                </Text>
+              )
+            }
+
           </div>
           <div>
             <Select

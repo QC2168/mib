@@ -20,6 +20,7 @@ export interface MibApi {
   addNode: (data:SaveItemType)=>Promise<ConfigType>,
   removeNode: (id:number)=>Promise<ConfigType>,
   editNode: (data:SaveItemType)=>Promise<ConfigType>,
+  editOutputPath: (output:string)=>Promise<ConfigType>,
 }
 
 declare global {

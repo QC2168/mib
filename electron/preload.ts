@@ -180,4 +180,5 @@ contextBridge.exposeInMainWorld('core', {
   addNode: (data: SaveItemType) => ipcRenderer.invoke('addNode', data),
   removeNode: (id: string) => ipcRenderer.invoke('removeNode', id),
   editNode: (data: SaveItemType) => ipcRenderer.invoke('editNode', data),
+  editOutputPath: (path: string) => ipcRenderer.invoke('editOutputPath', path),
 });
