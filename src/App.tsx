@@ -4,6 +4,7 @@ import {
 
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { ThemeType } from '@/lib/css/theme';
+import Scan from '@/pages/scan';
 import Home from './pages/home';
 import useLayout from './hooks/useLayout';
 
@@ -35,6 +36,7 @@ function App() {
             <Routes>
               <Route index element={<Home />} />
               <Route path="/home" element={<Home />} />
+              <Route path="/scan" element={<Scan />} />
               <Route
                 path="/file"
                 element={(

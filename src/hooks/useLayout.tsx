@@ -29,6 +29,7 @@ export default function useLayout() {
   const menuItems: MenuProps['items'] = [
     getItem('数据备份', 'home', <InboxOutlined />),
     getItem('文件管理', 'file', <FolderOpenOutlined />),
+    getItem('文件分析', 'scan', <FolderOpenOutlined />),
   ];
 
   return {

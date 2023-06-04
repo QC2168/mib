@@ -220,3 +220,20 @@ ipcMain.handle('addNode', (event, data) => addNode(data));
 ipcMain.handle('removeNode', (event, i: number) => removeNode(i));
 ipcMain.handle('editNode', (event, data, index) => editNode(data, index));
 ipcMain.handle('editOutputPath', (event, output) => editOutputPath(output));
+
+// scan folder to obtain extname
+ipcMain.handle('scan', async (event, path:string) => {
+  try {
+    const result = await runBackupWorker({
+      task: 'scan',
+      params: path,
+    });
+    win.webContents.send('scanDone', result);
+  } catch (error) {
+    win.webContents.send('scanDone', {
+      msg: '扫描进程出错了',
+      result: false,
+      error,
+    });
+  }
+});

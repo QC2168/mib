@@ -1,4 +1,5 @@
 import Mib from '@qc2168/mib';
+import getFileTypes from '../utils/getFileTypes';
 
 const { workerData, parentPort } = require('worker_threads');
 
@@ -63,5 +64,21 @@ if (task === 'restore') {
     });
   } finally {
     instance = null;
+  }
+}
+
+if (task === 'scan') {
+  try {
+    const result = getFileTypes(params);
+    post({
+      msg: '扫描完成',
+      result,
+    });
+  } catch (error) {
+    post({
+      msg: '扫描进程出错了',
+      result: false,
+      error,
+    });
   }
 }

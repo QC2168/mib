@@ -10,7 +10,6 @@ import BackupModal, { BackupModalRef as BackupModalRefExpose, MODAL_STATUS } fro
 import { useRef } from 'react';
 import useMessage from '@/utils/message';
 import useDataSource from '@/pages/home/hooks/useDataSource';
-import useMib from '@/pages/home/hooks/useMib';
 import useEditOutput from '@/pages/home/hooks/useEditOutput';
 import HelpModal, { helpModalExposeType } from '@/components/helpModal/index';
 import useBackup from './hooks/useBackup';
@@ -21,7 +20,6 @@ const { Option } = Select;
 export default function Analysis() {
   const { createErrorMessage } = useMessage();
   const [data, setData] = useDataSource();
-  const [mibInstance] = useMib();
   const helpModalRef = useRef<helpModalExposeType | null>(null);
   const {
     isEditOutput,
