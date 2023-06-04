@@ -3,7 +3,9 @@ import {
   Typography, Space,
 } from 'antd';
 
-import { VerticalAlignBottomOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  UploadOutlined, PlusOutlined, UserOutlined, DownloadOutlined,
+} from '@ant-design/icons';
 import BackupModal, { BackupModalRef as BackupModalRefExpose, MODAL_STATUS } from '@/pages/home/components/BackupModal';
 import { useRef } from 'react';
 import useMessage from '@/utils/message';
@@ -46,6 +48,7 @@ export default function Analysis() {
     devices,
     handleDevice,
     currentDevices,
+    restore,
   } = useBackup({
     open: BackupModalRef.current?.open,
     delNode,
@@ -131,14 +134,24 @@ export default function Analysis() {
                 devices.map((item) => <Option key={item.name} value={item.name}>{item.name}</Option>)
               }
             </Select>
-            <Button
-              loading={isLoading}
-              icon={<VerticalAlignBottomOutlined />}
-              onClick={() => backupTip()}
-              type="primary"
-            >
-              一键备份
-            </Button>
+            <Space>
+              <Button
+                loading={isLoading}
+                icon={<UploadOutlined />}
+                onClick={() => backupTip()}
+                type="primary"
+              >
+                备份
+              </Button>
+              <Button
+                loading={isLoading}
+                icon={<DownloadOutlined />}
+                onClick={() => restore()}
+                type="primary"
+              >
+                恢复
+              </Button>
+            </Space>
           </div>
 
         </div>

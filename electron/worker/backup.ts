@@ -39,3 +39,29 @@ if (task === 'backup') {
     instance = null;
   }
 }
+
+if (task === 'restore') {
+  const {
+    current,
+    path,
+  } = cfg;
+  instance = new Mib();
+  instance.setAdbPath(path);
+  instance.setDevice(current);
+  try {
+    instance.restore(params);
+
+    post({
+      msg: '恢复任务完成',
+      result: true,
+    });
+  } catch (error) {
+    post({
+      msg: '恢复进程出错了',
+      result: false,
+      error,
+    });
+  } finally {
+    instance = null;
+  }
+}

@@ -14,6 +14,7 @@ export interface MibApi {
   devices: () => Promise<DevicesType[]>,
   setDevice: (id:string) => Promise<void>,
   backup: (id:SaveItemType | SaveItemType[]) => Promise<void>,
+  restore: (id:SaveItemType | SaveItemType[]) => Promise<void>,
   backupDone: (cb:(event:any, data:ResponseType)=>void)=>void
   attachDevice: (cb:(event:any, data:ResponseType)=>void)=>void
   detachDevice: (cb:(event:any, data:ResponseType)=>void)=>void

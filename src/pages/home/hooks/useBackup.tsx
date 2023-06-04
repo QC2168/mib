@@ -69,19 +69,22 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
     setIsLoading(true);
     await backup(item);
   };
-
-  async function backupTip() {
+  function checkEnv() {
     // 判断是否连接状态
     // 判断备份节点
     if (selectedRowKeys.length === 0) {
       createWarningMessage('当前没有选中任何备份节点');
-      return;
+      return false;
     }
     // 检测设备连接
     if (!check()) {
       createWarningMessage('请先连接设备，再执行操作');
-      return;
+      return false;
     }
+    return true;
+  }
+  async function backupTip() {
+    if (!checkEnv()) return;
     confirm({
       title: '',
       icon: <ExclamationCircleOutlined />,
@@ -94,7 +97,18 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
       },
     });
   }
-
+  const restore = async () => {
+    if (!checkEnv()) return;
+    const data = (instance as Mib)?.config.backups.filter((j:SaveItemType) => selectedRowKeys.includes(j.comment)) ?? [];
+    setIsLoading(true);
+    try {
+      await window.core.restore(data);
+    } catch (e) {
+      createErrorMessage('恢复出错了');
+    } finally {
+      setIsLoading(false);
+    }
+  };
   useMount(() => {
   // 监听备份任务
     window.core.backupDone((event, data) => {
@@ -176,5 +190,6 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
     devices,
     handleDevice,
     currentDevices,
+    restore,
   };
 }

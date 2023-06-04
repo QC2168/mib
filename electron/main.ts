@@ -187,11 +187,31 @@ ipcMain.handle('backup', async (event, id: SaveItemType | SaveItemType[]) => {
       params: id,
     });
     win.webContents.send('backupDone', result);
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
     win.webContents.send('backupDone', {
       msg: '备份进程出错了',
       result: false,
+      error,
+    });
+  }
+});
+
+ipcMain.handle('restore', async (event, id: SaveItemType | SaveItemType[]) => {
+  try {
+    const result = await runBackupWorker({
+      task: 'restore',
+      cfg: {
+        current: mibInstance.adbOpt.current,
+        path: AdbPath,
+      },
+      params: id,
+    });
+    win.webContents.send('backupDone', result);
+  } catch (error) {
+    win.webContents.send('backupDone', {
+      msg: '恢复进程出错了',
+      result: false,
+      error,
     });
   }
 });
