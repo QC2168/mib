@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useMib from '@/pages/home/hooks/useMib';
 import * as echarts from 'echarts/core';
 import { SearchOutlined } from '@ant-design/icons';
@@ -8,6 +8,7 @@ import {
   LegendComponent,
   LegendComponentOption,
 } from 'echarts/components';
+import ReactECharts from 'echarts-for-react';
 import { PieChart, PieSeriesOption } from 'echarts/charts';
 import { LabelLayout } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
@@ -26,27 +27,20 @@ type EChartsOption = echarts.ComposeOption<
 >;
 
 let reg: any = null;
-let chartInstance: any = null;
+
 export default function Index() {
   const [isClick, setIsClick] = useState(false);
+  const [chartOption, setChartOption] = useState<EChartsOption>({});
+  const [loading, setLoading] = useState(false);
   const [, u] = useMib();
 
   const enterLoading = async () => {
     setIsClick(true);
+    setLoading(true);
     const instance = await u();
-    chartInstance.showLoading('default', {
-      text: '正在分析中',
-    });
     await window.core.scan(instance.config.output);
   };
 
-  const pieRef = useRef<HTMLDivElement | null>(null);
-
-  const initChart = () => {
-    if (!pieRef.current) return;
-    if (chartInstance !== null) return;
-    chartInstance = echarts.init(pieRef.current);
-  };
   const registerEvent = () => {
     let isRegister = false;
     return () => {
@@ -54,6 +48,7 @@ export default function Index() {
       isRegister = true;
       window.core.scanDone((e, data) => {
         if (data.result) {
+          setLoading(false);
           Reflect.deleteProperty(data.result, 'all');
           const r = Object.values(data.result)
             .map((i) => ({
@@ -62,7 +57,7 @@ export default function Index() {
             }));
           console.log('扫描结束', r);
 
-          chartInstance?.setOption({
+          setChartOption({
             series: [
               {
                 name: '数据分析',
@@ -93,7 +88,7 @@ export default function Index() {
 
             ],
           });
-          chartInstance.hideLoading();
+          // chartInstance.hideLoading();
           // createSuccessMessage(data.msg);
         } else {
           // createErrorMessage(data.msg);
@@ -106,10 +101,11 @@ export default function Index() {
     if (reg !== null) return;
     reg = registerEvent();
     reg();
-  });
+  }, []);
 
   useEffect(() => {
     const option: EChartsOption = {
+      height: '500px',
       tooltip: {
         trigger: 'item',
       },
@@ -145,18 +141,12 @@ export default function Index() {
         },
       ],
     };
-    if (!chartInstance) {
-      initChart();
-    }
-    chartInstance.setOption(option);
 
-    return () => {
-      chartInstance = null;
-    };
-  });
+    setChartOption(option);
+  }, []);
   return (
     <div className={`w-${window.innerWidth} h-[500px] relative`}>
-      <div className={`w-${window.innerWidth} h-[500px]`} ref={pieRef} />
+      <ReactECharts className={`w-${window.innerWidth} h-[500px]!`} showLoading={loading} option={chartOption} />
       {!isClick
         ? (
           <Button
