@@ -176,7 +176,7 @@ contextBridge.exposeInMainWorld('core', {
   backup: (id: SaveItemType | SaveItemType[]) => ipcRenderer.invoke('backup', id),
   restore: (id: SaveItemType | SaveItemType[]) => ipcRenderer.invoke('restore', id),
   backupDone: (callback) => ipcRenderer.on('backupDone', callback),
-  scanDone: (callback) => ipcRenderer.on('scanDone', callback),
+  scanDone: (callback) => ipcRenderer.once('scanDone', callback),
   attachDevice: (callback) => ipcRenderer.on('attachDevice', callback),
   detachDevice: (callback) => ipcRenderer.on('detachDevice', callback),
   addNode: (data: SaveItemType) => ipcRenderer.invoke('addNode', data),
