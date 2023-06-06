@@ -65,7 +65,7 @@ export default defineConfig({
       ],
       transformers: [transformerDirective()],
     }),
-    esmodule(['fs-extra', 'usb']),
+    esmodule(['fs-extra']),
   ],
   server: {
     host: pkg.env.VITE_DEV_SERVER_HOST,
