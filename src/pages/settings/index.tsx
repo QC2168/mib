@@ -1,13 +1,14 @@
 import { Form, Radio } from 'antd';
 import { ThemeType } from '@/lib/css/theme';
 import { useRecoilState } from 'recoil';
+import { Local } from '@/utils/storage';
 import { themeModeState } from '../../../state/themeState';
 
 export default function Index() {
   const [themeMode, setThemeMode] = useRecoilState(themeModeState);
 
   const changeThemeMode = (mode:ThemeType) => {
-    localStorage.setItem('themeMode', mode);
+    Local.set('themeMode', mode);
     setThemeMode(mode);
   };
   const initialValues = { themeMode };
