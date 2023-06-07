@@ -3,11 +3,11 @@ import { ThemeType } from '@/lib/css/theme';
 import { useRecoilState } from 'recoil';
 import { Local } from '@/utils/storage';
 import { themeModeState } from '../../../state/themeState';
+import { version } from '../../../package.json';
 
 export default function Index() {
   const [themeMode, setThemeMode] = useRecoilState(themeModeState);
-
-  const changeThemeMode = (mode:ThemeType) => {
+  const changeThemeMode = (mode: ThemeType) => {
     Local.set('themeMode', mode);
     setThemeMode(mode);
   };
@@ -25,6 +25,9 @@ export default function Index() {
             <Radio value={ThemeType.LIGHT}>浅色</Radio>
             <Radio value={ThemeType.DARK}>深色</Radio>
           </Radio.Group>
+        </Form.Item>
+        <Form.Item label="软件版本" name="version">
+          {version}
         </Form.Item>
       </Form>
     </div>
