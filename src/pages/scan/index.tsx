@@ -1,20 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import useMib from '@/pages/home/hooks/useMib';
 import * as echarts from 'echarts/core';
 import { SearchOutlined } from '@ant-design/icons';
 import {
-  TooltipComponent,
-  TooltipComponentOption,
-  LegendComponent,
-  LegendComponentOption,
+  LegendComponent, LegendComponentOption, TooltipComponent, TooltipComponentOption,
 } from 'echarts/components';
 import ReactECharts from 'echarts-for-react';
 import { PieChart, PieSeriesOption } from 'echarts/charts';
 import { LabelLayout } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
 import { Button } from 'antd';
-import { useSetState } from 'ahooks';
+import { useMount, useSetState } from 'ahooks';
+import { useRecoilState } from 'recoil';
 import chartDefaultOption from './option';
+import { themeModeState } from '../../../state/themeState';
 
 echarts.use([
   TooltipComponent,
@@ -29,6 +28,7 @@ type EChartsOption = echarts.ComposeOption<
 >;
 export default function Index() {
   const [isClick, setIsClick] = useState(false);
+  const [themeMode] = useRecoilState(themeModeState);
   const [chartOption, setChartOption] = useSetState<EChartsOption>(chartDefaultOption as EChartsOption);
   const [loading, setLoading] = useState(false);
   const [, u] = useMib();
@@ -40,7 +40,7 @@ export default function Index() {
     await window.core.scan(instance.config.output);
   };
 
-  useEffect(() => {
+  useMount(() => {
     window.core.scanDone((e, data) => {
       if (data.result) {
         Reflect.deleteProperty(data.result, 'all');
@@ -59,11 +59,10 @@ export default function Index() {
         });
       }
     });
-  }, []);
-
+  });
   return (
     <div className={`w-${window.innerWidth} h-[500px] relative`}>
-      <ReactECharts className={`w-${window.innerWidth} h-[500px]!`} showLoading={loading} option={chartOption} />
+      <ReactECharts className={`w-${window.innerWidth} h-[500px]!`} theme={themeMode} showLoading={loading} option={chartOption} />
       {!isClick
         ? (
           <Button

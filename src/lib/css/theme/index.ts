@@ -1,9 +1,9 @@
 import { useSetState } from 'ahooks';
-import {
-  Dispatch, SetStateAction, useState, useEffect,
-} from 'react';
+import { useEffect } from 'react';
 import { theme } from 'antd';
 import type { ThemeConfig } from 'antd/es/config-provider/context';
+import { useRecoilState } from 'recoil';
+import { themeModeState } from '../../../../state/themeState';
 
 export enum ThemeType {
   DARK = 'dark',
@@ -11,7 +11,6 @@ export enum ThemeType {
 }
 
 const { darkAlgorithm, defaultAlgorithm } = theme;
-const cacheTheme = localStorage.getItem('theme') as ThemeType;
 const TOKEN = {
   colorPrimary: '#C539B4',
   colorSuccess: '#852999',
@@ -19,36 +18,17 @@ const TOKEN = {
   colorWarning: '#EF9A53',
   colorError: '#FB2576',
 };
-export function useTheme(type: ThemeType = cacheTheme ?? ThemeType.LIGHT): [ThemeConfig, ThemeType, Dispatch<SetStateAction<ThemeType>>] {
-  const [mode, setMode] = useState<ThemeType>(type);
+export function useTheme() {
+  const [themeMode] = useRecoilState(themeModeState);
   const [themeConfig, setThemeConfig] = useSetState<ThemeConfig>({
     token: {
       ...TOKEN,
       colorError: '#FB2576',
     },
-    algorithm: [defaultAlgorithm],
+    algorithm: [themeMode === ThemeType.LIGHT ? defaultAlgorithm : darkAlgorithm],
   });
   useEffect(() => {
-    console.log({ mode });
-    if (mode === ThemeType.LIGHT) {
-      localStorage.setItem('theme', ThemeType.LIGHT);
-      setThemeConfig({
-        algorithm: [defaultAlgorithm],
-        token: {
-          ...TOKEN,
-          colorPrimaryBgHover: '#fdd2f3',
-        },
-      });
-    }
-    if (mode === ThemeType.DARK) {
-      localStorage.setItem('theme', ThemeType.DARK);
-      setThemeConfig({
-        algorithm: [darkAlgorithm],
-        token: TOKEN,
-      });
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode]);
-
-  return [themeConfig, mode, setMode];
+    setThemeConfig({ algorithm: [themeMode === ThemeType.LIGHT ? defaultAlgorithm : darkAlgorithm] });
+  }, [themeMode, setThemeConfig]);
+  return [themeConfig];
 }

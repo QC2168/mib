@@ -1,11 +1,11 @@
 import {
-  ConfigProvider, Layout, Result, Menu,
+  ConfigProvider, Layout, Menu,
 } from 'antd';
 
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import { ThemeType } from '@/lib/css/theme';
 import Scan from '@/pages/scan';
 import Home from './pages/home';
+import Settings from './pages/settings';
 import useLayout from './hooks/useLayout';
 
 const {
@@ -17,7 +17,6 @@ function App() {
   const {
     themeConfig,
     menuItems,
-    mode,
   } = useLayout();
 
   return (
@@ -27,7 +26,6 @@ function App() {
           <Menu
             className="fixed w-screen z-10"
             onSelect={({ key }) => navigate(key)}
-            theme={mode === ThemeType.DARK ? 'dark' : 'light'}
             defaultSelectedKeys={['home']}
             mode="horizontal"
             items={menuItems}
@@ -38,12 +36,8 @@ function App() {
               <Route path="/home" element={<Home />} />
               <Route path="/scan" element={<Scan />} />
               <Route
-                path="/file"
-                element={(
-                  <Result
-                    title="正在开发中"
-                  />
-                  )}
+                path="/settings"
+                element={<Settings />}
               />
             </Routes>
           </Content>
