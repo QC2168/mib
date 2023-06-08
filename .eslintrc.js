@@ -65,6 +65,7 @@ module.exports = {
       },
     ],
     'unused-imports/no-unused-imports': 'error',
+    'import/prefer-default-export': 'off',
     'linebreak-style': 'off',
   },
 };
