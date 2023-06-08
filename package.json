@@ -14,7 +14,7 @@
     "prepare": "husky install",
     "postinstall": "yarn prepare",
     "lint": "eslint . --ext .js,.ts,.tsx --fix --ignore-path .gitignore",
-    "release": "release-it"
+    "release": "pnpm lint && release-it"
   },
   "engines": {
     "node": ">=14.17.0"
