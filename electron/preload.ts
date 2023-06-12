@@ -184,4 +184,5 @@ contextBridge.exposeInMainWorld('core', {
   editNode: (data: SaveItemType) => ipcRenderer.invoke('editNode', data),
   editOutputPath: (path: string) => ipcRenderer.invoke('editOutputPath', path),
   scan: (path: string) => ipcRenderer.invoke('scan', path),
+  rebootADB: () => ipcRenderer.invoke('rebootADB'),
 });

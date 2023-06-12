@@ -25,6 +25,7 @@ export interface MibApi {
   editNode: (data:SaveItemType)=>Promise<ConfigType>,
   editOutputPath: (output:string)=>Promise<ConfigType>,
   scan: (path:string)=>Promise<Record<string, string>>,
+  rebootADB: ()=>Promise<ResponseType<boolean>>,
 }
 
 declare global {

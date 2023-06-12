@@ -220,6 +220,16 @@ ipcMain.handle('addNode', (event, data) => addNode(data));
 ipcMain.handle('removeNode', (event, i: number) => removeNode(i));
 ipcMain.handle('editNode', (event, data, index) => editNode(data, index));
 ipcMain.handle('editOutputPath', (event, output) => editOutputPath(output));
+ipcMain.handle('rebootADB', async (event) => {
+  const result = await runBackupWorker({
+    task: 'rebootADB',
+    cfg: {
+      path: AdbPath,
+    },
+    params: null,
+  });
+  return result;
+});
 
 // scan folder to obtain extname
 ipcMain.handle('scan', async (event, path:string) => {

@@ -1,4 +1,4 @@
-import Mib from '@qc2168/mib';
+import Mib, { rebootADBServer } from '@qc2168/mib';
 import getFileTypes from '../utils/getFileTypes';
 
 const { workerData, parentPort } = require('worker_threads');
@@ -79,6 +79,21 @@ if (task === 'scan') {
       msg: '扫描进程出错了',
       result: false,
       error,
+    });
+  }
+}
+
+if (task === 'rebootADB') {
+  try {
+    rebootADBServer(cfg.path);
+    post({
+      msg: '重启成功',
+      result: true,
+    });
+  } catch (error) {
+    post({
+      msg: '重启失败',
+      result: true,
     });
   }
 }
