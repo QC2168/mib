@@ -15,9 +15,9 @@ export default {
       radius: ['40%', '70%'],
       avoidLabelOverlap: false,
       itemStyle: {
-        borderRadius: 10,
+        borderRadius: 5,
         borderColor: '#fff',
-        borderWidth: 2,
+        borderWidth: 1,
       },
       label: {
         show: false,

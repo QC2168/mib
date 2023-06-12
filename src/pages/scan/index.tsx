@@ -12,8 +12,10 @@ import { CanvasRenderer } from 'echarts/renderers';
 import { Button } from 'antd';
 import { useMount, useSetState } from 'ahooks';
 import { useRecoilState } from 'recoil';
+import { ThemeType } from '@/lib/css/theme';
 import chartDefaultOption from './option';
 import { themeModeState } from '../../../state/themeState';
+import darkTheme from './dark.json';
 
 echarts.use([
   TooltipComponent,
@@ -62,7 +64,7 @@ export default function Index() {
   });
   return (
     <div className={`w-${window.innerWidth} h-[500px] relative`}>
-      <ReactECharts className={`w-${window.innerWidth} h-[500px]!`} theme={themeMode} showLoading={loading} option={chartOption} />
+      <ReactECharts className={`w-${window.innerWidth} h-[500px]!`} theme={themeMode === ThemeType.LIGHT ? 'default' : darkTheme} showLoading={loading} option={chartOption} />
       {!isClick
         ? (
           <Button
