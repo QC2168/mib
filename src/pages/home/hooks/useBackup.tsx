@@ -19,7 +19,8 @@ import useMib from './useMib';
 const { confirm } = Modal;
 export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { delNode: (i: number) => void }>) {
   const [instance] = useMib();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [backupLoading, setBackupLoading] = useState<boolean>(false);
+  const [restoreLoading, setRestoreLoading] = useState<boolean>(false);
   const {
     devices,
     handleDevice,
@@ -56,7 +57,7 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
     } catch (e) {
       createErrorMessage('备份出错了');
     } finally {
-      setIsLoading(false);
+      setBackupLoading(false);
     }
   }
 
@@ -66,7 +67,7 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
       createWarningMessage('请先连接设备，再执行操作');
       return;
     }
-    setIsLoading(true);
+    setBackupLoading(true);
     await backup(item);
   };
   function checkEnv() {
@@ -81,6 +82,11 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
       createWarningMessage('请先连接设备，再执行操作');
       return false;
     }
+    // 备份和恢复只能执行一个
+    if (restoreLoading || backupLoading) {
+      createWarningMessage('请等待任务执行完毕');
+      return false;
+    }
     return true;
   }
   async function backupTip() {
@@ -92,7 +98,7 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
       onOk() {
         console.log(selectedRowKeys);
         const data = (instance as Mib)?.config.backups.filter((j:SaveItemType) => selectedRowKeys.includes(j.comment)) ?? [];
-        setIsLoading(true);
+        setBackupLoading(true);
         backup(data);
       },
     });
@@ -100,13 +106,13 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
   const restore = async () => {
     if (!checkEnv()) return;
     const data = (instance as Mib)?.config.backups.filter((j:SaveItemType) => selectedRowKeys.includes(j.comment)) ?? [];
-    setIsLoading(true);
+    setRestoreLoading(true);
     try {
       await window.core.restore(data);
     } catch (e) {
       createErrorMessage('恢复出错了');
     } finally {
-      setIsLoading(false);
+      setRestoreLoading(false);
     }
   };
   useMount(() => {
@@ -185,11 +191,12 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
   return {
     rowSelection,
     backupNodeColumns,
-    isLoading,
+    backupLoading,
     backupTip,
     devices,
     handleDevice,
     currentDevices,
     restore,
+    restoreLoading,
   };
 }

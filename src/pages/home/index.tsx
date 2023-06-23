@@ -47,6 +47,7 @@ export default function Analysis() {
     handleDevice,
     currentDevices,
     restore,
+    restoreLoading,
   } = useBackup({
     open: BackupModalRef.current?.open,
     delNode,
@@ -139,15 +140,16 @@ export default function Analysis() {
                 onClick={() => backupTip()}
                 type="primary"
               >
-                备份
+                {isLoading ? '备份中' : '备份'}
               </Button>
               <Button
-                loading={isLoading}
+                loading={restoreLoading}
                 icon={<DownloadOutlined />}
                 onClick={() => restore()}
                 type="primary"
               >
-                恢复
+                {restoreLoading ? '恢复中' : '恢复'}
+
               </Button>
             </Space>
           </div>
