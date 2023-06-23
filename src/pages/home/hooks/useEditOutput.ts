@@ -29,6 +29,7 @@ export default function useEditOutput() {
     const i = await u();
     const path = i?.config.output;
     setOutputPath(path || '双击设定导出路径');
+    setTempOutput(path || '');
   });
   return {
     outputPath,
