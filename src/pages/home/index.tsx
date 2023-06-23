@@ -41,7 +41,7 @@ export default function Analysis() {
   const {
     rowSelection,
     backupNodeColumns,
-    isLoading,
+    backupLoading,
     backupTip,
     devices,
     handleDevice,
@@ -135,12 +135,12 @@ export default function Analysis() {
             </Select>
             <Space>
               <Button
-                loading={isLoading}
+                loading={backupLoading}
                 icon={<UploadOutlined />}
                 onClick={() => backupTip()}
                 type="primary"
               >
-                {isLoading ? '备份中' : '备份'}
+                {backupLoading ? '备份中' : '备份'}
               </Button>
               <Button
                 loading={restoreLoading}
