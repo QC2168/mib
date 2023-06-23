@@ -43,7 +43,10 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
   };
 
   const editNode = (data: SaveItemType) => {
-    if (!data.id) return;
+    if (!data.id) {
+      createWarningMessage('该节点无法编辑 （节点ID缺失）');
+      return;
+    }
     opt.open?.(MODAL_STATUS.EDIT, data);
   };
   const deleteNode = (data: SaveItemType) => {
