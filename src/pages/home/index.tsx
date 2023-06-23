@@ -41,12 +41,13 @@ export default function Analysis() {
   const {
     rowSelection,
     backupNodeColumns,
-    isLoading,
+    backupLoading,
     backupTip,
     devices,
     handleDevice,
     currentDevices,
     restore,
+    restoreLoading,
   } = useBackup({
     open: BackupModalRef.current?.open,
     delNode,
@@ -134,20 +135,21 @@ export default function Analysis() {
             </Select>
             <Space>
               <Button
-                loading={isLoading}
+                loading={backupLoading}
                 icon={<UploadOutlined />}
                 onClick={() => backupTip()}
                 type="primary"
               >
-                备份
+                {backupLoading ? '备份中' : '备份'}
               </Button>
               <Button
-                loading={isLoading}
+                loading={restoreLoading}
                 icon={<DownloadOutlined />}
                 onClick={() => restore()}
                 type="primary"
               >
-                恢复
+                {restoreLoading ? '恢复中' : '恢复'}
+
               </Button>
             </Space>
           </div>
