@@ -223,15 +223,23 @@ ipcMain.handle('editOutputPath', (event, output) => {
   const cfg = editOutputPath(output);
   return mibInstance.reloadConfig(cfg);
 });
-ipcMain.handle('rebootADB', async (event) => {
-  const result = await runBackupWorker({
-    task: 'rebootADB',
-    cfg: {
-      path: AdbPath,
-    },
-    params: null,
-  });
-  return result;
+ipcMain.handle('rebootADB', async () => {
+  try {
+    const result = await runBackupWorker({
+      task: 'rebootADB',
+      cfg: {
+        path: AdbPath,
+      },
+      params: null,
+    });
+    return result;
+  } catch (error) {
+    return {
+      msg: '重启失败',
+      result: true,
+      error,
+    };
+  }
 });
 
 // scan folder to obtain extname
