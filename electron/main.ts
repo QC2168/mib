@@ -219,7 +219,10 @@ ipcMain.handle('restore', async (event, id: SaveItemType | SaveItemType[]) => {
 ipcMain.handle('addNode', (event, data) => addNode(data));
 ipcMain.handle('removeNode', (event, i: number) => removeNode(i));
 ipcMain.handle('editNode', (event, data, index) => editNode(data, index));
-ipcMain.handle('editOutputPath', (event, output) => editOutputPath(output));
+ipcMain.handle('editOutputPath', (event, output) => {
+  const cfg = editOutputPath(output);
+  return mibInstance.reloadConfig(cfg);
+});
 ipcMain.handle('rebootADB', async (event) => {
   const result = await runBackupWorker({
     task: 'rebootADB',
