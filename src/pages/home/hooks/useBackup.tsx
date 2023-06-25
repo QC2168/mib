@@ -11,7 +11,6 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import useMessage from '@/utils/message';
 import useDevices from '@/pages/home/hooks/useDevices';
 import { BackupModalRef, MODAL_STATUS } from '@/pages/home/components/BackupModal';
-import Mib from '@qc2168/mib';
 import { useMount } from 'ahooks';
 import styles from '../index.module.less';
 import useMib from './useMib';
@@ -98,17 +97,18 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
       title: '',
       icon: <ExclamationCircleOutlined />,
       content: '备份可能需要一小段时间，确定么？',
-      onOk() {
-        console.log(selectedRowKeys);
-        const data = (instance as Mib)?.config.backups.filter((j:SaveItemType) => selectedRowKeys.includes(j.comment)) ?? [];
+      async onOk() {
+        const cfg = await window.core.instanceConfig();
+        const data = cfg.backups.filter((j:SaveItemType) => selectedRowKeys.includes(j.comment)) ?? [];
         setBackupLoading(true);
-        backup(data);
+        await backup(data);
       },
     });
   }
   const restore = async () => {
     if (!checkEnv()) return;
-    const data = (instance as Mib)?.config.backups.filter((j:SaveItemType) => selectedRowKeys.includes(j.comment)) ?? [];
+    const cfg = await window.core.instanceConfig();
+    const data = cfg.backups.filter((j:SaveItemType) => selectedRowKeys.includes(j.comment)) ?? [];
     setRestoreLoading(true);
     try {
       await window.core.restore(data);

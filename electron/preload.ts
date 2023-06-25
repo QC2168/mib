@@ -171,6 +171,7 @@ contextBridge.exposeInMainWorld('win', {
 
 contextBridge.exposeInMainWorld('core', {
   instance: () => ipcRenderer.invoke('mibInstance'),
+  instanceConfig: () => ipcRenderer.invoke('instanceConfig'),
   devices: () => ipcRenderer.invoke('getDevices'),
   setDevice: (id: string) => ipcRenderer.invoke('setDevice', id),
   backup: (id: SaveItemType | SaveItemType[]) => ipcRenderer.invoke('backup', id),

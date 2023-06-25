@@ -26,8 +26,8 @@ export default function useEditOutput() {
     }
   };
   useMount(async () => {
-    const i = await u();
-    const path = i?.config.output;
+    const cfg = await window.core.instanceConfig();
+    const path = cfg.output;
     setOutputPath(path || '双击设定导出路径');
     setTempOutput(path || '');
   });

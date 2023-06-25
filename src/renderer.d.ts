@@ -12,6 +12,7 @@ export interface WinApi {
 }
 export interface MibApi {
   instance: () => Promise<Mib>,
+  instanceConfig: () => Promise<ConfigType>,
   devices: () => Promise<DevicesType[]>,
   setDevice: (id:string) => Promise<void>,
   backup: (id:SaveItemType | SaveItemType[]) => Promise<void>,

@@ -172,6 +172,8 @@ ipcMain.handle('maximize-win', () => {
 
 ipcMain.handle('mibInstance', () => mibInstance);
 
+ipcMain.handle('instanceConfig', () => mibInstance.getConfig());
+
 ipcMain.handle('setDevice', (event, id: string) => mibInstance.setDevice(id));
 
 ipcMain.handle('getDevices', () => getDevices(mibInstance.adbOpt.adbPath));

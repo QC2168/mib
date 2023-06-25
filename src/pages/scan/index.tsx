@@ -38,8 +38,8 @@ export default function Index() {
   const enterLoading = async () => {
     setIsClick(true);
     setLoading(true);
-    const instance = await u();
-    await window.core.scan(instance.config.output);
+    const cfg = await window.core.instanceConfig();
+    await window.core.scan(cfg.output);
   };
 
   useMount(() => {
