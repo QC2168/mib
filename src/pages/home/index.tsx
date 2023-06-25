@@ -4,14 +4,13 @@ import {
 } from 'antd';
 
 import {
-  UploadOutlined, PlusOutlined, UserOutlined, DownloadOutlined,
+  UploadOutlined, PlusOutlined, DownloadOutlined,
 } from '@ant-design/icons';
 import BackupModal, { BackupModalRef as BackupModalRefExpose, MODAL_STATUS } from '@/pages/home/components/BackupModal';
 import { useRef } from 'react';
 import useMessage from '@/utils/message';
 import useDataSource from '@/pages/home/hooks/useDataSource';
 import useEditOutput from '@/pages/home/hooks/useEditOutput';
-import HelpModal, { helpModalExposeType } from '@/components/helpModal/index';
 import useBackup from './hooks/useBackup';
 
 const { Text } = Typography;
@@ -20,7 +19,6 @@ const { Option } = Select;
 export default function Analysis() {
   const { createErrorMessage } = useMessage();
   const [data, setData] = useDataSource();
-  const helpModalRef = useRef<helpModalExposeType | null>(null);
   const {
     isEditOutput,
     showEditOutputInput,
@@ -69,20 +67,10 @@ export default function Analysis() {
           >
             新增节点
           </Button>
-          <Button
-            type="link"
-            className=""
-            icon={<UserOutlined />}
-            onClick={() => helpModalRef?.current?.showModal()}
-          >
-            关于作者
-          </Button>
-
         </div>
       )}
       bordered
     >
-      <HelpModal ref={helpModalRef} />
       <div>
         {/* 节点 */}
         <Table
