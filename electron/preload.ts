@@ -167,6 +167,7 @@ contextBridge.exposeInMainWorld('win', {
   close: () => ipcRenderer.invoke('close-win'),
   minimize: () => ipcRenderer.invoke('minimize-win'),
   maximize: () => ipcRenderer.invoke('maximize-win'),
+  openLink: (url:string) => ipcRenderer.invoke('openLink', url),
 });
 
 contextBridge.exposeInMainWorld('core', {

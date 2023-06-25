@@ -9,6 +9,7 @@ export interface WinApi {
   close: () => Promise<void>,
   minimize: () => Promise<void>,
   maximize: () => Promise<void>,
+  openLink: (url:string) => Promise<void>,
 }
 export interface MibApi {
   instance: () => Promise<Mib>,

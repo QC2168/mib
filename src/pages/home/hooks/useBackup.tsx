@@ -13,11 +13,9 @@ import useDevices from '@/pages/home/hooks/useDevices';
 import { BackupModalRef, MODAL_STATUS } from '@/pages/home/components/BackupModal';
 import { useMount } from 'ahooks';
 import styles from '../index.module.less';
-import useMib from './useMib';
 
 const { confirm } = Modal;
 export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { delNode: (i: number) => void }>) {
-  const [instance] = useMib();
   const [backupLoading, setBackupLoading] = useState<boolean>(false);
   const [restoreLoading, setRestoreLoading] = useState<boolean>(false);
   const {

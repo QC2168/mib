@@ -3,7 +3,9 @@ import Mib, {
   devices as getDevices, type SaveItemType, addNode, removeNode, editNode, editOutputPath,
 } from '@qc2168/mib';
 
-import { app, BrowserWindow, ipcMain } from 'electron';
+import {
+  app, BrowserWindow, ipcMain, shell, Notification,
+} from 'electron';
 import { release } from 'os';
 // import installExtension, {
 //   REACT_DEVELOPER_TOOLS,
@@ -19,6 +21,9 @@ const AdbPath = app.isPackaged ? join(process.cwd(), '/resources/resources/adb/a
 
 const mibInstance = new Mib();
 mibInstance.setAdbPath(AdbPath);
+
+const NOTIFICATION_TITLE = 'MIB';
+
 // Disable GPU Acceleration for Windows 7
 if (release()
   .startsWith('6.1')) {
@@ -258,5 +263,21 @@ ipcMain.handle('scan', async (event, path:string) => {
       result: false,
       error,
     });
+  }
+});
+
+// open link
+ipcMain.handle('openLink', async (event, url:string) => {
+  try {
+    await shell.openExternal(url);
+    new Notification({
+      title: NOTIFICATION_TITLE,
+      body: '访问链接失败1',
+    }).show();
+  } catch (error) {
+    new Notification({
+      title: NOTIFICATION_TITLE,
+      body: '访问链接失败',
+    }).show();
   }
 });

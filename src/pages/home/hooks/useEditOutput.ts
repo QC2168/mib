@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import useMib from '@/pages/home/hooks/useMib';
 import { useMount } from 'ahooks';
 import useMessage from '@/utils/message';
 
@@ -7,7 +6,6 @@ export default function useEditOutput() {
   const [isEditOutput, setIsEditOutput] = useState(false);
   const [tempOutput, setTempOutput] = useState('');
   const [outputPath, setOutputPath] = useState('');
-  const [, u] = useMib();
   const { createSuccessMessage, createErrorMessage } = useMessage();
   const tempOutputChange = (event:any) => {
     setTempOutput(event.target!.value!);

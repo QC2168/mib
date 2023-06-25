@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import useMib from '@/pages/home/hooks/useMib';
 import * as echarts from 'echarts/core';
 import { SearchOutlined } from '@ant-design/icons';
 import {
@@ -33,8 +32,6 @@ export default function Index() {
   const [themeMode] = useRecoilState(themeModeState);
   const [chartOption, setChartOption] = useSetState<EChartsOption>(chartDefaultOption as EChartsOption);
   const [loading, setLoading] = useState(false);
-  const [, u] = useMib();
-
   const enterLoading = async () => {
     setIsClick(true);
     setLoading(true);
