@@ -32,13 +32,17 @@ export default function Index() {
   const [themeMode] = useRecoilState(themeModeState);
   const [chartOption, setChartOption] = useSetState<EChartsOption>(chartDefaultOption as EChartsOption);
   const [loading, setLoading] = useState(false);
+  const [outputPath, setOutputPath] = useState('');
   const enterLoading = async () => {
     setIsClick(true);
     setLoading(true);
     const cfg = await window.core.instanceConfig();
     await window.core.scan(cfg.output);
   };
-
+  const loadPath = async () => {
+    const { output } = await window.core.instanceConfig();
+    setOutputPath(output);
+  };
   useMount(() => {
     window.core.scanDone((e, data) => {
       if (data.result) {
@@ -58,6 +62,8 @@ export default function Index() {
         });
       }
     });
+
+    loadPath();
   });
   return (
     <div className={`w-${window.innerWidth} h-[500px] relative`}>
@@ -71,6 +77,7 @@ export default function Index() {
             icon={<SearchOutlined />}
             onClick={() => enterLoading()}
             type="text"
+            title={`扫描路径 ${outputPath}`}
           >
             开始分析
           </Button>
