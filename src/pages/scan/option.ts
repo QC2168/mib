@@ -1,14 +1,19 @@
 import { EChartsOption } from 'echarts';
+import { readablizeBytes } from '@/utils';
 
 export default {
   height: '500px',
   tooltip: {
     trigger: 'item',
+    formatter(params:any) {
+      return `<strong>类型:</strong> ${params.name}<br /><strong>占用大小:</strong> ${readablizeBytes(params.value || 0)}`;
+    },
   },
   legend: {
     top: '5%',
     left: 'center',
   },
+
   series: [
     {
       type: 'pie',
