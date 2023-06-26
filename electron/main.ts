@@ -4,7 +4,7 @@ import Mib, {
 } from '@qc2168/mib';
 
 import {
-  app, BrowserWindow, ipcMain, shell, Notification,
+  app, BrowserWindow, ipcMain, shell, Notification, nativeImage,
 } from 'electron';
 import { release } from 'os';
 import semver from 'semver';
@@ -26,6 +26,15 @@ const mibInstance = new Mib();
 mibInstance.setAdbPath(AdbPath);
 
 const NOTIFICATION_TITLE = 'MIB';
+const ICON = nativeImage.createFromPath('./resources/icon.ico');
+
+function notice(body:string) {
+  new Notification({
+    title: NOTIFICATION_TITLE,
+    body,
+    icon: ICON,
+  }).show();
+}
 
 // Disable GPU Acceleration for Windows 7
 if (release()
@@ -274,10 +283,7 @@ ipcMain.handle('openLink', async (event, url:string) => {
   try {
     await shell.openExternal(url);
   } catch (error) {
-    new Notification({
-      title: NOTIFICATION_TITLE,
-      body: '访问链接失败',
-    }).show();
+    notice('访问链接失败');
   }
 });
 
@@ -286,17 +292,11 @@ ipcMain.handle('checkVersion', async () => {
   try {
     const { data: { version: remoteVersion } } = await axios.get('https://gitee.com/QC2168/mib/raw/client/package.json');
     if (semver.gt(remoteVersion, version)) {
-      new Notification({
-        title: NOTIFICATION_TITLE,
-        body: '检测到新版本，请更新',
-      }).show();
+      notice('检测到新版本，请更新');
       return true;
     }
     return false;
   } catch (error) {
-    new Notification({
-      title: NOTIFICATION_TITLE,
-      body: '检测程序版本失败，请检测网络',
-    }).show();
+    notice('检测程序版本失败，请检测网络');
   }
 });
