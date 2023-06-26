@@ -270,10 +270,6 @@ ipcMain.handle('scan', async (event, path:string) => {
 ipcMain.handle('openLink', async (event, url:string) => {
   try {
     await shell.openExternal(url);
-    new Notification({
-      title: NOTIFICATION_TITLE,
-      body: '访问链接失败1',
-    }).show();
   } catch (error) {
     new Notification({
       title: NOTIFICATION_TITLE,
