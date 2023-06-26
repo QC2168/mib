@@ -77,7 +77,7 @@ export default function Index() {
         <Form.Item label="关于项目">
           <Space>
             {
-              hasNewVersion ? <Button icon={<VerticalAlignBottomOutlined />} onClick={() => update()} type="primary">软件更新</Button> : null
+              hasNewVersion ? <Button icon={<VerticalAlignBottomOutlined />} onClick={() => update()} type="primary">获取新版本</Button> : null
             }
 
             <Popover
