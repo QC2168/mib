@@ -11,6 +11,12 @@ export interface WinApi {
   maximize: () => Promise<void>,
   openLink: (url:string) => Promise<void>,
 }
+export interface Versions {
+  node: () => string,
+  chrome: () => string,
+  electron: () => string,
+  version: () => Promise<number>,
+}
 export interface MibApi {
   instance: () => Promise<Mib>,
   instanceConfig: () => Promise<ConfigType>,
@@ -34,5 +40,6 @@ declare global {
   interface Window {
     win: WinApi;
     core: MibApi;
+    versions: Versions;
   }
 }

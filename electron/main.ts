@@ -7,6 +7,9 @@ import {
   app, BrowserWindow, ipcMain, shell, Notification,
 } from 'electron';
 import { release } from 'os';
+import semver from 'semver';
+import axios from 'axios';
+import { version } from '../package.json';
 // import installExtension, {
 //   REACT_DEVELOPER_TOOLS,
 // } from 'electron-devtools-installer';
@@ -274,6 +277,26 @@ ipcMain.handle('openLink', async (event, url:string) => {
     new Notification({
       title: NOTIFICATION_TITLE,
       body: '访问链接失败',
+    }).show();
+  }
+});
+
+// eslint-disable-next-line consistent-return
+ipcMain.handle('checkVersion', async () => {
+  try {
+    const { data: { version: remoteVersion } } = await axios.get('https://gitee.com/QC2168/mib/raw/client/package.json');
+    if (semver.gt(remoteVersion, version)) {
+      new Notification({
+        title: NOTIFICATION_TITLE,
+        body: '检测到新版本，请更新',
+      }).show();
+      return true;
+    }
+    return false;
+  } catch (error) {
+    new Notification({
+      title: NOTIFICATION_TITLE,
+      body: '检测程序版本失败，请检测网络',
     }).show();
   }
 });

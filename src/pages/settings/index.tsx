@@ -1,21 +1,26 @@
 import {
   Form, Radio, Button, Popover, Space, Image,
 } from 'antd';
-import { GithubOutlined, ReloadOutlined, WechatOutlined } from '@ant-design/icons';
+import {
+  GithubOutlined, ReloadOutlined, WechatOutlined, VerticalAlignBottomOutlined,
+} from '@ant-design/icons';
 import { ThemeType } from '@/lib/css/theme';
 import { useRecoilState } from 'recoil';
 import { Local } from '@/utils/storage';
 import { useState } from 'react';
 import useMessage from '@/utils/message';
 import wechat from '@/assets/images/wechat.jpg';
+import { useMount } from 'ahooks';
 import { themeModeState } from '../../../state/themeState';
 import { version } from '../../../package.json';
 
 export default function Index() {
   const [themeMode, setThemeMode] = useRecoilState(themeModeState);
+  const [hasNewVersion, setHasNewVersion] = useState(false);
   const {
     createErrorMessage,
     createSuccessMessage,
+    createInfoMessage,
   } = useMessage();
   const initialValues = { themeMode };
   const changeThemeMode = (mode: ThemeType) => {
@@ -36,6 +41,18 @@ export default function Index() {
   const openRepo = async () => {
     await window.win.openLink('https://github.com/QC2168/mib');
   };
+  const update = () => {
+    createInfoMessage('请联系作者加入获取最新版本下载');
+  };
+  const check = async () => {
+    const data = await window.versions.version();
+    if (data) {
+      setHasNewVersion(true);
+    }
+  };
+  useMount(() => {
+    check();
+  });
   return (
     <div className="px-8 py-2">
       <Form
@@ -52,13 +69,17 @@ export default function Index() {
         </Form.Item>
         <Form.Item label="软件版本">
           {version}
+
         </Form.Item>
         <Form.Item label="设备连接服务（ADB）">
           <Button type="primary" icon={<ReloadOutlined />} loading={rebooting} disabled={rebooting} onClick={() => rebootADB()}>{rebooting ? '正在重启服务' : '重启服务'}</Button>
         </Form.Item>
         <Form.Item label="关于项目">
           <Space>
-            <Button type="primary" onClick={() => openRepo()} icon={<GithubOutlined />}>项目地址</Button>
+            {
+              hasNewVersion ? <Button icon={<VerticalAlignBottomOutlined />} onClick={() => update()} type="primary">软件更新</Button> : null
+            }
+
             <Popover
               title="联系作者加入交流群/反馈/建议"
               content={(
@@ -70,9 +91,8 @@ export default function Index() {
             >
               <Button icon={<WechatOutlined />} type="primary">联系作者</Button>
             </Popover>
-
+            <Button type="primary" onClick={() => openRepo()} icon={<GithubOutlined />}>项目地址</Button>
           </Space>
-
         </Form.Item>
       </Form>
     </div>
