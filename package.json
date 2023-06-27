@@ -2,7 +2,7 @@
   "name": "mib-client",
   "productName": "mib-client",
   "private": true,
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "data backup tool",
   "author": "QC2168",
   "license": "MIT",
