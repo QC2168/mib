@@ -1,10 +1,11 @@
 import {
-  Modal, Form, Input, Switch,
+  Modal, Form, Input, Switch, Tooltip,
 } from 'antd';
 
 import {
   useImperativeHandle, forwardRef, useState, Dispatch, SetStateAction,
 } from 'react';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import useMessage from '@/utils/message';
 import { SaveItemType } from '@qc2168/mib';
 
@@ -156,6 +157,19 @@ export default forwardRef<BackupModalRef, BackupModalProps>((props, ref) => {
             ]}
           >
             <Switch checkedChildren="开启" unCheckedChildren="关闭" />
+          </Form.Item>
+          <Form.Item
+            label="hash模式"
+            name="checkHash"
+            valuePropName="checked"
+            rules={[
+              { required: true },
+            ]}
+          >
+            <Switch checkedChildren="开启" unCheckedChildren="关闭" />
+            <Tooltip title="在同名情况下，如果文件hash值出现差异，会重新备份设备上的文件">
+              <QuestionCircleOutlined className="text-md" style={{ color: '#808080', padding: '5px' }} />
+            </Tooltip>
           </Form.Item>
         </Form>
 
