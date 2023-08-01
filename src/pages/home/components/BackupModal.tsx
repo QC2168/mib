@@ -155,6 +155,7 @@ export default forwardRef<BackupModalRef, BackupModalProps>((props, ref) => {
             rules={[
               { required: true },
             ]}
+            tooltip="不进行差异对比，备份设备所有文件数据（不推荐）"
           >
             <Switch checkedChildren="开启" unCheckedChildren="关闭" />
           </Form.Item>
