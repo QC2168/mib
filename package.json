@@ -47,7 +47,7 @@
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
     "dayjs": "^1.11.3",
-    "electron": "^23.1.0",
+    "electron": "^23.3.12",
     "electron-builder": "^23.0.3",
     "electron-devtools-installer": "^3.2.0",
     "electron-store": "^8.0.1",
@@ -69,7 +69,7 @@
     "release-it": "^15.11.0",
     "typescript": "^4.7.3",
     "unocss": "^0.44.1",
-    "vite": "^4.3.9",
+    "vite": "^4.4.8",
     "vite-plugin-electron": "^0.11.1",
     "vite-plugin-esmodule": "^1.4.2",
     "winston": "^3.8.1"

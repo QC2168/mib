@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-expressions */
 
 import { type SaveItemType } from '@qc2168/mib';
+import { RecommendSystemConfigEnum } from './utils/recommendConfigs/types';
 
 /* eslint-disable react-hooks/rules-of-hooks */
 function domReady(
@@ -188,4 +189,8 @@ contextBridge.exposeInMainWorld('core', {
   editOutputPath: (path: string) => ipcRenderer.invoke('editOutputPath', path),
   scan: (path: string) => ipcRenderer.invoke('scan', path),
   rebootADB: () => ipcRenderer.invoke('rebootADB'),
+});
+
+contextBridge.exposeInMainWorld('utils', {
+  injectRecommendConfig: (system:RecommendSystemConfigEnum) => ipcRenderer.invoke('injectRecommendConfig', system),
 });

@@ -10,6 +10,8 @@ import { release } from 'os';
 import semver from 'semver';
 import axios from 'axios';
 import { version } from '../package.json';
+import injectConfig from './utils/recommendConfigs';
+import { RecommendSystemConfigEnum } from './utils/recommendConfigs/types';
 // import installExtension, {
 //   REACT_DEVELOPER_TOOLS,
 // } from 'electron-devtools-installer';
@@ -300,3 +302,8 @@ ipcMain.handle('checkVersion', async () => {
     notice('检测程序版本失败，请检测网络');
   }
 });
+
+ipcMain.handle(
+  'injectRecommendConfig',
+  async (event, system:RecommendSystemConfigEnum) => injectConfig(system),
+);

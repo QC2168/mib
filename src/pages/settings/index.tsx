@@ -13,6 +13,7 @@ import wechat from '@/assets/images/wechat.jpg';
 import { useMount } from 'ahooks';
 import { themeModeState } from '../../../state/themeState';
 import { version } from '../../../package.json';
+import { RecommendSystemConfigEnum } from '../../../electron/utils/recommendConfigs/types';
 
 export default function Index() {
   const [themeMode, setThemeMode] = useRecoilState(themeModeState);
@@ -53,6 +54,15 @@ export default function Index() {
   useMount(() => {
     check();
   });
+
+  const importRecommendNode = async (system:RecommendSystemConfigEnum) => {
+    try {
+      await window.utils.injectRecommendConfig(system);
+      createSuccessMessage('注入推荐配置成功，快去备份吧！');
+    } catch {
+      createErrorMessage('注入失败，请重试');
+    }
+  };
   return (
     <div className="px-8 py-2">
       <Form
@@ -92,6 +102,11 @@ export default function Index() {
               <Button icon={<WechatOutlined />} type="primary">联系作者</Button>
             </Popover>
             <Button type="primary" onClick={() => openRepo()} icon={<GithubOutlined />}>项目地址</Button>
+          </Space>
+        </Form.Item>
+        <Form.Item label="导入常用配置配置">
+          <Space>
+            <Button onClick={() => importRecommendNode(RecommendSystemConfigEnum.XIAOMI)}>小米/红米(MIUI)</Button>
           </Space>
         </Form.Item>
       </Form>

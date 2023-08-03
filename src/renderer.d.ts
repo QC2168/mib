@@ -1,5 +1,6 @@
 import type Mib, { type DevicesType, type SaveItemType, type ConfigType } from '@qc2168/mib';
 import { FileType } from '../electron/utils/getFileTypes';
+import { RecommendSystemConfigEnum } from '../electron/utils/recommendConfigs';
 
 export interface ResponseType<T=unknown> {
   msg:string;
@@ -34,12 +35,16 @@ export interface MibApi {
   editOutputPath: (output:string)=>Promise<ConfigType>,
   scan: (path:string)=>Promise<Record<string, string>>,
   rebootADB: ()=>Promise<ResponseType<boolean>>,
+  injectRecommendConfig: (system:RecommendSystemConfigEnum)=>Promise<boolean>,
 }
-
+export interface UtilsApi {
+  injectRecommendConfig: (system:RecommendSystemConfigEnum)=>Promise<boolean>,
+}
 declare global {
   interface Window {
     win: WinApi;
     core: MibApi;
     versions: Versions;
+    utils : UtilsApi;
   }
 }

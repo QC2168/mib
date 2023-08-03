@@ -14,6 +14,9 @@ const { join, resolve } = require('path');
 
 rmSync(join(__dirname, 'dist-electron'), { recursive: true, force: true }); // v14.14.0
 
+const isDev = process.env.NODE_ENV === 'development';
+const isProd = process.env.NODE_ENV === 'production';
+
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
@@ -34,23 +37,13 @@ export default defineConfig({
   plugins: [
     react(),
     electron([{
-      entry: 'electron/main.ts',
+      entry: ['electron/main.ts', 'electron/preload.ts', 'electron/worker/backup.ts', 'electron/utils/recommendConfigs/index.ts'],
       vite: {
+        mode: process.env.NODE_ENV,
         build: {
-          sourcemap: true,
+          minify: isProd,
+          watch: isDev ? {} : null,
         },
-      },
-    },
-    {
-      entry: 'electron/preload.ts',
-      onstart(options) {
-        options.reload();
-      },
-    },
-    {
-      entry: 'electron/worker/backup.ts',
-      onstart(options) {
-        options.reload();
       },
     },
     ]),

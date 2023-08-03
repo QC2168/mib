@@ -1,0 +1,39 @@
+{
+  "backups": [
+    {
+      "path": "/sdcard/DCIM/Camera/",
+      "comment": "本地相册",
+      "full": false,
+      "checkHash": false,
+      "id": 0
+    },
+    {
+      "path": "/sdcard/DCIM/Screenshots/",
+      "comment": "屏幕截屏",
+      "full": false,
+      "checkHash":false,
+      "id": 1
+    },
+    {
+      "path": "/sdcard/MIUI/sound_recorder/",
+      "comment": "录音",
+      "full": false,
+      "checkHash":false,
+      "id": 2
+    },
+    {
+      "path": "/sdcard/MIUI/sound_recorder/app_rec/",
+      "comment": "应用录音",
+      "full": false,
+      "checkHash":false,
+      "id": 3
+    },
+    {
+      "path": "/sdcard/MIUI/sound_recorder/call_rec/",
+      "comment": "通话录音",
+      "full": false,
+      "checkHash":false,
+      "id": 4
+    }
+  ]
+}
