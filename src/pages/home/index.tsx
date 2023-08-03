@@ -82,7 +82,7 @@ export default function Analysis() {
             y: 280,
           }}
           pagination={false}
-          rowKey="comment"
+          rowKey="id"
           columns={backupNodeColumns}
           dataSource={data || []}
         />
