@@ -2,7 +2,9 @@ import {
   ConfigProvider, Layout, Menu,
 } from 'antd';
 
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import {
+  Route, Routes, useNavigate, useLocation,
+} from 'react-router-dom';
 import Scan from '@/pages/scan';
 import Home from './pages/home';
 import Settings from './pages/settings';
@@ -14,6 +16,7 @@ const {
 
 function App() {
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     themeConfig,
     menuItems,
@@ -27,6 +30,7 @@ function App() {
             className="fixed w-screen z-10"
             onSelect={({ key }) => navigate(key)}
             defaultSelectedKeys={['home']}
+            selectedKeys={[location.pathname.substring(1)]}
             mode="horizontal"
             items={menuItems}
           />
