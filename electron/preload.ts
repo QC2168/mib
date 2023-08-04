@@ -170,6 +170,7 @@ contextBridge.exposeInMainWorld('win', {
   minimize: () => ipcRenderer.invoke('minimize-win'),
   maximize: () => ipcRenderer.invoke('maximize-win'),
   openLink: (url:string) => ipcRenderer.invoke('openLink', url),
+  reload: () => ipcRenderer.invoke('reload'),
 });
 
 contextBridge.exposeInMainWorld('core', {

@@ -11,6 +11,7 @@ export interface WinApi {
   minimize: () => Promise<void>,
   maximize: () => Promise<void>,
   openLink: (url:string) => Promise<void>,
+  reload: () => Promise<void>,
 }
 export interface Versions {
   node: () => string,

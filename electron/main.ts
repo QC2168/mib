@@ -307,3 +307,7 @@ ipcMain.handle(
   'injectRecommendConfig',
   async (event, system:RecommendSystemConfigEnum) => injectConfig(system),
 );
+
+ipcMain.handle('reload', () => {
+  win.reload();
+});
