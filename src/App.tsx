@@ -1,6 +1,7 @@
 import {
   ConfigProvider, Layout, Menu,
 } from 'antd';
+import zhCN from 'antd/locale/zh_CN';
 
 import {
   Route, Routes, useNavigate, useLocation,
@@ -23,7 +24,7 @@ function App() {
   } = useLayout();
 
   return (
-    <ConfigProvider theme={themeConfig}>
+    <ConfigProvider theme={themeConfig} locale={zhCN}>
       <div>
         <Layout className="h-screen">
           <Menu
