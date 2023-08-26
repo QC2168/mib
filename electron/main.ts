@@ -197,7 +197,7 @@ ipcMain.handle('setDevice', (event, id: string) => mibInstance.setDevice(id));
 
 ipcMain.handle('getDevices', () => getDevices(mibInstance.adbOpt.adbPath));
 
-ipcMain.handle('backup', async (event, id: SaveItemType | SaveItemType[]) => {
+ipcMain.handle('backup', async (event, params: SaveItemType | SaveItemType[]) => {
   try {
     const result = await runBackupWorker({
       task: 'backup',
@@ -205,7 +205,7 @@ ipcMain.handle('backup', async (event, id: SaveItemType | SaveItemType[]) => {
         current: mibInstance.adbOpt.current,
         path: AdbPath,
       },
-      params: id,
+      params,
     });
     win.webContents.send('backupDone', result);
   } catch (error) {
