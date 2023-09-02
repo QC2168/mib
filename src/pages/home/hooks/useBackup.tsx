@@ -97,16 +97,16 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
       content: '备份可能需要一小段时间，确定么？',
       async onOk() {
         const cfg = await window.core.instanceConfig();
-        const data = cfg.backups.filter((j:SaveItemType) => selectedRowKeys.includes(j.comment)) ?? [];
+        const data = cfg.backups.filter((j:SaveItemType) => selectedRowKeys.includes(j.id!)) ?? [];
         setBackupLoading(true);
-        await backup(data);
+        backup(data);
       },
     });
   }
   const restore = async () => {
     if (!checkEnv()) return;
     const cfg = await window.core.instanceConfig();
-    const data = cfg.backups.filter((j:SaveItemType) => selectedRowKeys.includes(j.comment)) ?? [];
+    const data = cfg.backups.filter((j:SaveItemType) => selectedRowKeys.includes(j.id!)) ?? [];
     setRestoreLoading(true);
     try {
       await window.core.restore(data);
