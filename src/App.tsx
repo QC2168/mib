@@ -17,7 +17,6 @@ const {
 
 function App() {
   const navigate = useNavigate();
-  const location = useLocation();
   const {
     themeConfig,
     menuItems,
@@ -31,7 +30,6 @@ function App() {
             className="fixed w-screen z-10"
             onSelect={({ key }) => navigate(key)}
             defaultSelectedKeys={['home']}
-            selectedKeys={[location.pathname.substring(1)]}
             mode="horizontal"
             items={menuItems}
           />
