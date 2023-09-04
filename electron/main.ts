@@ -196,6 +196,7 @@ ipcMain.handle('instanceConfig', () => mibInstance.getConfig());
 ipcMain.handle('setDevice', (event, id: string) => mibInstance.setDevice(id));
 
 ipcMain.handle('getDevices', () => getDevices(mibInstance.adbOpt.adbPath));
+ipcMain.handle('getDevice', () => mibInstance.adbOpt.current || null);
 
 ipcMain.handle('backup', async (event, params: SaveItemType | SaveItemType[]) => {
   try {

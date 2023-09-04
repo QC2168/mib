@@ -7,14 +7,7 @@ export default function useDevices() {
   const [devices, setDevices] = useState<DevicesType[]>([]);
   const [currentDevices, setCurrentDevices] = useState<string | null>(null);
   const { createErrorMessage } = useMessage();
-  const updateDevices = async () => {
-    try {
-      const result = await window.core.devices();
-      setDevices(result);
-    } catch {
-      createErrorMessage('获取设备列表失败');
-    }
-  };
+
   const handleDevice = async (id: string) => {
     try {
       await window.core.setDevice(id);
@@ -23,6 +16,23 @@ export default function useDevices() {
       createErrorMessage('切换设备失败');
     }
   };
+  const updateDevices = async () => {
+    try {
+      const result = await window.core.devices();
+      await setDevices(result);
+      //   如果存在设备，选择第一个
+      if (result.length > 0) {
+        await handleDevice(result[0].name);
+      }
+    } catch {
+      createErrorMessage('获取设备列表失败');
+    }
+  };
+  const checkCurrentDevice = async () => {
+    const device = await window.core.getDevice();
+    setCurrentDevices(device);
+  };
+
   useMount(() => {
     // 监听设备接入
     window.core.attachDevice(() => {
@@ -34,8 +44,11 @@ export default function useDevices() {
     });
   });
   const check = () => currentDevices !== null;
-  useMount(() => {
-    updateDevices();
+  useMount(async () => {
+    // 获取数据
+    await updateDevices();
+    // 请求当前连接的设备
+    await checkCurrentDevice();
   });
   return {
     devices, handleDevice, currentDevices, updateDevices, check,

@@ -24,6 +24,7 @@ export interface MibApi {
   instanceConfig: () => Promise<ConfigType>,
   devices: () => Promise<DevicesType[]>,
   setDevice: (id:string) => Promise<void>,
+  getDevice: () => Promise<null|string>,
   backup: (id:SaveItemType | SaveItemType[]) => Promise<void>,
   restore: (id:SaveItemType | SaveItemType[]) => Promise<void>,
   backupDone: (cb:(event:any, data:ResponseType<boolean>)=>void)=>void
