@@ -154,7 +154,6 @@ export default function Analysis() {
                 </Text>
               )
             }
-
           </div>
           <div>
             <span ref={chooseDeviceRef}>

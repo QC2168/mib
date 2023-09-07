@@ -12,6 +12,7 @@ import axios from 'axios';
 import { version } from '../package.json';
 import injectConfig from './utils/recommendConfigs';
 import { RecommendSystemConfigEnum } from './utils/recommendConfigs/types';
+import { WorkModeEnum, WorkStateType } from './types';
 // import installExtension, {
 //   REACT_DEVELOPER_TOOLS,
 // } from 'electron-devtools-installer';
@@ -30,7 +31,7 @@ mibInstance.setAdbPath(AdbPath);
 const NOTIFICATION_TITLE = 'MIB';
 const ICON = nativeImage.createFromPath('./resources/icon.ico');
 
-function notice(body:string) {
+function notice(body: string) {
   new Notification({
     title: NOTIFICATION_TITLE,
     body,
@@ -163,6 +164,17 @@ const runBackupWorker = (workerData) => new Promise((resolve, reject) => {
   });
 });
 
+const workState = {
+  mode: WorkModeEnum.STOP,
+};
+const workModeProxy = new Proxy(workState, {
+  set(target:WorkStateType, key: string | symbol, value: WorkStateType): boolean {
+    const res = Reflect.set(target, key, value);
+    win.webContents.send('workModeChanged', { result: target });
+    return res;
+  },
+});
+
 // new window example arg: new windows url
 ipcMain.handle('open-win', (event, arg) => {
   const childWindow = new BrowserWindow({
@@ -200,6 +212,7 @@ ipcMain.handle('getDevice', () => mibInstance.adbOpt.current || null);
 
 ipcMain.handle('backup', async (event, params: SaveItemType | SaveItemType[]) => {
   try {
+    workModeProxy.mode = WorkModeEnum.BACKING;
     const result = await runBackupWorker({
       task: 'backup',
       cfg: {
@@ -215,11 +228,14 @@ ipcMain.handle('backup', async (event, params: SaveItemType | SaveItemType[]) =>
       result: false,
       error,
     });
+  } finally {
+    workModeProxy.mode = WorkModeEnum.STOP;
   }
 });
 
 ipcMain.handle('restore', async (event, id: SaveItemType | SaveItemType[]) => {
   try {
+    workModeProxy.mode = WorkModeEnum.RECOVERING;
     const result = await runBackupWorker({
       task: 'restore',
       cfg: {
@@ -235,6 +251,8 @@ ipcMain.handle('restore', async (event, id: SaveItemType | SaveItemType[]) => {
       result: false,
       error,
     });
+  } finally {
+    workModeProxy.mode = WorkModeEnum.STOP;
   }
 });
 
@@ -265,7 +283,7 @@ ipcMain.handle('rebootADB', async () => {
 });
 
 // scan folder to obtain extname
-ipcMain.handle('scan', async (event, path:string) => {
+ipcMain.handle('scan', async (event, path: string) => {
   try {
     const result = await runBackupWorker({
       task: 'scan',
@@ -282,7 +300,7 @@ ipcMain.handle('scan', async (event, path:string) => {
 });
 
 // open link
-ipcMain.handle('openLink', async (event, url:string) => {
+ipcMain.handle('openLink', async (event, url: string) => {
   try {
     await shell.openExternal(url);
   } catch (error) {
@@ -306,9 +324,11 @@ ipcMain.handle('checkVersion', async () => {
 
 ipcMain.handle(
   'injectRecommendConfig',
-  async (event, system:RecommendSystemConfigEnum) => injectConfig(system),
+  async (event, system: RecommendSystemConfigEnum) => injectConfig(system),
 );
 
 ipcMain.handle('reload', () => {
   win.reload();
 });
+
+ipcMain.handle('getWorkMode', () => workModeProxy.mode);

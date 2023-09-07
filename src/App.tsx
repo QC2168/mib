@@ -4,7 +4,7 @@ import {
 import zhCN from 'antd/locale/zh_CN';
 
 import {
-  Route, Routes, useNavigate, useLocation,
+  Route, Routes, useNavigate,
 } from 'react-router-dom';
 import Scan from '@/pages/scan';
 import Home from './pages/home';

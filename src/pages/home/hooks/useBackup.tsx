@@ -1,10 +1,7 @@
 import {
   Button, Modal, Popconfirm, Space, Tag,
 } from 'antd';
-import {
-  Key,
-  useState,
-} from 'react';
+import { Key, useState } from 'react';
 import type { ColumnsType } from 'antd/es/table';
 import type { SaveItemType as BackItemType, SaveItemType } from '@qc2168/mib';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
@@ -13,8 +10,15 @@ import useDevices from '@/pages/home/hooks/useDevices';
 import { BackupModalRef, MODAL_STATUS } from '@/pages/home/components/BackupModal';
 import { useMount } from 'ahooks';
 import styles from '../index.module.less';
+import { WorkModeEnum } from '../../../../electron/types';
 
 const { confirm } = Modal;
+
+const modeToLoadingState = {
+  [WorkModeEnum.STOP]: { backupLoading: false, restoreLoading: false },
+  [WorkModeEnum.BACKING]: { backupLoading: true, restoreLoading: false },
+  [WorkModeEnum.RECOVERING]: { backupLoading: false, restoreLoading: true },
+};
 export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { delNode: (i: number) => void }>) {
   const [backupLoading, setBackupLoading] = useState<boolean>(false);
   const [restoreLoading, setRestoreLoading] = useState<boolean>(false);
@@ -116,7 +120,18 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
       setRestoreLoading(false);
     }
   };
-  useMount(() => {
+  const resetState = async (workMode:WorkModeEnum|null) => {
+    let targetMode:WorkModeEnum;
+    if (workMode === null) {
+      targetMode = await window.core.getWorkMode();
+    } else {
+      targetMode = workMode;
+    }
+    const { backupLoading, restoreLoading } = modeToLoadingState[targetMode];
+    setBackupLoading(backupLoading);
+    setRestoreLoading(restoreLoading);
+  };
+  useMount(async () => {
   // 监听备份任务
     window.core.backupDone((event, data) => {
       if (data.result) {
@@ -125,6 +140,13 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
         createErrorMessage(data.msg);
       }
     });
+    //   监听状态
+    window.core.workModeChanged((event, data) => {
+      const { mode } = data.result;
+      resetState(mode);
+    });
+    //   获取状态
+    await resetState(null);
   });
   const backupNodeColumns: ColumnsType<BackItemType> = [
     {

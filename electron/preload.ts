@@ -191,6 +191,8 @@ contextBridge.exposeInMainWorld('core', {
   editOutputPath: (path: string) => ipcRenderer.invoke('editOutputPath', path),
   scan: (path: string) => ipcRenderer.invoke('scan', path),
   rebootADB: () => ipcRenderer.invoke('rebootADB'),
+  getWorkMode: () => ipcRenderer.invoke('getWorkMode'),
+  workModeChanged: (callback) => ipcRenderer.once('workModeChanged', callback),
 });
 
 contextBridge.exposeInMainWorld('utils', {
