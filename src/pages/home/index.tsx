@@ -6,8 +6,8 @@ import {
   UploadOutlined, PlusOutlined, DownloadOutlined,
 } from '@ant-design/icons';
 import BackupModal, { BackupModalRef as BackupModalRefExpose, MODAL_STATUS } from '@/pages/home/components/BackupModal';
-import { useRef } from 'react';
-import { useLocalStorageState } from 'ahooks';
+import { useEffect, useRef, useState } from 'react';
+import { useLocalStorageState, useSize } from 'ahooks';
 import useMessage from '@/utils/message';
 import useDataSource from '@/pages/home/hooks/useDataSource';
 import useEditOutput from '@/pages/home/hooks/useEditOutput';
@@ -99,10 +99,20 @@ export default function Analysis() {
       target: () => restoreBtnRef.current as HTMLDivElement,
     },
   ];
-
+  const cardBodyRef = useRef<HTMLDivElement|null>(null);
+  // 监听窗口变动
+  // 动态改变表格高度
+  const tableSize = useSize(cardBodyRef);
+  const [tableHeight, setTableHeight] = useState(290);
+  useEffect(() => {
+    if (!tableSize?.height) return;
+    setTableHeight(tableSize.height - 210);
+  }, [tableSize]);
   return (
     <Card
+      className="h-full"
       title="备份节点"
+      ref={cardBodyRef}
       extra={(
         <div className="flex">
           <Button
@@ -118,7 +128,7 @@ export default function Analysis() {
       )}
       bordered
     >
-      <div>
+      <div className="h-full">
         {/* 节点 */}
         <Table
           ref={tableRef}
@@ -127,7 +137,7 @@ export default function Analysis() {
           scroll={{
             x: '100%',
             scrollToFirstRowOnChange: true,
-            y: 280,
+            y: tableHeight,
           }}
           pagination={false}
           rowKey="id"
