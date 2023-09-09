@@ -43,7 +43,10 @@ export default function Index() {
     await window.win.openLink('https://github.com/QC2168/mib');
   };
   const update = () => {
-    createInfoMessage('请联系作者加入获取最新版本下载');
+    createInfoMessage('请前往mib-release下载最新版本，或联系作者获取最新版本下载');
+    setTimeout(async () => {
+      await window.win.openLink('https://github.com/QC2168/mib/releases');
+    }, 2000);
   };
   const check = async () => {
     const data = await window.versions.version();
