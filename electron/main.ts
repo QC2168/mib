@@ -79,7 +79,7 @@ async function createWindow() {
     autoHideMenuBar: true,
     minWidth: 970,
     minHeight: 600,
-    resizable: false,
+    resizable: true,
     width: 970,
     height: 600,
     webPreferences: {
