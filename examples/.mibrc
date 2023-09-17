@@ -1,0 +1,77 @@
+{
+    "backups": [
+        {
+            "id": 1,
+            "path": "/sdcard/DCIM/Camera/",
+            "comment": "本地相册",
+            "output": "",
+            "full": false,
+            "checkHash": false
+        },
+        {
+            "id": 2,
+            "path": "/sdcard/DCIM/Screenshots/",
+            "comment": "屏幕截屏",
+            "output": "",
+            "full": false,
+            "checkHash": false
+        },
+        {
+            "id": 3,
+            "path": "/sdcard/MIUI/sound_recorder/",
+            "comment": "录音",
+            "output": "",
+            "full": false,
+            "checkHash": false
+        },
+        {
+            "id": 4,
+            "path": "/sdcard/MIUI/sound_recorder/app_rec/",
+            "comment": "应用录音",
+            "output": "",
+            "full": false,
+            "checkHash": false
+        },
+        {
+            "id": 5,
+            "path": "/sdcard/MIUI/sound_recorder/call_rec/",
+            "comment": "通话录音",
+            "output": "",
+            "full": false,
+            "checkHash": false
+        },
+        {
+            "id": 6,
+            "path": "/sdcard/Android/data/com.tencent.mm/MicroMsg/Download/",
+            "comment": "微信文件",
+            "output": "",
+            "full": false,
+            "checkHash": false
+        },
+        {
+            "id": 7,
+            "comment": "相册集合",
+            "path": "/sdcard/Pictures/",
+            "output": "",
+            "full": false,
+            "checkHash": false
+        },
+        {
+            "id": 8,
+            "comment": "屏幕录制",
+            "path": "/sdcard/DCIM/ScreenRecorder/",
+            "output": "",
+            "full": false,
+            "checkHash": false
+        },
+        {
+            "id": 9,
+            "comment": "下载目录",
+            "path": "/sdcard/Download/",
+            "output": "",
+            "full": false,
+            "checkHash": false
+        }
+    ],
+    "output": "I:\\backups\\MI10PRO"
+}
