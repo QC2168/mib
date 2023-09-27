@@ -9,6 +9,7 @@ import useMessage from '@/utils/message';
 import useDevices from '@/pages/home/hooks/useDevices';
 import { BackupModalRef, MODAL_STATUS } from '@/pages/home/components/BackupModal';
 import { useMount } from 'ahooks';
+import { useTranslation } from 'react-i18next';
 import styles from '../index.module.less';
 import { WorkModeEnum } from '../../../../electron/types';
 
@@ -22,6 +23,7 @@ const modeToLoadingState = {
 export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { delNode: (i: number) => void }>) {
   const [backupLoading, setBackupLoading] = useState<boolean>(false);
   const [restoreLoading, setRestoreLoading] = useState<boolean>(false);
+  const { t } = useTranslation();
   const {
     devices,
     handleDevice,
@@ -45,7 +47,7 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
 
   const editNode = (data: SaveItemType) => {
     if (!data.id) {
-      createWarningMessage('该节点无法编辑 （节点ID缺失）');
+      createWarningMessage(t('home.table.nodeIdMiss'));
       return;
     }
     opt.open?.(MODAL_STATUS.EDIT, data);
@@ -59,7 +61,7 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
     try {
       await window.core.backup(data);
     } catch (e) {
-      createErrorMessage('备份出错了');
+      createErrorMessage(t('home.backups.backupError'));
     } finally {
       setBackupLoading(false);
     }
@@ -68,7 +70,7 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
   const backupNode = async (item: BackItemType) => {
     // 检测设备连接
     if (!check()) {
-      createWarningMessage('请先连接设备，再执行操作');
+      createWarningMessage(t('home.table.noDeviceConnect'));
       return;
     }
     setBackupLoading(true);
@@ -78,17 +80,17 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
     // 判断是否连接状态
     // 判断备份节点
     if (selectedRowKeys.length === 0) {
-      createWarningMessage('当前没有选中任何备份节点');
+      createWarningMessage(t('home.table.noSelectedNode'));
       return false;
     }
     // 检测设备连接
     if (!check()) {
-      createWarningMessage('请先连接设备，再执行操作');
+      createWarningMessage(t('home.table.noDeviceConnect'));
       return false;
     }
     // 备份和恢复只能执行一个
     if (restoreLoading || backupLoading) {
-      createWarningMessage('请等待任务执行完毕');
+      createWarningMessage(t('home.backups.waiting'));
       return false;
     }
     return true;
@@ -98,7 +100,7 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
     confirm({
       title: '',
       icon: <ExclamationCircleOutlined />,
-      content: '备份可能需要一小段时间，确定么？',
+      content: t('home.backups.tip'),
       async onOk() {
         const cfg = await window.core.instanceConfig();
         const data = cfg.backups.filter((j:SaveItemType) => selectedRowKeys.includes(j.id!)) ?? [];
@@ -115,7 +117,7 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
     try {
       await window.core.restore(data);
     } catch (e) {
-      createErrorMessage('恢复出错了');
+      createErrorMessage(t('home.backups.restoreError'));
     } finally {
       setRestoreLoading(false);
     }
@@ -150,7 +152,7 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
   });
   const backupNodeColumns: ColumnsType<BackItemType> = [
     {
-      title: '节点描述',
+      title: t('home.table.desc'),
       dataIndex: 'comment',
       key: 'comment',
       width: '150px',
@@ -162,7 +164,7 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
       ),
     },
     {
-      title: '备份路径',
+      title: t('home.table.targetPath'),
       dataIndex: 'path',
       key: 'path',
       width: '200px',
@@ -173,22 +175,22 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
       ),
     },
     {
-      title: '导出路径',
+      title: t('home.table.output'),
       dataIndex: 'output',
       key: 'output',
       align: 'center',
-      render: (i) => <Tag color="gold">{i || '继承父级'}</Tag>,
+      render: (i) => <Tag color="gold">{i || t('home.table.inheritOutput')}</Tag>,
     },
     {
-      title: '全量备份',
+      title: t('home.table.full'),
       dataIndex: 'full',
       key: 'full',
       align: 'center',
-      render: (i) => <Tag color={i ? 'blue' : 'red'}>{i ? '是' : '否'}</Tag>,
+      render: (i) => <Tag color={i ? 'blue' : 'red'}>{i ? t('home.table.yes') : t('home.table.no')}</Tag>,
 
     },
     {
-      title: '操作',
+      title: t('home.table.options'),
       dataIndex: 'actions',
       key: 'actions',
       align: 'center',
@@ -196,15 +198,13 @@ export default function useBackup(opt: Partial<Pick<BackupModalRef, 'open'> & { 
       width: '220px',
       render: (_: any, record: BackItemType) => (
         <Space size="small">
-          <Button type="link" onClick={() => backupNode(record)}>备份</Button>
-          <Button type="link" onClick={() => editNode(record)}>修改</Button>
+          <Button type="link" onClick={() => backupNode(record)}>{t('home.table.backup')}</Button>
+          <Button type="link" onClick={() => editNode(record)}>{t('home.table.edit')}</Button>
           <Popconfirm
-            title="确认删除该节点?"
+            title={t('home.table.deleteNodeTip')}
             onConfirm={() => deleteNode(record)}
-            okText="是"
-            cancelText="否"
           >
-            <Button type="link">删除</Button>
+            <Button type="link">{t('home.table.deleteNode')}</Button>
           </Popconfirm>
         </Space>
       ),

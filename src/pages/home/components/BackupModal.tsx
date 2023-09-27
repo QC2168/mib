@@ -7,6 +7,7 @@ import {
 } from 'react';
 import useMessage from '@/utils/message';
 import { SaveItemType } from '@qc2168/mib';
+import { useTranslation } from 'react-i18next';
 
 const { useForm } = Form;
 
@@ -27,6 +28,7 @@ export interface BackupModalProps {
 export default forwardRef<BackupModalRef, BackupModalProps>((props, ref) => {
   const [isOpenBackupModal, setOpenBackupModal] = useState(false);
   const { createSuccessMessage } = useMessage();
+  const { t } = useTranslation();
   const [form] = useForm();
   const [currentStatus, setCurrentStatus] = useState(MODAL_STATUS.ADD);
   const defaultState: SaveItemType = {
@@ -58,12 +60,12 @@ export default forwardRef<BackupModalRef, BackupModalProps>((props, ref) => {
     if (currentStatus === MODAL_STATUS.ADD) {
       const cfg = await window.core.addNode(values);
       props.setSource(cfg.backups);
-      createSuccessMessage('添加成功');
+      createSuccessMessage(t('home.nodeModal.added'));
     } else {
       // 如果是存在的，则是执行修改操作，由mib-cli处理
       const cfg = await window.core.editNode(values);
       props.setSource(cfg.backups);
-      createSuccessMessage('修改成功');
+      createSuccessMessage(t('home.nodeModal.edited'));
     }
     close();
   };
@@ -74,13 +76,13 @@ export default forwardRef<BackupModalRef, BackupModalProps>((props, ref) => {
   return (
     <div>
       <Modal
-        title={currentStatus === MODAL_STATUS.ADD ? '添加节点' : '修改节点'}
+        title={currentStatus === MODAL_STATUS.ADD ? t('home.nodeModal.addBtn') : t('home.nodeModal.editBtn')}
         open={isOpenBackupModal}
         onOk={() => createBackupNode()}
         onCancel={() => setOpenBackupModal(false)}
         maskClosable={false}
-        cancelText="取消"
-        okText={currentStatus === MODAL_STATUS.ADD ? '添加' : '修改'}
+        cancelText={t('home.nodeModal.exitText')}
+        okText={currentStatus === MODAL_STATUS.ADD ? t('home.nodeModal.addText') : t('home.nodeModal.editText')}
       >
         <Form
           name="detail"
@@ -93,82 +95,82 @@ export default forwardRef<BackupModalRef, BackupModalProps>((props, ref) => {
             <Input />
           </Form.Item>
           <Form.Item
-            label="节点备注"
+            label={t('home.nodeModal.comment')}
             name="comment"
             rules={[
               () => ({
                 required: true,
                 validator(_, value) {
                   if (!value || !value.trim()) {
-                    return Promise.reject(new Error('请输入备注信息'));
+                    return Promise.reject(new Error(t('home.nodeModal.commentPlaceHolder')));
                   }
                   return Promise.resolve();
                 },
               })]}
           >
-            <Input placeholder="请输入备注信息" />
+            <Input placeholder={t('home.nodeModal.commentPlaceHolder')} />
           </Form.Item>
           <Form.Item
-            label="备份路径"
+            label={t('home.nodeModal.backupPath')}
             name="path"
             rules={[
               () => ({
                 required: true,
                 validator(_: any, value: string) {
                   if (!value || !value.trim()) {
-                    return Promise.reject(new Error('请输入设备中需要备份路径'));
+                    return Promise.reject(new Error(t('home.nodeModal.backupPathPlaceHolder')));
                   }
                   if (/^\/(?:[^/]+\/)+$/.test(value)) {
                     return Promise.resolve();
                   }
-                  return Promise.reject(new Error('请输入正确的设备备份路径，以 / 开头和结尾'));
+                  return Promise.reject(new Error(t('home.nodeModal.backupPathErrorTip')));
                 },
               })]}
           >
-            <Input placeholder="请输入备份的文件夹路径" />
+            <Input placeholder={t('home.nodeModal.backupPathPlaceHolder')} />
           </Form.Item>
           <Form.Item
-            label="导出路径"
+            label={t('home.nodeModal.exportPath')}
             name="output"
             rules={[() => ({
               required: true,
               validator(_, value) {
                 if (value) {
                   if (!value || !value.trim()) {
-                    return Promise.reject(new Error('请输入要导出的文件夹路径'));
+                    return Promise.reject(new Error(t('home.nodeModal.exportPathEmpty')));
                   }
                   if (/^[a-zA-Z]:\/(.+)$/.test(value)) {
                     return Promise.resolve();
                   }
-                  return Promise.reject(new Error('请输入正确的导出路径，如 E:/backup'));
+                  return Promise.reject(new Error(t('home.nodeModal.exportPathErrorTip')));
                 }
                 return Promise.resolve();
               },
             })]}
           >
-            <Input placeholder="不填写代表继承父级路径" />
+            <Input placeholder={t('home.nodeModal.exportPathPlaceHolder')} />
           </Form.Item>
           <Form.Item
-            label="全量备份"
+            label={t('home.nodeModal.full')}
             name="full"
             valuePropName="checked"
             rules={[
               { required: true },
             ]}
-            tooltip="不进行差异对比，备份设备所有文件数据（不推荐）"
+            tooltip={t('home.nodeModal.fullTip')}
           >
-            <Switch checkedChildren="开启" unCheckedChildren="关闭" />
+            <Switch checkedChildren={t('home.nodeModal.checked')} unCheckedChildren={t('home.nodeModal.unChecked')} />
           </Form.Item>
           <Form.Item
-            label="hash模式"
+            label={t('home.nodeModal.hashMode')}
             name="checkHash"
             valuePropName="checked"
             rules={[
               { required: true },
             ]}
-            tooltip="在同名情况下，如果文件hash值出现差异，会重新备份设备上的文件"
+            tooltip={t('home.nodeModal.hashModeTip')}
           >
-            <Switch checkedChildren="开启" unCheckedChildren="关闭" />
+            <Switch checkedChildren={t('home.nodeModal.checked')} unCheckedChildren={t('home.nodeModal.unChecked')} />
           </Form.Item>
         </Form>
 

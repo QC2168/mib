@@ -11,7 +11,6 @@ import '@/lib/css/index.less';
 
 ReactDOM.createRoot(document.getElementById('root')!)
   .render(
-
     <React.StrictMode>
       <RecoilRoot>
         <HashRouter>

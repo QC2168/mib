@@ -86,9 +86,11 @@
     "echarts-for-react": "^3.0.2",
     "eslint-plugin-unused-imports": "^2.0.0",
     "fs-extra": "^10.1.0",
+    "i18next": "^23.5.1",
     "jsoneditor": "^9.9.2",
     "node-gyp-build": "^4.6.0",
     "only-allow": "^1.1.1",
+    "react-i18next": "^13.2.2",
     "recoil": "^0.7.7",
     "semver": "^7.5.3",
     "usb": "^2.9.0"

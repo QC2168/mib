@@ -1,0 +1,122 @@
+{
+  "translation": {
+    "menu": {
+      "home": "Home",
+      "fileAnalysis": "Analysis",
+      "settings": "Settings"
+    },
+    "home": {
+      "title": "Nodes",
+      "output": "Export path",
+      "selectDevices": "Select devices",
+      "backup": "Backup",
+      "backingUp": "Backing up",
+      "restore": "Restore",
+      "restoring": "Restoring",
+      "addNode": "Add Node",
+      "setExportPath": "Double click to set export path",
+      "exportPathConfirm": "Confirm",
+      "noDevices": "No device connection",
+      "table": {
+        "desc": "Node Desc",
+        "targetPath": "Backup to",
+        "output": "Output",
+        "full": "Full",
+        "options": "Options",
+        "backup": "Backup",
+        "edit": "Edit",
+        "deleteNode": "Delete",
+        "empty": "No node data is available",
+        "nodeIdMiss": "The node cannot be edited (reason: node ID is missing)",
+        "noDeviceConnect": "Please connect the device before performing the operation",
+        "noSelectedNode": "No backup nodes are currently selected",
+        "inheritOutput": "Inherit Parent",
+        "deleteNodeTip": "Confirm deletion of this node?",
+        "yes": "Y",
+        "no": "N"
+      },
+      "backups": {
+        "backupError": "Backup failed",
+        "restoreError": "restore failed",
+        "waiting": "Please wait for the task to be completed",
+        "tip": "Backup may take a short period of time, are you sure?"
+      },
+      "nodeModal": {
+        "added": "Added successfully",
+        "edited": "Successfully modified",
+        "addBtn": "Add Node",
+        "editBtn": "Modify nodes",
+        "addText": "Add",
+        "editText": "Edit",
+        "exitText": "Cancel",
+        "comment": "Node Comment",
+        "commentPlaceHolder": "Please enter note information",
+        "backupPath": "Backup Path",
+        "backupPathPlaceHolder": "Please enter the folder path for backup",
+        "backupPathErrorTip": "Please enter the correct device backup path, starting and ending with /",
+        "exportPath": "Export path",
+        "exportPathEmpty": "Please enter the folder path to export",
+        "exportPathErrorTip": "Please enter the correct export path, such as E:/backup",
+        "exportPathPlaceHolder": "If left blank, inherit the parent path",
+        "full": "Full mode",
+        "fullTip": "Back up all file data of the device without difference comparison (not recommended)",
+        "checked": "Y",
+        "unChecked": "N",
+        "hashMode": "Hash mode",
+        "hashModeTip": "In the case of the same name, if the file hash value is different, the file on the device will be re-backed up"
+      }
+    },
+    "devices": {
+      "handoverFailure": "Switching device failed",
+      "listFailed": "Unable to obtain device list"
+    },
+    "scan": {
+      "start": "Start Scan",
+      "type": "Type",
+      "size": "Size"
+    },
+    "settings":{
+      "tips": {
+        "obtainLatestVersion":"Please go to mib release to download the latest version, or contact the author to obtain the latest version download",
+        "rebooted":"Restart successfully",
+        "rebootFailed":"Restart failed",
+        "injectedCfg": "Successfully injected recommended configuration",
+        "injectCfgFailed": "Injection failed, please try again"
+      },
+      "field": {
+        "theme": "Theme",
+        "light": "Light",
+        "dark": "Dark",
+        "version": "Version",
+        "adbServe": "ADB Serve",
+        "rebooting": "Rebooting",
+        "reboot": "Reboot",
+        "about": "About",
+        "obtainLatestVBtn": "Obtain Latest Version",
+        "aboutAuthor": "Scan QR code to join WeChat group",
+        "authorBtn": "Contact Author",
+        "projectRepo": "Project Repo for Github",
+        "injectCfg": "Import common configurations",
+        "lng": "Language",
+        "zh": "Simplified Chinese",
+        "en": "English"
+      },
+      "injectCfgBtn":{
+        "xiaomi": "XIAOMI/REDMI (MIUI)"
+      }},  "tour": {
+      "backupNode": "Backup Node",
+      "backupNodeDesc": "This is a list of all backup nodes.",
+      "addNode": "Add Node",
+      "addNodeDesc": "Click here to add a backup node, and fill in node information as needed.",
+      "exportPath": "Export Path",
+      "exportPathDesc": "Set a root export path where backup files will be stored.",
+      "selectDevice": "Select Device",
+      "selectDeviceDesc": "Choose the data to be backed up ( the program will automatically select when a device is connected ).",
+      "backupData": "Backup Data",
+      "backupDataDesc": "Click here to initiate a backup based on your configured nodes.",
+      "restoreData": "Restore Data",
+      "restoreDataDesc": "Move previously backed-up data files back to the device as they are."
+    }
+  }
+
+}

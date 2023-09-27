@@ -11,6 +11,7 @@ import { useState } from 'react';
 import useMessage from '@/utils/message';
 import wechat from '@/assets/images/wechat.jpg';
 import { useMount } from 'ahooks';
+import { useTranslation } from 'react-i18next';
 import { themeModeState } from '../../../state/themeState';
 import { version } from '../../../package.json';
 import { RecommendSystemConfigEnum } from '../../../electron/utils/recommendConfigs/types';
@@ -23,19 +24,26 @@ export default function Index() {
     createSuccessMessage,
     createInfoMessage,
   } = useMessage();
-  const initialValues = { themeMode };
+
+  const { t, i18n } = useTranslation();
+  const lng = Local.get('lng');
+  const initialValues = { themeMode, lng };
   const changeThemeMode = (mode: ThemeType) => {
     Local.set('themeMode', mode);
     setThemeMode(mode);
+  };
+  const changeLng = (lng: string) => {
+    Local.set('lng', lng);
+    i18n.changeLanguage(lng);
   };
   const [rebooting, setRebooting] = useState(false);
   const rebootADB = async () => {
     setRebooting(true);
     const { result } = await window.core.rebootADB();
     if (result) {
-      createSuccessMessage('重启成功');
+      createSuccessMessage(t('settings.tips.rebooted'));
     } else {
-      createErrorMessage('重启失败');
+      createErrorMessage(t('settings.tips.rebootFailed'));
     }
     setRebooting(false);
   };
@@ -43,7 +51,7 @@ export default function Index() {
     await window.win.openLink('https://github.com/QC2168/mib');
   };
   const update = () => {
-    createInfoMessage('请前往mib-release下载最新版本，或联系作者获取最新版本下载');
+    createInfoMessage(t('settings.tips.obtainLatestVersion'));
     setTimeout(async () => {
       await window.win.openLink('https://github.com/QC2168/mib/releases');
     }, 2000);
@@ -61,9 +69,9 @@ export default function Index() {
   const importRecommendNode = async (system:RecommendSystemConfigEnum) => {
     try {
       await window.utils.injectRecommendConfig(system);
-      createSuccessMessage('注入推荐配置成功，快去备份吧！');
+      createSuccessMessage(t('settings.tips.injectedCfg'));
     } catch {
-      createErrorMessage('注入失败，请重试');
+      createErrorMessage(t('settings.tips.injectCfgFailed'));
     }
   };
   return (
@@ -74,27 +82,32 @@ export default function Index() {
         autoComplete="off"
       >
 
-        <Form.Item label="主题皮肤" name="themeMode">
+        <Form.Item label={t('settings.field.theme')} name="themeMode">
           <Radio.Group onChange={(e) => changeThemeMode(e.target.value)}>
-            <Radio value={ThemeType.LIGHT}>浅色</Radio>
-            <Radio value={ThemeType.DARK}>深色</Radio>
+            <Radio value={ThemeType.LIGHT}>{t('settings.field.light')}</Radio>
+            <Radio value={ThemeType.DARK}>{t('settings.field.dark')}</Radio>
           </Radio.Group>
         </Form.Item>
-        <Form.Item label="软件版本">
+        <Form.Item label={t('settings.field.lng')} name="lng">
+          <Radio.Group onChange={(e) => changeLng(e.target.value)}>
+            <Radio value="zh">{t('settings.field.zh')}</Radio>
+            <Radio value="en">{t('settings.field.en')}</Radio>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item label={t('settings.field.version')}>
           {version}
-
         </Form.Item>
-        <Form.Item label="设备连接服务（ADB）">
-          <Button type="primary" icon={<ReloadOutlined />} loading={rebooting} disabled={rebooting} onClick={() => rebootADB()}>{rebooting ? '正在重启服务' : '重启服务'}</Button>
+        <Form.Item label={t('settings.field.adbServe')}>
+          <Button type="primary" icon={<ReloadOutlined />} loading={rebooting} disabled={rebooting} onClick={() => rebootADB()}>{rebooting ? t('settings.field.rebooting') : t('settings.field.reboot')}</Button>
         </Form.Item>
-        <Form.Item label="关于项目">
+        <Form.Item label={t('settings.field.about')}>
           <Space>
             {
-              hasNewVersion ? <Button icon={<VerticalAlignBottomOutlined />} onClick={() => update()} type="primary">获取新版本</Button> : null
+              hasNewVersion ? <Button icon={<VerticalAlignBottomOutlined />} onClick={() => update()} type="primary">{t('settings.field.obtainLatestVBtn')}</Button> : null
             }
 
             <Popover
-              title="联系作者加入交流群/反馈/建议"
+              title={t('settings.field.aboutAuthor')}
               content={(
                 <Image
                   width={150}
@@ -102,14 +115,14 @@ export default function Index() {
                 />
 )}
             >
-              <Button icon={<WechatOutlined />} type="primary">联系作者</Button>
+              <Button icon={<WechatOutlined />} type="primary">{t('settings.field.authorBtn')}</Button>
             </Popover>
-            <Button type="primary" onClick={() => openRepo()} icon={<GithubOutlined />}>项目地址</Button>
+            <Button type="primary" onClick={() => openRepo()} icon={<GithubOutlined />}>{t('settings.field.projectRepo')}</Button>
           </Space>
         </Form.Item>
-        <Form.Item label="导入常用配置配置">
+        <Form.Item label={t('settings.field.injectCfg')}>
           <Space>
-            <Button onClick={() => importRecommendNode(RecommendSystemConfigEnum.XIAOMI)}>小米/红米(MIUI)</Button>
+            <Button onClick={() => importRecommendNode(RecommendSystemConfigEnum.XIAOMI)}>{t('settings.injectCfgBtn.xiaomi')}</Button>
           </Space>
         </Form.Item>
       </Form>

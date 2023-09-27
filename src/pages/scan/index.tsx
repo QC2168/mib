@@ -12,6 +12,7 @@ import { Button } from 'antd';
 import { useMount, useSetState } from 'ahooks';
 import { useRecoilState } from 'recoil';
 import { ThemeType } from '@/lib/css/theme';
+import { useTranslation } from 'react-i18next';
 import chartDefaultOption from './option';
 import { themeModeState } from '../../../state/themeState';
 import darkTheme from './dark.json';
@@ -28,6 +29,7 @@ type EChartsOption = echarts.ComposeOption<
   TooltipComponentOption | LegendComponentOption | PieSeriesOption
 >;
 export default function Index() {
+  const { t } = useTranslation();
   const [isClick, setIsClick] = useState(false);
   const [themeMode] = useRecoilState(themeModeState);
   const [chartOption, setChartOption] = useSetState<EChartsOption>(chartDefaultOption as EChartsOption);
@@ -77,9 +79,9 @@ export default function Index() {
             icon={<SearchOutlined />}
             onClick={() => enterLoading()}
             type="text"
-            title={`扫描路径 ${outputPath}`}
+            title={`scan path ${outputPath}`}
           >
-            开始分析
+            {t('scan.start')}
           </Button>
         )
         : ''}

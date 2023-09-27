@@ -1,0 +1,124 @@
+{
+  "translation": {
+    "menu": {
+      "home": "数据备份",
+      "fileAnalysis": "文件分析",
+      "settings": "设置"
+    },
+    "home": {
+      "title": "备份节点",
+      "output": "导出路径",
+      "selectDevices": "选择设备",
+      "noDevices": "无设备连接",
+      "backup": "备份",
+      "backingUp": "备份中",
+      "restore": "恢复",
+      "restoring": "恢复中",
+      "addNode": "add",
+      "setExportPath": "双击设置导出路径",
+      "exportPathSaveError": "保存失败",
+      "exportPathSave": "保存成功",
+      "exportPathConfirm": "确定",
+      "table": {
+        "desc": "节点描述",
+        "targetPath": "备份路径",
+        "output": "导出路径",
+        "full": "全量备份",
+        "options": "操作",
+        "backup": "备份",
+        "edit": "修改",
+        "deleteNode": "删除",
+        "empty": "暂无节点数据",
+        "nodeIdMiss": "该节点无法编辑 （节点ID缺失）",
+        "noDeviceConnect": "请先连接设备，再执行操作",
+        "noSelectedNode": "当前没有选中任何备份节点",
+        "inheritOutput": "继承父级",
+        "deleteNodeTip": "确认删除该节点?",
+        "yes": "是",
+        "no": "否"
+      },
+      "backups": {
+        "backupError": "备份出错了",
+        "restoreError": "恢复出错了",
+        "waiting": "请等待任务执行完毕",
+        "tip": "备份可能需要一小段时间，确定么？"
+      },
+      "nodeModal": {
+        "added": "添加成功",
+        "edited": "修改成功",
+        "addBtn": "添加节点",
+        "editBtn": "修改节点",
+        "addText": "添加",
+        "editText": "修改",
+        "exitText": "取消",
+        "comment": "节点备注",
+        "commentPlaceHolder": "请输入备注信息",
+        "backupPath": "备份路径",
+        "backupPathPlaceHolder": "请输入备份的文件夹路径",
+        "backupPathErrorTip": "请输入正确的设备备份路径，以 / 开头和结尾",
+        "exportPath": "导出路径",
+        "exportPathEmpty": "请输入要导出的文件夹路径",
+        "exportPathErrorTip": "请输入正确的导出路径，如 E:/backup",
+        "exportPathPlaceHolder": "不填写代表继承父级路径",
+        "full": "全量备份",
+        "fullTip": "不进行差异对比，备份设备所有文件数据（不推荐）",
+        "checked": "开启",
+        "unChecked": "关闭",
+        "hashMode": "Hash模式",
+        "hashModeTip": "在同名情况下，如果文件hash值出现差异，会重新备份设备上的文件"
+      }
+    },
+    "devices": {
+      "handoverFailure": "切换设备失败",
+      "listFailed": "获取设备列表失败"
+    },
+    "scan": {
+      "start": "开始分析"
+    },
+    "settings":{
+      "tips": {
+        "obtainLatestVersion":"请前往mib-release下载最新版本，或联系作者获取最新版本下载",
+        "rebooted":"重启成功",
+        "rebootFailed":"重启失败",
+        "injectedCfg": "注入推荐配置成功，快去备份吧！",
+        "injectCfgFailed": "注入失败，请重试"
+      },
+      "field": {
+        "theme": "主题皮肤",
+        "light": "浅色",
+        "dark": "深色",
+        "version": "软件版本",
+        "adbServe": "设备连接服务（ADB）",
+        "rebooting": "正在重启服务",
+        "reboot": "重启服务",
+        "about": "关于项目",
+        "obtainLatestVBtn": "获取新版本",
+        "aboutAuthor": "联系作者加入交流群/反馈/建议",
+        "authorBtn": "联系作者",
+        "projectRepo": "项目地址",
+        "injectCfg": "导入常用配置配置",
+        "lng": "显示语言",
+        "zh": "简体中文",
+        "en": "英文"
+
+      },
+      "injectCfgBtn":{
+        "xiaomi": "小米/红米(MIUI)"
+      }
+    },
+    "tour": {
+      "backupNode": "备份节点",
+      "backupNodeDesc": "这里是所有备份节点的列表",
+      "addNode": "添加节点",
+      "addNodeDesc": "点击这里，往列表添加备份节点，并根据实际需求，填写节点信息并添加",
+      "exportPath": "导出路径",
+      "exportPathDesc": "设置一个根部导出路径，备份的文件都会被放到这里",
+      "selectDevice": "选择设备",
+      "selectDeviceDesc": "选择需要备份的数据（接入设备时，程序会自动选择）",
+      "backupData": "备份数据",
+      "backupDataDesc": "点击这里会根据您配置的节点进行备份",
+      "restoreData": "恢复数据",
+      "restoreDataDesc": "将已备份过的数据文件，原封不动的移动到设备中"
+    }
+  }
+}

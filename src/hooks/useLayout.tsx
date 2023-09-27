@@ -2,10 +2,12 @@ import { type MenuProps } from 'antd';
 import { ReactNode, Key } from 'react';
 import { InboxOutlined, SettingOutlined, PieChartOutlined } from '@ant-design/icons';
 import { useTheme } from '@/lib/css/theme';
+import { useTranslation } from 'react-i18next';
 
 type MenuItem = Required<MenuProps>['items'][number];
 export default function useLayout() {
   const [themeConfig] = useTheme();
+  const { t } = useTranslation();
 
   function getItem(
     label: ReactNode,
@@ -20,9 +22,9 @@ export default function useLayout() {
   }
 
   const menuItems: MenuProps['items'] = [
-    getItem('数据备份', 'home', <InboxOutlined />),
-    getItem('文件分析', 'scan', <PieChartOutlined />),
-    getItem('设置', 'settings', <SettingOutlined />),
+    getItem(t('menu.home'), 'home', <InboxOutlined />),
+    getItem(t('menu.fileAnalysis'), 'scan', <PieChartOutlined />),
+    getItem(t('menu.settings'), 'settings', <SettingOutlined />),
   ];
 
   return {

@@ -11,6 +11,7 @@ import { useLocalStorageState, useSize } from 'ahooks';
 import useMessage from '@/utils/message';
 import useDataSource from '@/pages/home/hooks/useDataSource';
 import useEditOutput from '@/pages/home/hooks/useEditOutput';
+import { useTranslation } from 'react-i18next';
 import useBackup from './hooks/useBackup';
 
 const { Text } = Typography;
@@ -25,6 +26,7 @@ export default function Analysis() {
       defaultValue: true,
     },
   );
+  const { t } = useTranslation();
   const {
     isEditOutput,
     showEditOutputInput,
@@ -69,33 +71,33 @@ export default function Analysis() {
   const chooseDeviceRef = useRef<HTMLDivElement|null>(null);
   const steps: TourProps['steps'] = [
     {
-      title: '备份节点',
-      description: '这里是所有备份节点的列表',
+      title: t('tour.backupNode'),
+      description: t('tour.backupNodeDesc'),
       target: () => tableRef.current as HTMLDivElement,
     },
     {
-      title: '添加节点',
-      description: '点击这里，往列表添加备份节点，并根据实际需求，填写节点信息并添加',
+      title: t('tour.addNode'),
+      description: t('tour.addNodeDesc'),
       target: () => addNodeRef.current as HTMLDivElement,
     },
     {
-      title: '导出路径',
-      description: '设置一个根部导出路径，备份的文件都会被放到这里',
+      title: t('tour.exportPath'),
+      description: t('tour.exportPathDesc'),
       target: () => outputPathRef.current as HTMLDivElement,
     },
     {
-      title: '选择设备',
-      description: '选择需要备份的数据（接入设备时，程序会自动选择）',
+      title: t('tour.selectDevice'),
+      description: t('tour.selectDeviceDesc'),
       target: () => chooseDeviceRef.current as HTMLDivElement,
     },
     {
-      title: '备份数据',
-      description: '点击这里会根据您配置的节点进行备份',
+      title: t('tour.backupData'),
+      description: t('tour.backupDataDesc'),
       target: () => backupBtnRef.current as HTMLDivElement,
     },
     {
-      title: '恢复数据',
-      description: '将已备份过的数据文件，原封不动的移动到设备中',
+      title: t('tour.restoreData'),
+      description: t('tour.restoreDataDesc'),
       target: () => restoreBtnRef.current as HTMLDivElement,
     },
   ];
@@ -111,7 +113,7 @@ export default function Analysis() {
   return (
     <Card
       className="h-full"
-      title="备份节点"
+      title={t('home.title')}
       ref={cardBodyRef}
       extra={(
         <div className="flex">
@@ -122,7 +124,7 @@ export default function Analysis() {
             icon={<PlusOutlined />}
             onClick={() => addNode()}
           >
-            新增节点
+            {t('home.addNode')}
           </Button>
         </div>
       )}
@@ -133,7 +135,7 @@ export default function Analysis() {
         <Table
           ref={tableRef}
           rowSelection={rowSelection}
-          locale={{ emptyText: <Empty description="暂无节点数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
+          locale={{ emptyText: <Empty description={t('home.table.empty')} image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
           scroll={{
             x: '100%',
             scrollToFirstRowOnChange: true,
@@ -148,19 +150,20 @@ export default function Analysis() {
 
           <div className="flex items-center" ref={outputPathRef}>
             <Text strong className="mr-1">
-              当前导出路径:
+              {t('home.output')}
+              :
             </Text>
             {
               isEditOutput ? (
                 <Space.Compact>
                   <Input allowClear onChange={(e) => tempOutputChange(e)} defaultValue={outputPath} />
-                  <Button onClick={() => saveOutput()} type="primary">确定</Button>
+                  <Button onClick={() => saveOutput()} type="primary">{t('home.exportPathConfirm')}</Button>
                 </Space.Compact>
               ) : (
                 <Text
                   onDoubleClick={() => showEditOutputInput()}
                 >
-                  {outputPath ?? '双击设置导出路径'}
+                  {outputPath ?? t('home.setExportPath')}
                 </Text>
               )
             }
@@ -169,11 +172,11 @@ export default function Analysis() {
             <span ref={chooseDeviceRef}>
               <Select
                 className="mr-3"
-                defaultValue="请选择设备"
-                value={currentDevices || '请选择设备'}
+                defaultValue={t('home.selectDevices')}
+                value={currentDevices || t('home.selectDevices')}
                 style={{ width: 160 }}
                 onChange={handleDevice}
-                notFoundContent={<div>无设备连接</div>}
+                notFoundContent={<div>{t('home.noDevices')}</div>}
               >
                 {
                   devices.map((item) => <Option key={item.name} value={item.name}>{item.name}</Option>)
@@ -189,7 +192,7 @@ export default function Analysis() {
                 onClick={() => backupTip()}
                 type="primary"
               >
-                {backupLoading ? '备份中' : '备份'}
+                {backupLoading ? t('home.backingUp') : t('home.backup')}
               </Button>
               <Button
                 ref={restoreBtnRef}
@@ -198,7 +201,7 @@ export default function Analysis() {
                 onClick={() => restore()}
                 type="primary"
               >
-                {restoreLoading ? '恢复中' : '恢复'}
+                {restoreLoading ? t('home.restoring') : t('home.restore')}
 
               </Button>
             </Space>
