@@ -14,7 +14,7 @@
       "backingUp": "备份中",
       "restore": "恢复",
       "restoring": "恢复中",
-      "addNode": "add",
+      "addNode": "新增节点",
       "setExportPath": "双击设置导出路径",
       "exportPathSaveError": "保存失败",
       "exportPathSave": "保存成功",
