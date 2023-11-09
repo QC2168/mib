@@ -12,9 +12,9 @@ import useMessage from '@/utils/message';
 import wechat from '@/assets/images/wechat.jpg';
 import { useMount } from 'ahooks';
 import { useTranslation } from 'react-i18next';
+import { RecommendSystemConfigEnum } from '@/types/index';
 import { themeModeState } from '../../../state/themeState';
 import { version } from '../../../package.json';
-import { RecommendSystemConfigEnum } from '../../../electron/utils/recommendConfigs/types';
 
 export default function Index() {
   const [themeMode, setThemeMode] = useRecoilState(themeModeState);

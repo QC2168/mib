@@ -10,8 +10,8 @@ import useDevices from '@/pages/home/hooks/useDevices';
 import { BackupModalRef, MODAL_STATUS } from '@/pages/home/components/BackupModal';
 import { useMount } from 'ahooks';
 import { useTranslation } from 'react-i18next';
+import { WorkModeEnum } from '@/types/index';
 import styles from '../index.module.less';
-import { WorkModeEnum } from '../../../../electron/types';
 
 const { confirm } = Modal;
 
