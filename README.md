@@ -1,71 +1,72 @@
 # MIB
-一款基于`electron`+`react`+`typescript`的开发的备份工具(GUI)，根据你的配置自动将移动设备上的数据文件迁移备份至电脑上，支持增量备份。
+A backup tool (GUI) developed based on `electron` + `react` + `typescript`. It automatically migrates and backs up data files from mobile devices to the computer according to your configuration, supporting incremental backups.
 
-![Home](https://github.com/QC2168/mib/blob/client/public/home.png)
+![Home](https://github.com/QC2168/mib/blob/client/public/home-en.png)
 
-## 🌈 功能
-- [x] USB连接备份数据
-- [x] 无线连接备份数据
-- [x] 增量备份
-- [x] 多设备备份选择
-- [x] 单节点全量备份
-- [x] 单节点选择备份
-- [x] 主题切换
-- [x] 已备份数据类型分析
+**English** | [中文文档](https://github.com/QC2168/mib/blob/client/README-zh_CN.md)
 
-## 🚀 如何开启adb模式
-[在设备上启用 adb 调试](https://developer.android.com/studio/command-line/adb?hl=zh-cn#Enabling)
+## 🌈 Features
+- [x] Backup data via USB connection
+- [x] Backup data via wireless connection
+- [x] Incremental backup
+- [x] Multi-device backup selection
+- [x] Full backup for a single node
+- [x] Selective backup for a single node
+- [x] Theme switching
+- [x] Analysis of backed-up data types
 
-## 🌊 如何使用无线连接
+## 🚀 How to Enable ADB Mode
+[Enable ADB Debugging on the device](https://developer.android.com/studio/command-line/adb?hl=zh-cn#Enabling)
 
-[通过 Wi-Fi 连接到设备（Android 10 及更低版本）](https://developer.android.com/studio/command-line/adb?hl=zh-cn#wireless)
+## 🌊 How to Use Wireless Connection
 
-[通过 Wi-Fi 连接到设备（Android 11 及更高版本）](https://developer.android.com/studio/command-line/adb?hl=zh-cn#connect-to-a-device-over-wi-fi-android-11+)
+[Connect to the device via Wi-Fi (Android 10 and lower)](https://developer.android.com/studio/command-line/adb?hl=zh-cn#wireless)
 
+[Connect to the device via Wi-Fi (Android 11 and higher)](https://developer.android.com/studio/command-line/adb?hl=zh-cn#connect-to-a-device-over-wi-fi-android-11+)
 
-## 📁 MIB 配置文件 .mibrc
+## 📁 MIB Configuration File .mibrc
 
-> 默认配置文件存放在用户目录下
-> 
-> 当前版本已支持在软件内部编辑，无需手动改动配置文件
+> The default configuration file is stored in the user's directory.
+>
+> The current version supports editing within the software, eliminating the need to manually modify the configuration file.
 
-``` JSON
+```json
 {
     "backups": [
         {
             "path": "/sdcard/DCIM/Camera/",
-            "comment": "本地相册"
+            "comment": "Local photo album"
         },
         {
             "path": "/sdcard/DCIM/Screenshots/",
-            "comment": "屏幕截屏"
+            "comment": "Screenshots"
         },
         {
             "path": "/sdcard/MIUI/sound_recorder/",
-            "comment": "录音"
+            "comment": "Voice recordings"
         },
         {
             "path": "/sdcard/MIUI/sound_recorder/app_rec/",
-            "comment": "应用录音"
+            "comment": "App recordings"
         },
         {
             "path": "/sdcard/MIUI/sound_recorder/call_rec/",
-            "comment": "通话录音"
+            "comment": "Call recordings"
         }
-        // 添加更多的备份节点
+        // Add more backup nodes
     ],
-  // 推荐使用绝对路径
+  // Recommended to use absolute paths
   "output": "E:/files",
-  // 读取扫描忽略文件、文件夹名称
+  // Read scan ignore file and folder names
   "ignoreFileList": []
 }
 ```
 
-### 🧱 节点选项
+### 🧱 Node Options
 
-| 属性    | 类型    | 描述                 | 是否必选 |
-| ------- | ------- | -------------------- | -------- |
-| path    | String  | 设备备份路径         | 是       |
-| comment | String  | 节点说明             | 是       |
-| full    | Boolean | 当前节点全量备份     | 否       |
-| output  | Boolean | 指定当前节点导出路径 | 否       |
+| Property | Type    | Description           | Required |
+| -------- | ------- | --------------------- | -------- |
+| path     | String  | Device backup path    | Y     |
+| comment  | String  | Node description      | Y      |
+| full     | Boolean | Full backup for node   | N       |
+| output   | Boolean | Specify export path for the current node | N |

@@ -3,9 +3,6 @@
 
 ![Home](https://github.com/QC2168/mib/blob/client/public/home.png)
 
-[Click to go to Chinese document]()
-
-
 ## 🌈 功能
 - [x] USB连接备份数据
 - [x] 无线连接备份数据
